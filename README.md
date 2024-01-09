@@ -153,7 +153,7 @@ GitHub地址：[https://github.com/FirstUI/FirstUI-uvue](https://github.com/Firs
 
 - 新增 Textarea 多行输入框 组件。
 
-- 新增 ActionSheet 上拉菜单 
+- 新增 ActionSheet 上拉菜单 组件。
 
 - 新增 Toast 轻提示 组件。
 
