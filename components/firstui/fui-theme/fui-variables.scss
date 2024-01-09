@@ -1,5 +1,5 @@
 /*
-  FirstUI部分组件props属性全局配置变量，用于替换组件内默认变量值【注意：需要全局中引入才有效】，主题铯结合fui-theme.scss调整
+  FirstUI部分组件props属性全局配置变量，用于替换组件内默认变量值【注意：需要全局中引入才有效】，主题色结合fui-theme.scss调整
   优先级：props变量（如果有传值）> scss配置变量值
   注意：建议在 uni.scss 中引入，App.uvue中引入可能无法替换组件内!default变量值
 */
