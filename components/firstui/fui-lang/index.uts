@@ -38,6 +38,18 @@ export const fuiLang = reactive({
 		ar: ar
 	}
 } as FuiLocaleLangParam)
+
+/**
+* setFuiLocaleLang：设置语言包数据
+* @description 设置语言包数据
+* @param {UTSJSONObject} lang 语言包数据，具体格式见语言文件，需要保持一致
+* @param {string} locale {string} 指定语言类型，只能指定已有的类型
+*/
+export const setFuiLocaleLang = (lang : UTSJSONObject, locale : string) => {
+	const obj = fuiLang.messages;
+	obj[locale] = lang;
+}
+
 /**
 * getFuiLocaleLang：获取语言包数据
 * @description 获取语言包数据
@@ -49,7 +61,7 @@ export const getFuiLocaleLang = (locale : null | string) : UTSJSONObject => {
 		initLangData = fuiLang.messages[locale] as UTSJSONObject;
 	} else {
 		let key = uni.getStorageSync('fui_locale_lang')
-		if (key == null || key=='') {
+		if (key == null || key == '') {
 			key = fuiLang.locale == '' ? 'cn' : fuiLang.locale;
 		}
 		initLangData = fuiLang.messages[key] as UTSJSONObject;
