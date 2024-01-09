@@ -42,9 +42,7 @@
 
 <style>
 	.fui-color__item {
-		/* #ifndef UNI-APP-X */
 		display: flex;
-		/* #endif */
 		width: 100%;
 		justify-content: space-between;
 		flex-direction: row;
