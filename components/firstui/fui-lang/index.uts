@@ -46,8 +46,7 @@ export const fuiLang = reactive({
 * @param {string} locale {string} 指定语言类型，只能指定已有的类型
 */
 export const setFuiLocaleLang = (lang : UTSJSONObject, locale : string) => {
-	const obj = fuiLang.messages;
-	obj[locale] = lang;
+	fuiLang.messages[locale] = lang;
 }
 
 /**
