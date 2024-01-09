@@ -23,7 +23,7 @@
 	 * @tutorial https://unix.firstui.cn/
 	 * @property {String} type {String} 样式类型，可选值：primary，success， warning，danger，purple，gray，black
 	 * @property {String} text {String} 文本内容
-	 * @property {Number} size {Number} 是否有边框
+	 * @property {Number} size {Number} 字体大小
 	 * @property {String} unit {String} 字体大小单位，可选值：rpx、px
 	 * @property {String} color {String} 字体颜色，设置值则type失效
 	 * @property {String} fontWeight {String} 字重，注意：仅支持normal、bold、‘400‘，’700‘
