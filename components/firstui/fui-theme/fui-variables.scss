@@ -1,0 +1,133 @@
+/*
+  FirstUI部分组件props属性全局配置变量，用于替换组件内默认变量值【注意：需要全局中引入才有效】，主题铯结合fui-theme.scss调整
+  优先级：props变量（如果有传值）> scss配置变量值
+  注意：建议在 uni.scss 中引入，App.uvue中引入可能无法替换组件内!default变量值
+*/
+
+/* fui-text 文本组件 */
+/* 文本字体大小 (szie + unit属性) */
+$fui-text-size: 32rpx;
+
+/* fui-number 数字组件 */
+/* 数字字体大小 (szie + unit属性) */
+$fui-number-size: 32rpx;
+
+/* fui-icon 字体图标组件 */
+/* 字体图标大小 (szie + unit属性) */
+$fui-icon-size: 64rpx;
+
+/* fui-button 按钮组件 */
+/* 按钮高度 （height 属性） */
+$fui-button-height: 96rpx;
+/* 按钮字体大小 （size 属性） */
+$fui-button-size: 32rpx;
+/* 按钮圆角大小 （radius 属性） */
+$fui-button-radius: 16rpx;
+
+
+/* fui-list-cell 列表组件 */
+/* padding值 */
+$fui-list-cell-padding:32rpx;
+/* 箭头颜色 */
+$fui-list-cell-arrowcolor:#B2B2B2;
+/* 下边框left值*/
+$fui-list-cell-bottomleft:32rpx;
+/* 边框宽度（适用于 fui-list 与 fui-list-cell组件） */
+$fui-list-cell-borderwidth:0.5px;
+
+
+/* fui-section 标题栏组件 */
+/* 标题字体大小 (size 属性) */
+$fui-section-title-size: 32rpx;
+/* 标题字体颜色 （color 属性）*/
+$fui-section-title-color: #181818;
+/* 标题字重，可选值：400、700、normal、bold 。（fontWeight 属性）*/
+$fui-section-title-weight: 700;
+/* 描述字体大小 (descrSize 属性)*/
+$fui-section-descr-size: 28rpx;
+/* 描述字体颜色 (descrColor 属性)*/
+$fui-section-descr-color: #B2B2B2;
+/* 描述距离标题padding-top值 （descrTop 属性）*/
+$fui-section-descr-top: 12rpx;
+
+/* fui-grid 宫格组件 */
+/* 边框宽度 */
+$fui-grid-border-width:0.5px;
+
+/* fui-card 卡片组件 */
+/* 边框宽度 */
+$fui-card-border-width:0.5px;
+
+/* fui-input 输入框组件 */
+/* 边框宽度 */
+$fui-input-border-width:0.5px;
+/* 标题字体大小 */
+$fui-input-label-size: 32rpx;
+/* 输入框字体大小 */
+$fui-input-size: 32rpx;
+
+/* fui-checkbox 复选框组件 */
+/* 未选中时边框颜色 */
+$fui-checkbox-border-color: #CCCCCC;
+/* 未选中时背景颜色 */
+$fui-checkbox-background: #FFFFFF;
+/* 对号颜色 */
+$fui-checkbox-mark-color: #FFFFFF;
+
+/* fui-radio 单选框组件 */
+/* 未选中时边框颜色 */
+$fui-radio-border-color: #CCCCCC;
+/* 未选中时背景颜色 */
+$fui-radio-background: #FFFFFF;
+/* 对号颜色 */
+$fui-radio-mark-color: #FFFFFF;
+
+/* fui-switch 开关组件 */
+/* 未选中时背景颜色 */
+$fui-switch-background: #FFFFFF ;
+/* switch关闭时过渡背景颜色 type=switch有效 */
+$fui-switch-normal-transition: #dfdfdf;
+/* 未选中时边框颜色 */
+$fui-switch-border-color: #CCCCCC;
+/* switch圆形按钮阴影 */
+$fui-switch-circle-shadow: 0 0 3px rgba(0, 0, 0, .4);
+/* switch圆形按钮的背景色 */
+$fui-switch-circle-background: #FFFFFF;
+/* switch中对号颜色，type=checkbox时有效 */
+$fui-switch-mark-color: #FFFFFF;
+
+/* fui-textarea 多行输入框 */
+/* 边框宽度 */
+$fui-textarea-border-width: 0.5px;
+/* 标题字体大小 */
+$fui-textarea-label-size: 32rpx;
+/* 输入框字体大小 */
+$fui-textarea-size: 32rpx;
+
+/* fui-actionsheet 上拉菜单组件 */
+/* 浅色模式背景色 */
+$fui-actionsheet-bg-light: #F8F8F8;
+/* 深色模式背景色 */
+$fui-actionsheet-bg-dark: #111111;
+/* 浅色模式按钮背景色 */
+$fui-actionsheet-btnbg-light: #FFFFFF;
+/* 深色模式按钮背景色 */
+$fui-actionsheet-btnbg-dark: #222222;
+/* 浅色模式字体颜色 */
+$fui-actionsheet-color-light: #181818;
+/* 深色模式字体颜色 */
+$fui-actionsheet-color-dark: #D1D1D1;
+/* 提示文本字体颜色 */
+$fui-actionsheet-tip-color: #7F7F7F;
+/* 顶部左右圆角值，radius为true时有效 */
+$fui-actionsheet-radius: 24rpx;
+/* 分割线宽度 */
+$fui-actionsheet-border-width: 0.5px;
+/* 分割线浅色模式颜色 */
+$fui-actionsheet-bcolor-light: #EEEEEE;
+/* 分割线深色模式颜色 */
+$fui-actionsheet-bcolor-dark: #333333;
+
+/* fui-dialog 对话框组件 */
+/* 按钮默认字体颜色 */
+$fui-dialog-bn-color: #333333 !default;

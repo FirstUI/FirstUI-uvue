@@ -1,0 +1,107 @@
+<template>
+	<checkbox-group :name="name">
+		<slot></slot>
+	</checkbox-group>
+</template>
+
+<script>
+	import { type PropType, ComponentPublicInstance } from 'vue'
+	/**
+	 * Checkbox 复选框
+	 * @description Checkbox 多项选择器，需结合fui-checkbox-group和fui-checkbox组件一起使用。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} name {String}	多项选择器名称	
+	 * @property {Array} modelValue { string[] } 选中的value值集合，用于双向绑定
+	 * @event {Function} change 选中项发生变化时触发，(event: string[]) => void
+	 * @event {Function} update:modelValue 用于组件双向绑定，(event: string[]) => void
+	 */
+	export default {
+		name: "fui-checkbox-group",
+		emits: ['change', 'update:modelValue'],
+		provide() {
+			return {
+				fuiCkGroup: this
+			}
+		},
+		props: {
+			name: {
+				type: String,
+				default: ''
+			},
+			modelValue: {
+				type: Array as PropType<string[]>,
+				default: () : string[] => [] as string[]
+			}
+		},
+		data() {
+			return {
+				vals: [] as string[],
+				childrens: [] as ComponentPublicInstance[],
+				fuiForm: null as null | ComponentPublicInstance
+			};
+		},
+		watch: {
+			modelValue(vals : string[]) {
+				this.modelChange(vals)
+			},
+		},
+		created() {
+			//用于submit、reset事件
+			const isForm = this.getParent('fui-form');
+			if (isForm) {
+				const form = this.fuiForm as ComponentPublicInstance
+				(form.$data['formChildren'] as ComponentPublicInstance[]).push(this);
+			}
+		},
+		methods: {
+			checkboxChange(e : string[]) {
+				this.$emit('change', e)
+				this.$emit("update:modelValue", e);
+			},
+			changeValue() {
+				const vals = [] as string[];
+				this.childrens.forEach((item : ComponentPublicInstance) => {
+					const isChk = item.$data['val'] as boolean;
+					if (isChk) {
+						vals.push(item.$props['value'] as string);
+					}
+				})
+				this.vals = vals;
+				this.checkboxChange(vals)
+			},
+			modelChange(vals : string[]) {
+				this.childrens.forEach((item : ComponentPublicInstance) => {
+					const value = item.$props['value'] as string;
+					if (vals.includes(value)) {
+						item.$data['val'] = true;
+					} else {
+						item.$data['val'] = false
+					}
+				})
+			},
+			getParent(name : string) : boolean {
+				if (this.$parent == null) return false;
+				let parent = this.$parent as ComponentPublicInstance;
+				let parentName = parent.$options['name'];
+				while (parentName != name) {
+					if (parent.$parent == null) return false;
+					parent = parent.$parent as ComponentPublicInstance;
+					if (parent.$options['name'] == '') return false;
+					parentName = parent.$options['name'];
+				}
+				this.fuiForm = parent;
+				return true;
+			},
+			//暂时做重置处理（还原需记录初始值）
+			reset() {
+				this.childrens.forEach((item : ComponentPublicInstance) => {
+					item.$data['val'] = false;
+				})
+				this.vals = [] as string[];
+				this.checkboxChange(this.vals)
+			}
+		}
+	}
+</script>
+
+<style scoped></style>

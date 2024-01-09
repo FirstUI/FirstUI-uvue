@@ -1,0 +1,11 @@
+// 美国英语
+export default {
+	actionsheet: {
+		cancel: 'Cancel'
+	} as UTSJSONObject,
+	dialog: {
+		title: 'Message',
+		cancel: 'Cancel',
+		confirm: 'OK'
+	} as UTSJSONObject
+} as UTSJSONObject

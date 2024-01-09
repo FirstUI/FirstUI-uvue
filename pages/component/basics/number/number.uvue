@@ -1,0 +1,60 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Number</text>
+				<text class="fui-page__desc">Number 数字，DigitalNumbers字体，仅支持数字和小数点。默认字体显示：123456789.00</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<text class="fui-section__title">基本使用</text>
+				<fui-number text="1234567890.00"></fui-number>
+				<text class="fui-section__title">调整颜色</text>
+				<fui-number text="200" color="#465CFF"></fui-number>
+				<text class="fui-section__title">调整字体大小</text>
+				<view class="fui-flex">
+					<fui-number text="123" color="#FFB703" :size="24"></fui-number>
+					<fui-number text="678" color="#FFB703" :size="48"></fui-number>
+				</view>
+				<text class="fui-section__title">加粗/点击效果</text>
+				<fui-number :text="520" color="#09BE4F" :size="64" fontWeight="bold" :highlight="true" @click="onTap"></fui-number>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	import { FuiNumberClickParam } from '@/components/firstui/fui-types/index.uts'
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		onLoad() {
+
+		},
+		methods: {
+			onTap(e : FuiNumberClickParam) {
+				console.log(e)
+				this.fui.toast(e.text)
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-wrap {
+		padding-bottom: 96rpx;
+	}
+
+	.fui-section__title {
+		margin-top: 64rpx;
+	}
+	.fui-flex{
+		align-items: flex-end;
+	}
+</style>

@@ -1,0 +1,95 @@
+<template>
+	<view class="fui-wing__blank-wrap"
+		:class="[radius!=0?'fui-wing__blank-hidden':'',gap!=0?'':`fui-wing__blank-${size}`]" :style="getStyles"
+		@tap="handleClick">
+		<slot></slot>
+	</view>
+</template>
+
+<script>
+	/**
+	 * WhiteSpace 上下间距
+	 * @description 上下间距，布局组件，主要用于设置内容之间上下间距使用。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} size {String}	默认间距大小，可选值small、default、large 默认优先使用全局配置
+	 * @property {Number} gap {Number} 自定义间距大小，单位rpx，设置后则size失效
+	 * @property {String} background {String} 背景颜色
+	 * @property {Number} radius {Number} 圆角大小，单位rpx
+	 * @property {Number} marginTop {Number} margin-top值，单位rpx
+	 * @property {Number} marginBottom {Number} margin-bottom值，单位rpx
+	 * @event {Function} click 点击元素时触发，() => void
+	 */
+	export default {
+		name: "fui-wing-blank",
+		emits: ['click'],
+		props: {
+			size: {
+				type: String,
+				default: 'default'
+			},
+			gap: {
+				type: Number,
+				default: 0
+			},
+			background: {
+				type: String,
+				default: ''
+			},
+			radius: {
+				type: Number,
+				default: 0
+			},
+			marginTop: {
+				type: Number,
+				default: 0
+			},
+			marginBottom: {
+				type: Number,
+				default: 0
+			}
+		},
+		computed: {
+			getStyles() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.background != '') mp.set('background', this.background);
+				if (this.radius != 0) mp.set('border-radius', `${this.radius}rpx`);
+				if (this.marginTop != 0) mp.set('margin-top', `${this.marginTop}rpx`);
+				if (this.marginBottom != 0) mp.set('margin-bottom', `${this.marginBottom}rpx`);
+				if (this.gap != 0) mp.set('padding', `0 ${this.gap}rpx`);
+				return mp;
+			}
+		},
+		methods: {
+			handleClick() {
+				this.$emit('click')
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-spacing-row-sm: 16rpx !default;
+	$fui-spacing-row-base: 24rpx !default;
+	$fui-spacing-row-lg: 32rpx !default;
+
+	.fui-wing__blank-wrap {
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.fui-wing__blank-hidden {
+		overflow: hidden;
+	}
+
+	.fui-wing__blank-small {
+		padding: 0 $fui-spacing-row-sm;
+	}
+
+	.fui-wing__blank-default {
+		padding: 0 $fui-spacing-row-base;
+	}
+
+	.fui-wing__blank-large {
+		padding: 0 $fui-spacing-row-lg;
+	}
+</style>

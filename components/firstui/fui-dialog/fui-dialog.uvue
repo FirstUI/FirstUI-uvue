@@ -1,0 +1,324 @@
+<template>
+	<view :ref="refId" class="fui-dialog__wrap" :style="{background:maskBackground,zIndex:zIndex}"
+		:class="{'fui-dialog__mask-bg':maskBackground==''}" @tap="maskClose">
+		<view class="fui-dialog__inner" :class="{'fui-dialog__bg':background==''}"
+			:style="{background:background,borderRadius:`${radius}rpx`}">
+			<text class="fui-dialog__title" :class="{'fui-dialog__title-color':color==''}" :style="{color:color}"
+				v-if="title!=''">{{d_title}}</text>
+			<view class="fui-dialog__body" :class="{'fui-dialog__mtop':title==''}">
+				<text class="fui-dialog__descr" :class="{'fui-dialog__descr-color':contentColor==''}"
+					:style="{color:contentColor}" v-if="content!=''">{{content}}</text>
+				<slot></slot>
+			</view>
+			<view class="fui-dialog__footer">
+				<template v-for="(item,index) in btns" :key="index">
+					<text :style="{color:item.color}" class="fui-dialog__btn"
+						:class="{'fui-dialog__btn-active':index==current,'fui-dialog__btn-first':index==0,'fui-dialog__btn-color':(item.color==null || item.color=='') && (item.primary==null || item.primary==false),'fui-dialog__color-primary':(item.color==null || item.color=='') && item.primary==true}"
+						@tap="handleClick(index)" @touchstart="onTouchstart(index)" @touchend="onEnd"
+						@touchcancel="onEnd">{{item.text}}</text>
+				</template>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import type { PropType } from 'vue';
+	import { FuiDialogButtonsParam } from '../fui-types/index.uts'
+	import { fuiLang, getFuiLocaleLang } from '../fui-lang/index.uts'
+	/**
+	 * Dialog 对话框
+	 * @description Dialog 对话框，在浮层中显示，引导用户进行相关操作。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Boolean} visible {Boolean} 是否显示对话框
+	 * @property {String} title {String} 对话框标题
+	 * @property {String} color {String} 对话框标题字体颜色
+	 * @property {String} content {String} 对话框内容
+	 * @property {String} contentColor {String} 对话框内容字体颜色
+	 * @property {Array} buttons {Array&lt;FuiDialogButtonsParam&gt;} 对话框按钮数据
+	 * @property {String} background {String} 对话框背景色
+	 * @property {Number} radius {Number} 对话框圆角值，单位rpx
+	 * @property {String} maskBackground {String} 对话框遮罩背景色
+	 * @property {Boolean} maskClosable {Boolean} 点击遮罩是否可关闭对话框
+	 * @property {Number} zIndex {Number} 层级z-index值
+	 * @event {Function} click 点击对话框按钮时触发，(event:FuiDialogButtonsParam) => void
+	 * @event {Function} close 点击遮罩层（maskClosable=true）时触发，() => void
+	 * @event {Function} update:visible 点击遮罩层且maskClosable设为true时触发，用于双向绑定，(event:boolean) => void
+	 */
+	export default {
+		name: 'fui-dialog',
+		emits: ['click', 'close', 'update:visible'],
+		props: {
+			visible: {
+				type: Boolean,
+				default: false
+			},
+			title: {
+				type: String,
+				default: 'fui_def'
+			},
+			color: {
+				type: String,
+				default: ''
+			},
+			content: {
+				type: String,
+				default: ''
+			},
+			contentColor: {
+				type: String,
+				default: ''
+			},
+			buttons: {
+				type: Array as PropType<FuiDialogButtonsParam[]>,
+				default: () : FuiDialogButtonsParam[] => [] as FuiDialogButtonsParam[]
+			},
+			background: {
+				type: String,
+				default: ''
+			},
+			radius: {
+				type: Number,
+				default: 24
+			},
+			maskBackground: {
+				type: String,
+				default: ''
+			},
+			maskClosable: {
+				type: Boolean,
+				default: true
+			},
+			zIndex: {
+				type: Number,
+				default: 996
+			}
+		},
+		data() {
+			const refId = `fui_dialog_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				refId: refId,
+				isShow: false,
+				element: null as null | Element,
+				current: -1,
+				btns: [] as FuiDialogButtonsParam[],
+				d_title: ''
+			}
+		},
+		computed: {
+			locale() : string {
+				return fuiLang.locale
+			}
+		},
+		watch: {
+			visible: {
+				handler(newVal : boolean) {
+					if (newVal) {
+						this.open();
+					} else {
+						if (this.isShow) this.close();
+					}
+				},
+				immediate: true
+			},
+			locale: {
+				handler(val : string) {
+					const lang = getFuiLocaleLang(val)
+					const dialog = lang['dialog'] as UTSJSONObject;
+					this.d_title = this.title == 'fui_def' ? (dialog.getString('title') as string) : this.title;
+					const btns = JSON.parse<FuiDialogButtonsParam[]>(JSON.stringify(this.buttons))
+					if (btns != null && btns.length == 0) {
+						const param = [{
+							text: dialog.getString('cancel') as string
+						}, {
+							text: dialog.getString('confirm') as string,
+							primary: true
+						}] as FuiDialogButtonsParam[];
+						this.getButtons(param)
+					} else {
+						this.getButtons(btns as FuiDialogButtonsParam[])
+					}
+				},
+				immediate: true
+			},
+			buttons(vals : FuiDialogButtonsParam[]) {
+				this.getButtons(vals)
+			},
+			title(val : string) {
+				if (val != 'fui_def') {
+					this.d_title = this.title
+				}
+			}
+		},
+		mounted() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					if (!this.isShow) this.close();
+				}, 50);
+			})
+		},
+		methods: {
+			getButtons(vals : FuiDialogButtonsParam[]) {
+				this.btns = [] as FuiDialogButtonsParam[];
+				this.$nextTick(() => {
+					this.btns = vals;
+				})
+			},
+			handleClick(index : number) {
+				const item = this.btns[index];
+				item.index = index;
+				this.$emit('click', item);
+			},
+			maskClose() {
+				if (!this.maskClosable) return;
+				this.$emit('close');
+				this.$emit('update:visible', false)
+			},
+			open() {
+				this.isShow = true;
+				this.$nextTick(() => {
+					setTimeout(() => {
+						this._animation(true);
+					}, 50);
+				});
+			},
+			close() {
+				this.isShow = false;
+				this._animation(false);
+			},
+			_animation(visible : boolean) {
+				if (this.element == null) {
+					this.element = this.$refs[this.refId] as Element;
+				}
+				this.element!.style.setProperty('opacity', visible ? '1' : '0')
+				if (visible) {
+					this.element!.style.setProperty('visibility', 'visible');
+				} else {
+					setTimeout(() => {
+						this.element!.style.setProperty('visibility', 'hidden');
+					}, 250)
+				}
+			},
+			onTouchstart(index : number) {
+				this.current = index;
+			},
+			onEnd() {
+				this.current = -1;
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-border: #EEEEEE !default;
+	$fui-bg-color-hover: rgba(0, 0, 0, 0.2) !default;
+	$fui-bg-color-mask: rgba(0, 0, 0, 0.6) !default;
+	$fui-color-section: #333333 !default;
+	$fui-color-subtitle: #7F7F7F !default;
+	$fui-bg-color: #FFFFFF !default;
+	$fui-dialog-bn-color: #333333 !default;
+	$fui-color-primary: #465CFF !default;
+
+	.fui-dialog__wrap {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		transition-timing-function: ease-in;
+		transition-property: visibility, opacity;
+		transition-duration: 0.25s;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		visibility: hidden;
+		opacity: 0;
+	}
+
+	.fui-dialog__inner {
+		width: 680rpx;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	.fui-dialog__title {
+		padding: 64rpx 48rpx 0;
+		font-weight: 700;
+		font-size: 34rpx;
+		text-align: center;
+	}
+
+	.fui-dialog__body {
+		padding: 32rpx 48rpx;
+		margin-bottom: 32rpx;
+	}
+
+	.fui-dialog__descr {
+		font-size: 30rpx;
+		font-weight: normal;
+		text-align: center;
+	}
+
+	.fui-dialog__mtop {
+		margin-top: 32rpx;
+	}
+
+	.fui-dialog__footer {
+		display: flex;
+		flex-direction: row;
+		position: relative;
+		height: 112rpx;
+		border-top-width: 0.5px;
+		border-top-style: solid;
+		border-top-color: $fui-color-border;
+	}
+
+	.fui-dialog__btn {
+		flex: 1;
+		height: 112rpx;
+		line-height: 112rpx;
+		font-weight: 700;
+		position: relative;
+		font-size: 34rpx;
+		border-left-width: 0.5px;
+		border-left-style: solid;
+		border-left-color: $fui-color-border;
+		text-align: center;
+	}
+
+	.fui-dialog__btn-active {
+		background: $fui-bg-color-hover;
+	}
+
+	.fui-dialog__btn-first {
+		border-left-width: 0 !important;
+	}
+
+	.fui-dialog__mask-bg {
+		background: $fui-bg-color-mask !important;
+	}
+
+	.fui-dialog__title-color {
+		color: $fui-color-section !important;
+	}
+
+	.fui-dialog__descr-color {
+		color: $fui-color-subtitle !important;
+	}
+
+
+	.fui-dialog__bg {
+		background: $fui-bg-color !important;
+	}
+
+	.fui-dialog__btn-color {
+		color: $fui-dialog-bn-color !important;
+	}
+
+	.fui-dialog__color-primary {
+		color: $fui-color-primary !important;
+	}
+</style>

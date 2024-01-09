@@ -1,0 +1,12 @@
+import { reactive } from 'vue'
+
+export type State = {
+	//当前版本
+	version : string;
+}
+
+export const state = reactive({ version: '1.0.0' } as State)
+
+export const setVersion = (version : string) => {
+	state.version = version
+}

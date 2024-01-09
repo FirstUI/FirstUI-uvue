@@ -1,0 +1,165 @@
+<template>
+	<text class="fui-digitalnumbers"
+		:class="{'fui-number__size':isBind,'fui-number__color':color=='','fui-number__lineheight':lineHeight && isBind }"
+		:style="{color:color, fontSize: getSize, fontWeight: fontWeight,lineHeight:lineHeight?getSize:'normal',textDecoration:decoration}"
+		@tap="handleClick" @touchstart="touchstart" @touchcancel="touchend" @touchend="touchend"
+		ref="fui_number">{{getNumber}}</text>
+</template>
+
+<script>
+	import { FuiNumberClickParam } from '../fui-types/index.uts';
+	/**
+	 * Number 数字
+	 * @description Number 数字，DigitalNumbers字体，仅支持数字和小数点。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} text {String} 数字内容
+	 * @property {Number} size {Number} 字体大小
+	 * @property {String} unit {String} 字体大小单位，可选值：rpx、px
+	 * @property {String} color {String} 字体颜色
+	 * @property {String} fontWeight {String} 字重，注意：仅支持normal、bold、‘400‘，’700‘
+	 * @property {Boolean} disabled {Boolean} 是否禁用点击，设置为true则点击事件及效果失效
+	 * @property {Boolean} highlight {Boolean} 是否有点击效果
+	 * @property {String} decoration {String} 文本的修饰，可选值：none、 underline、line-through 等
+	 * @property {Boolean} lineHeight {Boolean}	是否将行高设置与字体大小一致	
+	 * @property {String} param	{String} 自定义参数，点击事件中回传
+	 * @event {Function} click 点击数字时触发，(event: FuiNumberClickParam) => void
+	 */
+	export default {
+		emits: ['click'],
+		name: "fui-number",
+		props: {
+			//数字值
+			text: {
+				type: Object,
+				default: ''
+			},
+			size: {
+				type: Object,
+				default: 0
+			},
+			//rpx | px
+			unit: {
+				type: String,
+				default: 'rpx'
+			},
+			color: {
+				type: String,
+				default: ''
+			},
+			//字重
+			fontWeight: {
+				type: String,
+				default: 'normal'
+			},
+			//是否禁用点击
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			//是否有点击效果
+			highlight: {
+				type: Boolean,
+				default: false
+			},
+			//none、 underline、line-through
+			decoration: {
+				type: String,
+				default: 'none'
+			},
+			lineHeight: {
+				type: Boolean,
+				default: false
+			},
+			param: {
+				type: String,
+				default: '0'
+			}
+		},
+		computed: {
+			getSize() : string {
+				let size : string;
+				if (typeof this.size == 'number') {
+					size = (this.size as number).toString() + this.unit;
+				} else if (typeof this.size == 'string') {
+					size = (this.size as string) + this.unit;
+				} else {
+					size = this.size.toString() + this.unit;
+				}
+				return size;
+			},
+			isBind() : boolean {
+				const size = this.getSize
+				let bind = false;
+				if (size == '' || size == 'px' || size == 'rpx' || size == '0rpx' || size == '0px') {
+					bind = true;
+				}
+				return bind;
+			},
+			getNumber() : string {
+				let num = ''
+				if (typeof this.text == 'string') {
+					num = this.text as string;
+				} else if (typeof this.text == 'number') {
+					num = (this.text as number).toString();
+				} else {
+					num = this.text.toString()
+				}
+				return num;
+			}
+		},
+		data() {
+			return {
+				numberEl: null as Element | null
+			}
+		},
+		mounted() {
+			this.numberEl = this.$refs['fui_number'] as Element;
+		},
+		methods: {
+			touchstart() {
+				if (!this.highlight || this.disabled) return;
+				this.numberEl?.style?.setProperty('opacity', 0.5);
+			},
+			touchend() {
+				if (!this.highlight || this.disabled) return;
+				this.numberEl?.style?.setProperty('opacity', 1);
+			},
+			handleClick() {
+				if (this.disabled) return;
+				this.$emit('click', {
+					text: this.getNumber,
+					param: this.param
+				} as FuiNumberClickParam);
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-section: #333333 !default;
+	$fui-number-size: 32rpx !default;
+
+	@font-face {
+		font-family: DigitalNumbers;
+		src: url("./numbers.ttf");
+	}
+
+	.fui-number__color {
+		color: $fui-color-section !important;
+	}
+
+	.fui-number__size {
+		font-size: $fui-number-size !important;
+	}
+
+	.fui-number__lineheight {
+		line-height: $fui-number-size !important;
+	}
+
+	.fui-digitalnumbers {
+		font-family: DigitalNumbers;
+		/* #ifdef H5 */
+		cursor: pointer;
+		/* #endif */
+	}
+</style>

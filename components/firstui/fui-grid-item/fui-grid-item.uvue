@@ -1,0 +1,138 @@
+<template>
+	<view v-if="width" :style="getStyle" class="fui-grid__item">
+		<view :hover-class="highlight?'fui-grid__highlight':''" :hover-stay-time="150"
+			:style="{background:backgroundColor }" class="fui-grid__item-box" @click="handleClick">
+			<view class="fui-grid__border-right" v-if="showBorder"></view>
+			<view class="fui-grid__border-bottom" v-if="showBorder"></view>
+			<slot></slot>
+		</view>
+	</view>
+</template>
+
+<script>
+	import { ComponentPublicInstance } from 'vue'
+	/**
+	 * Grid 宫格
+	 * @description Grid 宫格，主要使用场景如：热门内容等。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Boolean} highlight {Boolean} 是否有点击效果
+	 * @property {String} backgroundColor {String} 背景颜色
+	 * @property {Number} index {Number} 当前item索引	，click事件中返回
+	 * @event {Function} click 点击时触发，返回传入的索引值(event: number) => void
+	 */
+	export default {
+		name: "fui-grid-item",
+		emits: ['click'],
+		inject: ['fuiGrid'],
+		props: {
+			highlight: {
+				type: Boolean,
+				default: true
+			},
+			backgroundColor: {
+				type: String,
+				default: 'transparent'
+			},
+			index: {
+				type: Number,
+				default: 0
+			}
+		},
+		data() {
+			return {
+				columns: 0,
+				showBorder: true,
+				width: '0',
+				height: '0'
+			};
+		},
+		computed: {
+			getStyle() : object {
+				const mp : Map<string, string> = new Map();
+				mp.set('width', this.width);
+				if (this.height != '0') mp.set('height', this.height);
+				return mp
+			}
+		},
+		created() {
+			this.init()
+		},
+		beforeUnmount() {
+			if (this.fuiGrid != null) {
+				const grid = this.fuiGrid as ComponentPublicInstance
+				const children = grid.$data['children'] as ComponentPublicInstance[];
+				children.forEach((item : ComponentPublicInstance, index : number) => {
+					if (item == this) {
+						children.splice(index, 1)
+					}
+				})
+			}
+		},
+		methods: {
+			init() {
+				if (this.fuiGrid != null) {
+					const grid = this.fuiGrid as ComponentPublicInstance;
+					this.columns = grid.$props['columns'] as number;
+					this.showBorder = grid.$props['showBorder'] as boolean;
+					(grid.$data['children'] as ComponentPublicInstance[]).push(this);
+					this.width = grid.$data['width'] as string;
+					this.height = grid.$data['height'] as string;
+				}
+			},
+			handleClick() {
+				if (this.fuiGrid != null) {
+					const grid = this.fuiGrid as ComponentPublicInstance;
+					grid.$callMethod('handleClick', this.index)
+				}
+				this.$emit('click', this.index)
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	$fui-color-border: #EEEEEE !default;
+	$fui-bg-color-hover: rgba(0, 0, 0, 0.2) !default;
+	$fui-grid-border-width: 0.5px !default;
+
+	@mixin fui_grid_border {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		background-color: $fui-color-border;
+		z-index: 1;
+		pointer-events: none;
+	}
+
+	.fui-grid__item {
+		display: flex;
+		flex-shrink: 0;
+		box-sizing: border-box;
+	}
+
+	.fui-grid__item-box {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		box-sizing: border-box;
+		position: relative;
+	}
+
+	// 部分机型设置边框0.5px 不显示，此处做兼容处理
+	.fui-grid__border-right {
+		width: $fui-grid-border-width;
+		top: 0;
+		@include fui_grid_border;
+	}
+
+	.fui-grid__border-bottom {
+		position: absolute;
+		height: $fui-grid-border-width;
+		left: 0;
+		@include fui_grid_border;
+	}
+
+	.fui-grid__highlight {
+		background-color: $fui-bg-color-hover;
+	}
+</style>

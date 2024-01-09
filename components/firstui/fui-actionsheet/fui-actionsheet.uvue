@@ -1,0 +1,376 @@
+<template>
+	<view>
+		<view :ref="refAsMkId" class="fui-actionsheet__mask" @tap="handleClickMask" :style="{zIndex:zIndex-10}"></view>
+		<view :ref="refAsId" class="fui-actionsheet__wrap"
+			:class="[radius?'fui-actionsheet__radius':'',`fui-as__bg-${themeStyl}`]" :style="{zIndex:zIndex}">
+			<text class="fui-actionsheet__tips"
+				:class="[color==''?'fui-actionsheet__tip-color':'',`fui-as__btn-${themeStyl}`]"
+				:style="{fontSize:`${size}rpx`,color:color}" v-if="tips!=''">{{tips}}</text>
+			<view :class="{'fui-actionsheet__operate-box':isCancel}">
+				<view :class="[`fui-as__btn-${themeStyl}`]" v-for="(item,index) in vals" :key="index"
+					hover-class="fui-actionsheet__btn-active" :hover-stay-time="150">
+					<text class="fui-actionsheet__btn"
+						:style="{color:theme=='dark'?item.darkColor:item.color,fontSize:`${itemSize}rpx`}"
+						:class="[(item.darkColor==null || item.darkColor=='') && themeStyl=='dark'?`fui-actionsheet__color-${themeStyl}`: '',(item.color==null || item.color=='') && themeStyl=='light'?`fui-actionsheet__color-${themeStyl}`:'' , !isCancel && index==vals.length-1 && iphoneX && safeArea?'fui-as__safe-weex':'',index!=0 || tips!=''?`fui-as__divider-${themeStyl}`:'']"
+						@tap="handleClickItem(index)">{{item.text}}</text>
+				</view>
+			</view>
+			<view :class="[`fui-as__btn-${themeStyl}`]" hover-class="fui-actionsheet__btn-active"
+				:hover-stay-time="150">
+				<text :style="{fontSize:`${itemSize}rpx`}" class="fui-actionsheet__btn"
+					:class="{'fui-actionsheet__color-dark':themeStyl=='dark','fui-actionsheet__color-light':themeStyl=='light','fui-as__safe-weex':iphoneX && safeArea}"
+					v-if="isCancel && themeStyl!=''" @tap="handleClickCancel">{{cancelText}}</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import { type PropType } from 'vue'
+	import { FuiActionSheetItemParam } from '../fui-types/index.uts'
+	import { fuiLang, getFuiLocaleLang } from '../fui-lang/index.uts'
+	/**
+	 * ActionSheet 上拉菜单
+	 * @description ActionSheet 上拉菜单，从底部弹出的模态框，提供和当前场景相关的操作菜单。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Boolean} visible {Boolean} 是否显示上拉菜单
+	 * @property {Array} itemList {Array&lt;FuiActionSheetItemParam&gt;} 菜单按钮数据
+	 * @property {Number} itemSize {Number}	菜单按钮字体大小，单位rpx
+	 * @property {String} tips {String} 提示信息
+	 * @property {String} color {String} 提示信息文本颜色
+	 * @property {Number} size {Number} 提示信息字体大小，单位rpx
+	 * @property {Boolean} radius {Boolean} 上拉菜单是否带圆角
+	 * @property {Boolean} isCancel {Boolean} 是否需要取消按钮
+	 * @property {String} theme {String} 上拉菜单主题。可选值：light、dark。
+	 * @property {Boolean} maskClosable {Boolean} 点击遮罩是否可关闭上拉菜单
+	 * @property {Number} zIndex {Number} 上拉菜单层级z-index值
+	 * @property {Boolean} safeArea {Boolean} 是否适配底部安全区
+	 * @event {Function} click 点击上拉菜单按钮时触发，(event: FuiActionSheetItemParam) => void
+	 * @event {Function} cancel 点击遮罩层（maskClosable=true）或者取消按钮时触发，() => void
+	 * @event {Function} update:visible 点击遮罩层（maskClosable=true）或者取消按钮时触发，用于双向绑定	，(event: boolean) => void
+	 */
+	export default {
+		name: "fui-actionsheet",
+		emits: ['click', 'cancel', 'update:visible'],
+		props: {
+			visible: {
+				type: Boolean,
+				default: false
+			},
+			itemList: {
+				type: Array as PropType<FuiActionSheetItemParam[]>,
+				default: () : FuiActionSheetItemParam[] => [] as FuiActionSheetItemParam[]
+			},
+			itemSize: {
+				type: Number,
+				default: 32
+			},
+			tips: {
+				type: String,
+				default: ""
+			},
+			color: {
+				type: String,
+				default: ""
+			},
+			size: {
+				type: Number,
+				default: 26
+			},
+			radius: {
+				type: Boolean,
+				default: true
+			},
+			isCancel: {
+				type: Boolean,
+				default: true
+			},
+			theme: {
+				type: String,
+				default: 'light'
+			},
+			maskClosable: {
+				type: Boolean,
+				default: false
+			},
+			zIndex: {
+				type: Number,
+				default: 996
+			},
+			safeArea: {
+				type: Boolean,
+				default: true
+			}
+		},
+		data() {
+			const refAsId = `fui_as_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			const refAsMkId = `fui_asmk_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				refAsId: refAsId,
+				refAsMkId: refAsMkId,
+				isShow: false,
+				iphoneX: false,
+				vals: [] as FuiActionSheetItemParam[],
+				element: null as Element | null,
+				mkElement: null as Element | null,
+				isActive: false,
+				themeStyl: '',
+				cancelText: ''
+			}
+		},
+		computed: {
+			getStyle() : object {
+				const mp : Map<string, string> = new Map();
+				return mp
+			},
+			locale() : string {
+				return fuiLang.locale
+			}
+		},
+		watch: {
+			visible: {
+				handler(newVal : boolean) {
+					if (newVal) {
+						this.open();
+					} else {
+						if (this.isShow) this.close();
+					}
+				},
+				immediate: true
+			},
+			itemList(newVal : FuiActionSheetItemParam[]) {
+				this.initData(newVal)
+			},
+			theme: {
+				handler(val : string) {
+					this.themeStyl = ''
+					this.$nextTick(() => {
+						this.themeStyl = val
+					})
+				},
+				immediate: true
+			},
+			locale: {
+				handler(val : string) {
+					const lang = getFuiLocaleLang(val)
+					const actionsheet = lang['actionsheet'] as UTSJSONObject;
+					this.cancelText = actionsheet.getString('cancel') as string;
+				},
+				immediate: true
+			}
+		},
+		created() {
+			// #ifdef APP-IOS || MP || H5
+			this.iphoneX = this.isPhoneX();
+			// #endif 
+			const list = JSON.parse<FuiActionSheetItemParam[]>(JSON.stringify(this.itemList))
+			if (list != null) this.initData(list);
+		},
+		mounted() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					if (!this.visible) this.close();
+				}, 50);
+			})
+		},
+		methods: {
+			initData(vals : FuiActionSheetItemParam[]) {
+				this.vals = [] as FuiActionSheetItemParam[]
+				this.themeStyl = '';
+				this.$nextTick(() => {
+					this.vals = vals
+					this.themeStyl = this.theme
+				})
+			},
+			handleClickMask() {
+				if (!this.maskClosable) return;
+				this.handleClickCancel();
+			},
+			handleClickItem(index : number) {
+				if (!this.visible) return;
+				const item = this.vals[index];
+				item.index = index;
+				this.$emit('click', item);
+			},
+			handleClickCancel() {
+				this.$emit('cancel');
+				this.$emit('update:visible', false)
+			},
+			open() {
+				this.$nextTick(() => {
+					setTimeout(() => {
+						this.isShow = true;
+						this._animation(true);
+					}, 50);
+				})
+			},
+			close() {
+				this.isShow = false;
+				this._animation(false);
+			},
+			_animation(visible : boolean) {
+				if (this.element == null) {
+					this.element = this.$refs[this.refAsId] as Element;
+				}
+				if (this.mkElement == null) {
+					this.mkElement = this.$refs[this.refAsMkId] as Element;
+				}
+
+				this.mkElement!.style.setProperty('opacity', visible ? '1' : '0')
+				this.element!.style.setProperty('transform', `translateY(${visible ? '0' : '100%'})`);
+				this.element!.style.setProperty('opacity', visible ? '1' : '0')
+				if (visible) {
+					this.mkElement!.style.setProperty('visibility', 'visible');
+					this.element!.style.setProperty('visibility', 'visible');
+				} else {
+					setTimeout(() => {
+						this.mkElement!.style.setProperty('visibility', 'hidden');
+						this.element!.style.setProperty('visibility', 'hidden');
+					}, 250)
+				}
+			},
+			// #ifdef APP-IOS || MP || H5
+			isPhoneX() : boolean {
+				if (!this.safeArea) return false;
+				//34px
+				const res : GetSystemInfoResult = uni.getSystemInfoSync();
+				let iphonex = false;
+				let models = ['iphonex', 'iphonexr', 'iphonexsmax']
+				for (let i = 11; i < 20; i++) {
+					models.push(`iphone${i}`)
+					models.push(`iphone${i}mini`)
+					models.push(`iphone${i}pro`)
+					models.push(`iphone${i}promax`)
+				}
+				const model = res.model.replace(/\s/g, "").toLowerCase()
+				const newModel = model.split('<')[0]
+				if (models.includes(model) || models.includes(newModel) || res.safeAreaInsets.bottom > 0) {
+					iphonex = true;
+				}
+				return iphonex;
+			}
+			// #endif
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-bg-color-hover: rgba(0, 0, 0, 0.2) !default;
+	$fui-bg-color-mask: rgba(0, 0, 0, 0.6) !default;
+	$fui-actionsheet-bg-light: #F8F8F8 !default;
+	$fui-actionsheet-bg-dark: #111111 !default;
+	$fui-actionsheet-btnbg-light: #FFFFFF !default;
+	$fui-actionsheet-btnbg-dark: #222222 !default;
+	$fui-actionsheet-color-light: #181818 !default;
+	$fui-actionsheet-color-dark: #D1D1D1 !default;
+	$fui-actionsheet-tip-color: #7F7F7F !default;
+	$fui-actionsheet-radius: 24rpx !default;
+	$fui-actionsheet-border-width: 0.5px !default;
+	$fui-actionsheet-bcolor-light: #EEEEEE !default;
+	$fui-actionsheet-bcolor-dark: #333333 !default;
+
+	.fui-actionsheet__wrap {
+		width: 100%;
+		visibility: hidden;
+		min-height: 100rpx;
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		transition-duration: 0.25s;
+		transition-property: transform, opacity, visibility;
+		transition-timing-function: ease-in-out;
+		transform: translateY(100%);
+		transform-origin: center center;
+	}
+
+	.fui-as__bg-light {
+		background-color: $fui-actionsheet-bg-light;
+	}
+
+	.fui-as__bg-dark {
+		background-color: $fui-actionsheet-bg-dark;
+	}
+
+	.fui-actionsheet__radius {
+		border-top-left-radius: $fui-actionsheet-radius;
+		border-top-right-radius: $fui-actionsheet-radius;
+		overflow: hidden;
+	}
+
+	.fui-actionsheet__tips {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 40rpx 60rpx;
+		text-align: center;
+		font-weight: normal;
+	}
+
+	.fui-as__btn-light {
+		background-color: $fui-actionsheet-btnbg-light;
+	}
+
+	.fui-as__btn-dark {
+		background-color: $fui-actionsheet-btnbg-dark;
+	}
+
+	.fui-actionsheet__color-light {
+		color: $fui-actionsheet-color-light !important;
+	}
+
+	.fui-actionsheet__color-dark {
+		color: $fui-actionsheet-color-dark !important;
+	}
+
+	.fui-actionsheet__tip-color {
+		color: $fui-actionsheet-tip-color !important;
+	}
+
+	.fui-actionsheet__operate-box {
+		padding-bottom: 12rpx;
+	}
+
+	.fui-actionsheet__btn {
+		width: 100%;
+		height: 100rpx;
+		line-height: 100rpx;
+		text-align: center;
+		font-weight: normal;
+		position: relative;
+		box-sizing: content-box;
+	}
+
+	.fui-actionsheet__btn-active {
+		background-color: $fui-bg-color-hover !important;
+	}
+
+	.fui-as__divider-light {
+		border-top-width: $fui-actionsheet-border-width;
+		border-top-color: $fui-actionsheet-bcolor-light;
+		border-top-style: solid;
+	}
+
+	.fui-as__divider-dark {
+		border-top-width: $fui-actionsheet-border-width;
+		border-top-color: $fui-actionsheet-bcolor-dark;
+		border-top-style: solid;
+	}
+
+	.fui-as__safe-weex {
+		padding-bottom: 34px;
+	}
+
+	.fui-actionsheet__mask {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: $fui-bg-color-mask;
+		transition-duration: 0.25s;
+		transition-property: opacity, visibility;
+		transition-timing-function: ease-in-out;
+		opacity: 0;
+		visibility: hidden;
+	}
+</style>

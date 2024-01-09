@@ -1,0 +1,238 @@
+<template>
+	<view class="fui-wrap">
+		<view class="fui-banner__box">
+			<image class="fui-banner" src="/static/images/index/light/img_banner_3x.png" mode="widthFix"></image>
+			<view class="fui-banner__content">
+				<image class="fui-logo" src="/static/images/common/img_logo.png" mode="widthFix"></image>
+				<text class="fui-title">First UI</text>
+				<text class="fui-desc">First UI是一款轻量、全面可靠的移动端组件库。</text>
+			</view>
+		</view>
+		<view class="fui-tabs__box">
+			<scroll-view class="fui-scroll__box-tab" id="fui_tabs" :scroll-with-animation="true" :scroll-x="true"
+				:show-scrollbar="false" :scroll-into-view="scrollInto">
+				<view class="fui-scroll__view fui-align__center">
+					<view class="fui-tab__item" v-for="(item, index) in tabs" :key="index">
+						<text :id="item.id" class="fui-tab__item-txt" :class="{'fui-tab__item-text':tabIndex==index}"
+							@tap="tabClick(index)">{{ item.name }}</text>
+						<view class="fui-tabs--indicator" :class="{'fui-tabs__indicator-active':tabIndex==index}">
+						</view>
+					</view>
+				</view>
+
+			</scroll-view>
+			<swiper :current="tabIndex" class="fui-swiper__box" @change="tabChange" :style="{height:`${height}px`}">
+				<swiper-item class="fui-swiper__item" v-for="(tab, index) in tabs" :key="tab.id">
+					<scroll-view class="fui-scroll__box" :scroll-y="true" :style="{height:`${height}px`}">
+						<view class="fui-list__view">
+							<fui-list-cell padding="0 32rpx" :bottomBorder="false" radius="16rpx" :marginTop="24"
+								v-for="(item,idx) in tab.data" :key="idx" @click="href(tab.id,item.page,index)">
+								<view class="fui-list__item fui-align__center">
+									<image class="fui-item__icon"
+										:src="`/static/images/index/light/icon_${item.icon}_3x.png`"></image>
+									<text class="fui-item__name">{{item.name}}</text>
+									<image v-if="item.vip" class="fui-vip__icon"
+										src="/static/images/index/light/icon_member_3x.png"></image>
+								</view>
+							</fui-list-cell>
+						</view>
+					</scroll-view>
+				</swiper-item>
+			</swiper>
+		</view>
+	</view>
+</template>
+
+<script>
+	import { tabs, type Itabs } from './index.uts'
+	export default {
+		data() {
+			return {
+				tabs: tabs as Itabs[],
+				scrollInto: '' as string,
+				tabIndex: 0 as number,
+				height: 0 as number
+			}
+		},
+		onReady() {
+			this.height = uni.getSystemInfoSync().windowHeight - this.fui.rpx2px(538);
+		},
+		methods: {
+			tabClick(index : number) {
+				this.switchTab(index)
+			},
+			tabChange(e : SwiperChangeEvent) {
+				let index = e.detail.current;
+				this.switchTab(index);
+			},
+			switchTab(index : number) {
+				if (this.tabIndex == index) return;
+				this.tabIndex = index;
+				let scrollIndex = index - 1 < 0 ? 0 : index - 1;
+				this.scrollInto = this.tabs[scrollIndex].id;
+			},
+			href(type : string, page : string, index : number) {
+				console.log(index)
+				if (page != '') {
+					this.fui.href(`/pages/component/${type}/${page}/${page}`, false)
+				} else {
+					this.fui.href('/pages/common/coding/coding', false)
+				}
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-banner__box {
+		width: 100%;
+		height: 538rpx;
+		position: relative;
+		background-color: #EDF9FF;
+	}
+
+	.fui-banner {
+		width: 100%;
+		height: 538rpx;
+	}
+
+	.fui-banner__content {
+		width: 100%;
+		height: 538rpx;
+		position: absolute;
+		z-index: 2;
+		left: 0;
+		top: 0;
+		padding: 80rpx 32rpx 0;
+		box-sizing: border-box;
+	}
+
+	.fui-logo {
+		width: 80rpx;
+		height: 80rpx;
+		border-radius: 16rpx;
+	}
+
+	.fui-title {
+		font-size: 40rpx;
+		line-height: 40rpx;
+		padding: 24rpx 0 40rpx;
+		font-weight: 700;
+		box-sizing: border-box;
+	}
+
+	.fui-desc {
+		width: 280rpx;
+		font-size: 24rpx;
+		line-height: 40rpx;
+		color: #333333;
+	}
+
+	.fui-tabs__box {
+		width: 100%;
+		background: #FFFFFF;
+		border-radius: 40rpx 40rpx 0 0;
+		position: relative;
+		bottom: 0;
+		left: 0;
+		top: -120rpx;
+		z-index: 12;
+	}
+
+	.fui-scroll__view {
+		/* width: 100%; */
+		height: 108rpx;
+	}
+
+	.fui-tab__item-txt {
+		position: relative;
+		flex-shrink: 0;
+		padding: 0 26rpx;
+		height: 108rpx;
+		line-height: 108rpx;
+		box-sizing: border-box;
+		font-size: 28rpx;
+		font-weight: 700;
+		color: #7F7F7F;
+		border-bottom-width: 0;
+		transition: transform 0.2s linear;
+		text-align: center;
+	}
+
+	.fui-tab__item {
+		position: relative;
+	}
+
+	.fui-tabs--indicator {
+		position: absolute;
+		left: 24rpx;
+		bottom: 0;
+		height: 2px;
+		width: 0;
+		background-color: #465CFF;
+		border-radius: 2px;
+		transition-duration: 0.2s;
+		transition-property: width, transform;
+		transition-timing-function: linear;
+	}
+
+	.fui-tabs__indicator-active {
+		width: 45rpx;
+		transform: scale(1.2);
+	}
+
+	.fui-tab__item-text {
+		transform: scale(1.2);
+		color: #465CFF;
+	}
+
+	.fui-scroll__box {
+		width: 100%;
+		height: 108rpx;
+	}
+
+	.fui-scroll__box-tab {
+		width: 100%;
+		height: 108rpx;
+		flex-direction: row;
+	}
+
+	.fui-swiper__box {
+		flex: 1;
+		background-color: #F1F4FA;
+	}
+
+	.fui-swiper__item {
+		flex: 1;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.fui-list__view {
+		width: 100%;
+		/* min-height: 101%; */
+		padding: 8rpx 32rpx 32rpx;
+		box-sizing: border-box;
+	}
+
+	.fui-list__item {
+		width: 100%;
+		height: 112rpx;
+	}
+
+	.fui-item__name {
+		padding-left: 24rpx;
+		padding-right: 12rpx;
+		flex-shrink: 0;
+		font-size: 32rpx;
+		font-weight: 700;
+		color: #181818;
+	}
+
+	.fui-item__icon,
+	.fui-vip__icon {
+		width: 48rpx;
+		height: 48rpx;
+		flex-shrink: 0;
+	}
+</style>

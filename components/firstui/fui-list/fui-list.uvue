@@ -1,0 +1,157 @@
+<template>
+	<view class="fui-list__wrap" :style="{marginTop:`${marginTop}rpx`}">
+		<text v-if="title" class="fui-list__title"
+			:style="{padding:padding,color:color,fontSize:`${size}rpx`,background:background}">{{title}}</text>
+		<view class="fui-list__container">
+			<view v-if="topBorder" :style="{background:borderColor,left:`${topLeft}rpx`,right:`${topRight}rpx`}"
+				class="fui-list__border-top" :class="{'fui-list__border-color':borderColor==''}"></view>
+			<slot></slot>
+			<view v-if="bottomBorder"
+				:style="{background:borderColor,left:`${bottomLeft}rpx`,right:`${bottomRight}rpx`}"
+				class="fui-list__border-bottom" :class="{'fui-list__border-color':borderColor==''}"></view>
+		</view>
+		<text v-if="footer" class="fui-list__footer"
+			:style="{color:footerColor,fontSize:`${footerSize}rpx`,paddding:footerPadding}">{{footer}}</text>
+	</view>
+</template>
+
+<script>
+	/**
+	 * List 列表
+	 * @description List 列表，常用的布局组件。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Number} marginTop	{Number} margin-top值，单位rpx
+	 * @property {String} title {String} 标题
+	 * @property {String} color {String} 标题颜色
+	 * @property {Number} size	{Number} 标题字体大小，单位rpx
+	 * @property {String} padding {String} 标题padding值
+	 * @property {String} background {String} 标题背景色
+	 * @property {String} footer {String} 底部说明文字
+	 * @property {String} footerColor {String} 底部说明文字颜色
+	 * @property {Number} footerSize {Number} 底部说明文字大小 单位rpx
+	 * @property {String} footerPadding {String} 底部说明文本padding值
+	 * @property {Boolean} topBorder {Boolean} 是否显示上边框
+	 * @property {Boolean} bottomBorder {Boolean} 是否显示下边框
+	 * @property {String} borderColor {String} 边框颜色
+	 * @property {Number} topLeft {Number} 上边框left值，单位rpx
+	 * @property {Number} topRight {Number} 上边框right值，单位rpx
+	 * @property {Number} bottomLeft {Number} 下边框left值，单位rpx
+	 * @property {Number} bottomRight {Number} 下边框right值，单位rpx
+	 */
+	export default {
+		name: "fui-list",
+		props: {
+			marginTop: {
+				type: Number,
+				default: 0
+			},
+			title: {
+				type: String,
+				default: ''
+			},
+			color: {
+				type: String,
+				default: '#7F7F7F'
+			},
+			size: {
+				type: Number,
+				default: 28
+			},
+			padding: {
+				type: String,
+				default: '32rpx 32rpx 20rpx 32rpx'
+			},
+			background: {
+				type: String,
+				default: 'transparent'
+			},
+			footer: {
+				type: String,
+				default: ''
+			},
+			footerColor: {
+				type: String,
+				default: '#7F7F7F'
+			},
+			footerSize: {
+				type: Number,
+				default: 28
+			},
+			footerPadding: {
+				type: String,
+				default: '20rpx 32rpx 0 32rpx'
+			},
+			topBorder: {
+				type: Boolean,
+				default: true
+			},
+			bottomBorder: {
+				type: Boolean,
+				default: false
+			},
+			borderColor: {
+				type: String,
+				default: ''
+
+			},
+			topLeft: {
+				type: Number,
+				default: 0
+			},
+			topRight: {
+				type: Number,
+				default: 0
+			},
+			bottomLeft: {
+				type: Number,
+				default: 0
+			},
+			bottomRight: {
+				type: Number,
+				default: 0
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-border: #EEEEEE !default;
+	$fui-list-cell-borderwidth: 0.5px !default;
+
+	.fui-list__wrap {
+		width: 100%;
+	}
+
+	.fui-list__title,
+	.fui-list__footer {
+		box-sizing: border-box;
+		/* #ifndef UNI-APP-X */
+		word-break: break-all;
+		/* #endif */
+	}
+
+	.fui-list__container {
+		position: relative;
+		width: 100%;
+	}
+
+	.fui-list__border-top {
+		position: absolute;
+		top: 0;
+		height: $fui-list-cell-borderwidth;
+		z-index: 1;
+		pointer-events: none;
+	}
+
+	.fui-list__border-bottom {
+		position: absolute;
+		bottom: 0;
+		height: $fui-list-cell-borderwidth;
+		z-index: 1;
+		pointer-events: none;
+	}
+
+	.fui-list__border-color {
+		background-color: $fui-color-border !important;
+	}
+</style>

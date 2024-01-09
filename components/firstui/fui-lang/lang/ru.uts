@@ -1,0 +1,11 @@
+//俄语
+export default {
+	actionsheet: {
+		cancel: 'Отмена'
+	} as UTSJSONObject,
+	dialog: {
+		title: 'Сообщение',
+		cancel: 'Отмена',
+		confirm: 'OK'
+	} as UTSJSONObject
+} as UTSJSONObject

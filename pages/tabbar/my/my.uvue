@@ -1,0 +1,22 @@
+<template>
+	<view class="fui-wrap">
+		<f-coding></f-coding>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				
+			}
+		},
+		methods: {
+			
+		}
+	}
+</script>
+
+<style>
+
+</style>

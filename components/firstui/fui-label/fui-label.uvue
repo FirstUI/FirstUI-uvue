@@ -1,0 +1,66 @@
+<template>
+	<view class="fui-label__wrap" :class="{'fui-label__full':full}" :style="{padding:padding,margin:margin}"
+		@tap.stop="onClick">
+		<slot></slot>
+	</view>
+</template>
+
+<script>
+	import { ComponentPublicInstance } from 'vue';
+	/**
+	 * Label 标签
+	 * @description Label 标签，用来改进表单组件的可用性，将控件放在该标签下，当点击时，就会触发对应的控件，目前主要用于fui-switch、fui-radio、fui-checkbox组件。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} padding {String} padding值
+	 * @property {String} margin {String} margin值
+	 * @property {Boolean} full {Boolean} 宽度是否100%
+	 */
+	export default {
+		name: "fui-label",
+		provide() {
+			return {
+				fuiLabel: this
+			}
+		},
+		props: {
+			//padding值：'20rpx 32rpx'
+			padding: {
+				type: String,
+				default: ''
+			},
+			//margin值：'20rpx 32rpx'
+			margin: {
+				type: String,
+				default: ''
+			},
+			full: {
+				type: Boolean,
+				default: false
+			}
+		},
+		data() {
+			return {
+				childrens: [] as ComponentPublicInstance[]
+			}
+		},
+		methods: {
+			onClick() {
+				if (this.childrens.length > 0) {
+					this.childrens.forEach((item : ComponentPublicInstance) => {
+						item.$callMethod('labelClick')
+					})
+				}
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.fui-label__wrap {
+		box-sizing: border-box;
+	}
+
+	.fui-label__full {
+		width: 100%;
+	}
+</style>

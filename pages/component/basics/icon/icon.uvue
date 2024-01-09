@@ -1,0 +1,61 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Icon</text>
+				<text class="fui-page__desc">Icon 图标，First UI字体图标库。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<fui-grid :columns="3" @click="getName">
+					<fui-grid-item v-for="(item, index) in icons" :highlight="item!=''" :index="index" :key="index">
+						<view class="fui-icon__item">
+							<fui-icon :name="item"></fui-icon>
+							<text class="fui-icon__name">{{ item }}</text>
+						</view>
+					</fui-grid-item>
+				</fui-grid>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	import icons from './icon.uts';
+	export default {
+		data() {
+			return {
+				icons: icons as string[]
+			}
+		},
+		methods: {
+			getName(index : number) {
+				const name = this.icons[index]
+				this.fui.toast(name)
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-wrap{
+		background-color: #fff;
+	}
+	.fui-icon__item {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		position: relative;
+	}
+
+	.fui-icon__name {
+		font-size: 28rpx;
+		font-weight: 400;
+		padding-top: 16rpx;
+	}
+</style>

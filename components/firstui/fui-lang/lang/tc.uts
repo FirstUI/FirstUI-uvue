@@ -1,0 +1,12 @@
+//繁体中文
+export default {
+	actionsheet: {
+		cancel: '取消'
+	} as UTSJSONObject,
+	dialog: {
+		title: '提示',
+		cancel: '取消',
+		confirm: '確定'
+	} as UTSJSONObject
+
+} as UTSJSONObject

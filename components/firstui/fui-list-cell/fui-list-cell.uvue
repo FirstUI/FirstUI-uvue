@@ -1,0 +1,200 @@
+<template>
+	<view class="fui-list__cell" :hover-class="highlight?'fui-list__cell-highlight':''" :hover-stay-time="150"
+		:class="{'fui-list__cell-background':background==''}"
+		:style="{background:background,marginTop:`${marginTop}rpx`,marginBottom:`${marginBottom}rpx`,borderRadius:radius}"
+		@tap="handleClick">
+		<view v-if="topBorder" :style="{background:borderColor,left:`${topLeft}rpx`,right:`${topRight}rpx`}"
+			class="fui-cell__border-top" :class="{'fui-cell__border-color':borderColor==''}"></view>
+		<!-- 外层设置 padding 会影响 absolute 定位的left和right值 ... -->
+		<view class="fui-list__cell-inner" :class="{'fui-list__cell-padding':padding==''}" :style="{padding:padding}">
+			<slot></slot>
+			<view class="fui-cell__arrow" :class="{'fui-list__cell-arrowcolor':arrowColor==''}" v-if="arrow">
+			</view>
+		</view>
+		<view v-if="bottomBorder"
+			:style="{background:borderColor,left:`${bottomLeft==-1?0:bottomLeft}rpx`,right:`${bottomRight}rpx`}"
+			class="fui-cell__border-bottom"
+			:class="{'fui-cell__border-color':borderColor=='','fui-list__cell-bleft':bottomLeft==-1}"></view>
+	</view>
+</template>
+
+<script>
+	/**
+	 * List 列表
+	 * @description 列表Item项目，常用的布局组件。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} padding {String} padding值
+	 * @property {Number} marginTop {Number} margin-top值，单位rpx
+	 * @property {Number} marginBottom {Number} margin-bottom值，单位rpx
+	 * @property {String} background {String} 背景颜色
+	 * @property {Boolean} highlight {Boolean} 是否有点击效果
+	 * @property {Boolean} arrow {Boolean} 是否需要右侧箭头
+	 * @property {String} arrowColor {String} 右侧箭头颜色
+	 * @property {Boolean} topBorder {Boolean} 是否显示上边框
+	 * @property {Boolean} bottomBorder {Boolean} 是否显示下边框
+	 * @property {String} borderColor {String} 边框颜色
+	 * @property {Number} topLeft {Number} 上边框left值，单位rpx
+	 * @property {Number} topRight {Number} 上边框right值，单位rpx
+	 * @property {Number} bottomLeft {Number} 下边框left值，单位rpx
+	 * @property {Number} bottomRight {Number} 下边框right值，单位rpx
+	 * @property {String} radius {String} border-radius圆角值 , 如‘16rpx’
+	 * @property {Number} index {Number} 索引值
+	 * @event {Function} click 点击组件时触发，返回索引值，(event: number) => void
+	 */
+	export default {
+		name: "fui-list-cell",
+		emits: ['click'],
+		props: {
+			padding: {
+				type: String,
+				default: ''
+			},
+			marginTop: {
+				type: Number,
+				default: 0
+			},
+			marginBottom: {
+				type: Number,
+				default: 0
+			},
+			background: {
+				type: String,
+				default: ''
+			},
+			highlight: {
+				type: Boolean,
+				default: true
+			},
+			arrow: {
+				type: Boolean,
+				default: false
+			},
+			arrowColor: {
+				type: String,
+				default: ''
+			},
+			topBorder: {
+				type: Boolean,
+				default: false
+			},
+			bottomBorder: {
+				type: Boolean,
+				default: true
+			},
+			borderColor: {
+				type: String,
+				default: ''
+			},
+			topLeft: {
+				type: Number,
+				default: 0
+			},
+			topRight: {
+				type: Number,
+				default: 0
+			},
+			bottomLeft: {
+				type: Number,
+				default: -1
+			},
+			bottomRight: {
+				type: Number,
+				default: 0
+			},
+			radius: {
+				type: String,
+				default: '0'
+			},
+			index: {
+				type: Number,
+				default: 0
+			}
+		},
+		methods: {
+			handleClick() {
+				this.$emit('click', this.index);
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-bg-color-hover: rgba(0, 0, 0, 0.2) !default;
+	$fui-color-border: #EEEEEE !default;
+	$fui-bg-color: #FFFFFF !default;
+	$fui-list-cell-padding: 32rpx !default;
+	$fui-list-cell-arrowcolor: #B2B2B2 !default;
+	$fui-list-cell-bottomleft: 32rpx !default;
+	$fui-list-cell-borderwidth: 0.5px !default;
+
+	.fui-list__cell {
+		position: relative;
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		box-sizing: border-box;
+	}
+
+	.fui-list__cell-inner {
+		flex: 1;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		box-sizing: border-box;
+	}
+
+	.fui-cell__arrow {
+		height: 40rpx;
+		width: 40rpx;
+		border-width: 3px 3px 0 0;
+		border-style: solid;
+		transform: rotate(45deg) scale(0.5);
+		border-radius: 4rpx;
+		flex-shrink: 0;
+		margin-left: auto;
+		box-sizing: border-box;
+		transform-origin: center center;
+		margin-right: -5.8579rpx;
+	}
+
+	.fui-cell__border-top {
+		position: absolute;
+		top: 0;
+		height: $fui-list-cell-borderwidth;
+		z-index: 1;
+		pointer-events: none;
+	}
+
+	.fui-cell__border-bottom {
+		position: absolute;
+		bottom: 0;
+		height: $fui-list-cell-borderwidth;
+		z-index: 1;
+		pointer-events: none;
+	}
+
+	.fui-cell__border-color {
+		background-color: $fui-color-border !important;
+	}
+
+	.fui-list__cell-background {
+		background-color: $fui-bg-color !important;
+	}
+
+	.fui-list__cell-highlight {
+		background-color: $fui-bg-color-hover !important;
+	}
+
+	.fui-list__cell-padding {
+		padding: $fui-list-cell-padding !important;
+	}
+
+	.fui-list__cell-arrowcolor {
+		border-color: $fui-list-cell-arrowcolor !important;
+	}
+
+	.fui-list__cell-bleft {
+		left: $fui-list-cell-bottomleft !important;
+	}
+</style>

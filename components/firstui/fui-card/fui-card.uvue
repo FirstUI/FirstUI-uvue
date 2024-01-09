@@ -1,0 +1,250 @@
+<template>
+	<view class="fui-card__wrap"
+		:class="{'fui-card__full':full,'fui-card__border':showBorder,'fui-card__border-radius':showBorder && !full,'fui-card__border-color':borderColor==''}"
+		:style="{margin:margin,background:background,borderRadius:full?'0px':radius,'box-shadow':showBorder?'none':shadow,borderColor:borderColor}"
+		@tap="handleClick">
+		<view class="fui-card__header" v-if="tag!='' || title!='' || src!=''"
+			:class="{'fui-card__header-line':headerLine,'fui-card__bottom-bcolor':lineColor!='' && headerLine}"
+			:style="{'border-top-left-radius':full?'0px':radius,'border-top-right-radius':full?'0px':radius,'border-bottom-color':headerLine?lineColor:'transparent',padding:padding,background:headerBackground}">
+			<view class="fui-card__header-left">
+				<image :src="src" class="fui-card__header-thumb" v-if="src!=''"
+					:style="{height:`${height}rpx`,width:`${width}rpx`,borderRadius:imageRadius}"></image>
+				<text class="fui-card__header-title" :style="{fontSize:`${size}rpx`,color:color}"
+					v-if="title!=''">{{title}}</text>
+			</view>
+			<text class="fui-card__header-right" v-if="tag!=''"
+				:style="{fontSize:`${tagSize}rpx`,color:tagColor}">{{tag}}</text>
+		</view>
+		<view class="fui-card__body" :class="{'fui-card__header-line':footerLine}">
+			<slot></slot>
+		</view>
+		<view class="fui-card__footer"
+			:style="{'border-bottom-left-radius':full?'0px':radius,'border-bottom-right-radius':full?'0px':radius}">
+			<slot name="footer"></slot>
+		</view>
+	</view>
+</template>
+
+<script>
+	/**
+	 * Card 卡片
+	 * @description Card 卡片，常用的布局组件。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} margin {String} margin值：
+	 * @property {Boolean} full	{Boolean} 是否通栏，圆角失效
+	 * @property {String} background {String} 背景色
+	 * @property {String} radius {String} 圆角值
+	 * @property {String} shadow {String} 阴影，showBorder为false时有效
+	 * @property {Boolean} showBorder {Boolean} 是否显示边框，为true时box-shadow失效
+	 * @property {String} borderColor {String} 边框颜色
+	 * @property {String} headerBackground {String}	header部分背景色
+	 * @property {Boolean} headerLine {Boolean} 是否需要header底部线条
+	 * @property {Boolean} footerLine {Boolean}	是否需要内容与footer之间线条	
+	 * @property {String} lineColor {String} header 底部线条颜色
+	 * @property {String} padding {String} header padding值
+	 * @property {String} src {String} 头像，图标图片地址
+	 * @property {Number} width	{Number} 图片宽度，单位rpx
+	 * @property {Number} height {Number}图片高度，单位rpx
+	 * @property {String} imageRadius {String} 图片圆角
+	 * @property {String} title {String} 标题
+	 * @property {Number} size {Number} 标题字体大小，单位rpx
+	 * @property {String} color {String} 标题字体颜色
+	 * @property {String} tag {String} 标签，额外信息
+	 * @property {Number} tagSize {Number} 标签字体大小，单位rpx
+	 * @property {String} tagColor {String}	标签字体颜色
+	 * @property {Number} index {Number} 索引
+	 * @event {Function} click 点击Card时触发，返回传入的索引值，(event: Number) => void
+	 */
+	export default {
+		name: "fui-card",
+		emits: ['click'],
+		props: {
+			margin: {
+				type: String,
+				default: '0 32rpx'
+			},
+			full: {
+				type: Boolean,
+				default: false
+			},
+			background: {
+				type: String,
+				default: '#fff'
+			},
+			radius: {
+				type: String,
+				default: '16rpx'
+			},
+			shadow: {
+				type: String,
+				default: '0 2rpx 4rpx 0 rgba(2, 4, 38, 0.05)'
+			},
+			showBorder: {
+				type: Boolean,
+				default: false
+			},
+			borderColor: {
+				type: String,
+				default: ''
+			},
+			headerBackground: {
+				type: String,
+				default: '#fff'
+			},
+			headerLine: {
+				type: Boolean,
+				default: true
+			},
+			footerLine: {
+				type: Boolean,
+				default: false
+			},
+			lineColor: {
+				type: String,
+				default: '#EEEEEE'
+			},
+			padding: {
+				type: String,
+				default: '20rpx'
+			},
+			src: {
+				type: String,
+				default: ''
+			},
+			width: {
+				type: Number,
+				default: 64
+			},
+			height: {
+				type: Number,
+				default: 64
+			},
+			imageRadius: {
+				type: String,
+				default: '8rpx'
+			},
+			title: {
+				type: String,
+				default: ''
+			},
+			size: {
+				type: Number,
+				default: 30
+			},
+			color: {
+				type: String,
+				default: '#7F7F7F'
+			},
+			tag: {
+				type: String,
+				default: ''
+			},
+			tagSize: {
+				type: Number,
+				default: 24
+			},
+			tagColor: {
+				type: String,
+				default: '#b2b2b2'
+			},
+			index: {
+				type: Number,
+				default: 0
+			}
+		},
+		data() {
+			return {};
+		},
+		methods: {
+			handleClick() {
+				this.$emit('click', this.index)
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-border: #EEEEEE !default;
+	$fui-card-border-width: 0.5px !default;
+
+	.fui-card__wrap {
+		box-sizing: border-box;
+		overflow: hidden;
+	}
+
+	.fui-card__full {
+		margin-left: 0px !important;
+		margin-right: 0px !important;
+		border-radius: 0px !important;
+	}
+
+
+	.fui-card__border {
+		position: relative;
+		box-shadow: none !important;
+		border-width: $fui-card-border-width;
+		border-style: solid;
+		box-sizing: border-box;
+	}
+
+	.fui-card__border-color {
+		border-color: $fui-color-border !important;
+	}
+
+
+	.fui-card__header {
+		width: 100%;
+		overflow: hidden;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		box-sizing: border-box;
+		position: relative;
+	}
+
+	.fui-card__header-left {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.fui-card__header-line {
+		position: relative;
+		border-bottom-width: $fui-card-border-width;
+		border-bottom-style: solid;
+		box-sizing: border-box;
+	}
+
+	.fui-card__bottom-bcolor {
+		border-bottom-color: $fui-color-border !important;
+	}
+
+
+	.fui-card__header-thumb {
+		margin-right: 20rpx;
+		flex-shrink: 0;
+	}
+
+	.fui-card__header-title {
+		max-width: 380rpx;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		lines: 1;
+	}
+
+	.fui-card__header-right {
+		flex-shrink: 0;
+		text-align: right;
+	}
+
+	.fui-card__body {
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.fui-card__footer {
+		width: 100%;
+		box-sizing: border-box;
+	}
+</style>

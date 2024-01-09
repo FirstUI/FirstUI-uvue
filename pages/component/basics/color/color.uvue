@@ -1,0 +1,66 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Color</text>
+				<text class="fui-page__desc">Color 色彩，First UI用色指南。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<template v-for="(item,index) in colors" :key="item.key">
+					<fui-section :title="item.text" :is-line="true" padding="0" :margin-bottom="32"
+						:margin-top="index==0?0:64"></fui-section>
+					<view @tap="getColor(model.gradual ?? model.value)" v-for="(model,idx) in item.data" :key="idx"
+						class="fui-color__item fui-page__spacing" :style="{background:model.gradual ?? model.value}">
+						<text class="fui-text" :style="{color:model.color}">{{model.text}}</text>
+						<text class="fui-text" :style="{color:model.color}">{{model.value}}</text>
+					</view>
+				</template>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	import {type IColorType, colors } from './color.uts';
+	export default {
+		data() {
+			return {
+				colors: colors as IColorType[]
+			}
+		},
+		methods: {
+			getColor(color : string) {
+				this.fui.toast(color)
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-color__item {
+		/* #ifndef UNI-APP-X */
+		display: flex;
+		/* #endif */
+		width: 100%;
+		justify-content: space-between;
+		flex-direction: row;
+		align-items: center;
+		height: 84rpx;
+		border-radius: 42px;
+		margin-bottom: 24rpx;
+		box-shadow: 0 4rpx 8rpx 0 rgba(2, 4, 38, 0.05);
+		/* #ifdef H5 */
+		cursor: pointer;
+		/* #endif */
+	}
+
+	.fui-text {
+		font-size: 28rpx;
+		font-weight: normal;
+		color: #fff;
+	}
+</style>

@@ -1,0 +1,110 @@
+<template>
+	<view class="fui-row__box" :class="[justifyClass,alignClass]" :style="{marginTop:marginTop,marginBottom:marginBottom,marginLeft:`-${marginValue}rpx`,
+		marginRight:`-${marginValue}rpx`}">
+		<slot></slot>
+	</view>
+</template>
+
+<script>
+	/**
+	 * Layout 栅格布局
+	 * @description Layout 栅格布局，将整个屏幕宽度分为 24 单位，每个单位的大小，由当前屏幕尺寸决定。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} justify {String} flex布局下的水平排列方式，可取值：start、end、center、space-around、space-between
+	 * @property {String} align {String} flex布局下的垂直排列方式，可取值：top、middle、bottom
+	 * @property {String} marginTop {String} margin-top值，传值需要带单位
+	 * @property {String} marginBottom {String}	margin-bottom值，传值需要带单位
+	 * @property {Number} gutter {Number} 栅格间隔，单位rpx
+	 * @property {Number} width {Number} 如果使用span等属性，需要配置宽度，单位rpx
+	 */
+	export default {
+		name: "fui-row",
+		provide() {
+			return {
+				fuiRow: this
+			}
+		},
+		props: {
+			//水平排列方式 start/end/center/space-around/space-between
+			justify: {
+				type: String,
+				default: 'start'
+			},
+			//垂直排列方式 top/middle/bottom
+			align: {
+				type: String,
+				default: 'top'
+			},
+			marginTop: {
+				type: String,
+				default: '0'
+			},
+			marginBottom: {
+				type: String,
+				default: '0'
+			},
+			//栅格间隔
+			gutter: {
+				type: Number,
+				default: 0
+			},
+			// nvue如果使用span等属性，需要配置宽度
+			width: {
+				type: Number,
+				default: 750
+			}
+		},
+		data() {
+			return {
+				flex: false
+			}
+		},
+		computed: {
+			marginValue() : number {
+				return this.gutter / 2;
+
+				// return 0;
+			},
+			justifyClass() : string {
+				return this.justify != 'start' ? `fui-row__${this.justify}` : ''
+			},
+			alignClass() : string {
+				return this.align != 'top' ? `fui-row__${this.align}` : ''
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.fui-row__box {
+		width: 100%;
+		display: flex;
+		position: relative;
+		flex-direction: row;
+		box-sizing: border-box;
+	}
+
+	.fui-row__middle {
+		align-items: center;
+	}
+
+	.fui-row__bottom {
+		align-items: flex-end;
+	}
+
+	.fui-row__end {
+		justify-content: flex-end;
+	}
+
+	.fui-row__center {
+		justify-content: center;
+	}
+
+	.fui-row__space-around {
+		justify-content: space-around;
+	}
+
+	.fui-row__space-between {
+		justify-content: space-between;
+	}
+</style>

@@ -1,0 +1,155 @@
+<template>
+	<view class="fui-toast__wrap" :class="[position=='bottom'?'fui-toast__bottom':'fui-toast__center']" :ref="refId">
+		<view class="fui-toast__inner" :style="{padding:padding,background:background,zIndex:zIndex}">
+			<slot></slot>
+			<view class="fui-toast__icon-box" v-if="src!=''" :style="{width:`${width}rpx`,height:`${width}rpx`}">
+				<image class="fui-toast__icon" :src="src"
+					:style="{width:`${width}rpx`,height:`${width}rpx`,borderRadius:`${radius}rpx`}">
+				</image>
+			</view>
+			<text class="fui-toast__text" :style="{fontSize:`${size}rpx`,color:color}" v-if="text!=''">{{text}}</text>
+		</view>
+	</view>
+</template>
+
+<script>
+	import { FuiToastShowParam } from '../fui-types/index.uts';
+	/**
+	 * Toast 轻提示
+	 * @description Toast 轻提示，一种轻量级反馈/提示，适合用于页面转场、数据交互的等场景中。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} padding {String} 提示框padding值，
+	 * @property {String} background {String} 提示框背景颜色
+	 * @property {Number} width	{Number} 图标宽度（高度与宽度一致），单位rpx
+	 * @property {Number} radius {Number} 图标圆角大小，单位rpx
+	 * @property {Number} size {Number} 提示信息字体大小，单位rpx
+	 * @property {String} color {String} 提示信息文本颜色	
+	 * @property {String} position {String} 提示信息显示位置，可选值：center、bottom	
+	 * @property {Number} zIndex {Number} 提示框z-index值
+	 * @method {Function} show 传入参数，显示提示信息：(options : FuiToastShowParam) => void
+	 */
+	export default {
+		name: "fui-toast",
+		props: {
+			padding: {
+				type: String,
+				default: '32rpx'
+			},
+			background: {
+				type: String,
+				default: 'rgba(0,0,0,.6)'
+			},
+			width: {
+				type: Number,
+				default: 64
+			},
+			radius: {
+				type: Number,
+				default: 0
+			},
+			size: {
+				type: Number,
+				default: 30
+			},
+			color: {
+				type: String,
+				default: '#fff'
+			},
+			position: {
+				type: String,
+				default: 'center'
+			},
+			zIndex: {
+				type: Number,
+				default: 1001
+			}
+		},
+		data() {
+			const refToastId = `fui_toast_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				timer: null as number | null,
+				src: '',
+				text: '',
+				refId: refToastId,
+				element: null as null | Element
+			};
+		},
+		beforeUnmount() {
+			if (this.timer != null) clearTimeout(this.timer as number);
+			this.timer = null;
+		},
+		methods: {
+			show(options : FuiToastShowParam) {
+				if (this.timer != null) clearTimeout(this.timer as number);
+				this.text = options.text == null ? '' : (options.text as string);
+				this.src = options.src == null ? '' : (options.src as string);
+				const duration = options.duration == null ? 2000 : (options.duration as number);
+				if (this.element == null) {
+					this.element = this.$refs[this.refId] as Element;
+				}
+				this.$nextTick(() => {
+					setTimeout(() => {
+						this.element!.style.setProperty('opacity', '1')
+						this.element!.style.setProperty('visibility', 'visible');
+						this.timer = setTimeout(() => {
+							this.element!.style.setProperty('opacity', '0')
+							if (this.timer != null) clearTimeout(this.timer as number);
+							this.timer = null;
+							setTimeout(() => {
+								this.element!.style.setProperty('visibility', 'hidden');
+							}, 250)
+						}, duration);
+					}, 50);
+				});
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.fui-toast__wrap {
+		position: fixed;
+		left: 15%;
+		right: 15%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition-property: opacity, visibility;
+		transition-timing-function: ease-in-out;
+		transition-duration: 0.25s;
+		visibility: hidden;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.fui-toast__center {
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.fui-toast__bottom {
+		bottom: 160rpx;
+		transform: translateY(0);
+	}
+
+	.fui-toast__inner {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		border-radius: 16rpx;
+		overflow: hidden;
+		box-sizing: border-box;
+	}
+
+	.fui-toast__icon-box {
+		padding-bottom: 20rpx;
+		box-sizing: content-box;
+		flex-shrink: 0;
+	}
+
+	.fui-toast__text {
+		font-weight: 400;
+		text-align: center;
+	}
+</style>

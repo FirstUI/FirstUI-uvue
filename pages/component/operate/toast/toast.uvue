@@ -1,0 +1,78 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Toast</text>
+				<text class="fui-page__desc">Toast 轻提示，一种轻量级反馈/提示，适合用于页面转场、数据交互的等场景中。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<fui-button type="gray" btn-size="medium" text="带图标提示" :bold="true" margin="24rpx"
+					@click="showToast(1)"></fui-button>
+				<fui-button type="gray" btn-size="medium" text="无图标提示" :bold="true" @click="showToast(2)">
+				</fui-button>
+				<fui-button type="gray" btn-size="medium" text="自定义内容" margin="24rpx" :bold="true"
+					@click="showToast(3)">
+				</fui-button>
+			</view>
+			<fui-toast ref="toast" :radius="16"></fui-toast>
+
+			<!--自定义内容-->
+			<fui-toast ref="toastRef">
+				<view class="fui-toast__custom">
+					<fui-icon name="checkbox" color="#fff"></fui-icon>
+					<text class="fui-toast__txt">操作成功</text>
+				</view>
+			</fui-toast>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	import { ComponentPublicInstance } from 'vue'
+	import { FuiToastShowParam } from '@/components/firstui/fui-types/index.uts'
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+			showToast(type : number) {
+				let options = {} as FuiToastShowParam
+				if (type == 3) {
+					//写法一：仅在easycom模式下使用
+					(this.$refs['toastRef'] as FuiToastComponentPublicInstance).show(options)
+				} else {
+					if (type == 1) {
+						options.src = "/static/images/common/img_logo.png";
+						options.text = 'First UI !';
+					} else if (type == 2) {
+						options.text = '请输入手机号';
+					}
+					//写法二
+					(this.$refs['toast'] as ComponentPublicInstance).$callMethod('show', options)
+				}
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-page__bd,
+	.fui-toast__custom {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+
+	.fui-toast__txt {
+		font-size: 32rpx;
+		color: #FFFFFF;
+		padding-top: 12rpx;
+	}
+</style>

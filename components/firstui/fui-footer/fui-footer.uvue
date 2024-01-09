@@ -1,0 +1,218 @@
+<template>
+	<view class="fui-footer" :class="[isFixed?'fui-footer__fixed-bottom':'']" :style='{background:background}'>
+		<view class="fui-footer__link" v-if="navigateLen>0">
+			<view v-for="(item,index) in navigate" :key="index" hover-class="fui-link-hover" :hover-stay-time="150"
+				@tap="onTap(item)">
+				<text class="fui-link__text"
+					:class="{'fui-link__color':item.color==null || item.color=='','fui-link__text-border':index==navigateLen-1}"
+					:style="{color:item.color,fontSize:`${item.size==null?28:item.size}rpx`,borderColor:borderColor,lineHeight:`${item.size==null?28:item.size}rpx`}">{{item.text}}</text>
+			</view>
+		</view>
+		<text class="fui-footer__text" :class="{'fui-as__safe-weex':iphoneX && safeArea}"
+			:style="{color:color,fontSize:`${size}rpx`}">{{text}}</text>
+	</view>
+</template>
+
+<script>
+	import type { PropType } from 'vue'
+	import { FuiFooterNavigateParam } from '../fui-types/index.uts'
+	/**
+	 * Footer 页脚
+	 * @description Footer 页脚，主要使用场景：页面底部显示导航链接、版权等信息。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Array} navigate { Array&lt;FuiFooterNavigateParam&gt; } 导航链接设置 <br/><br/> text { String } 链接文本 <br/> url { String } 链接<br/>  openType { String }<br/>  delta { number } <br/> color { String } <br/>  size { Number }
+	 * @property {Boolean} cancelNav {Boolean} 是否取消 navigate 中链接跳转，使用click事件自行处理
+	 * @property {String} text {String}	底部文本，版权信息
+	 * @property {String} color	{String} 文本字体颜色
+	 * @property {Number} size {Number} 文本字体大小，单位rpx
+	 * @property {String} background {String} footer背景颜色
+	 * @property {String} borderColor {String} 导航链接之间分隔线颜色
+	 * @property {Boolean} isFixed {Boolean} 是否固定在底部
+	 * @property {Boolean} safeArea {Boolean} 是否适配底部安全区
+	 * @event {Function} click 点击链接时触发，(event: FuiFooterNavigateParam) => void
+	 */
+	export default {
+		name: "fui-footer",
+		emits: ['click'],
+		props: {
+			//链接设置
+			navigate: {
+				type: Array as PropType<FuiFooterNavigateParam[]>,
+				default: () : FuiFooterNavigateParam[] => [] as FuiFooterNavigateParam[]
+			},
+			//
+			cancelNav: {
+				type: Boolean,
+				default: false
+			},
+			//底部文本
+			text: {
+				type: String,
+				default: ''
+			},
+			//文本字体颜色
+			color: {
+				type: String,
+				default: "#B2B2B2"
+			},
+			//文本字体大小
+			size: {
+				type: Number,
+				default: 24
+			},
+			//footer背景颜色
+			background: {
+				type: String,
+				default: "rgba(0,0,0,0)"
+			},
+			//分隔线颜色，仅nvue生效
+			borderColor: {
+				type: String,
+				default: '#B2B2B2'
+			},
+			//是否固定在底部
+			isFixed: {
+				type: Boolean,
+				default: false
+			},
+			//是否适配底部安全区
+			safeArea: {
+				type: Boolean,
+				default: true
+			}
+		},
+		computed: {
+			navigateLen() : number {
+				//TODO：此处应该是开发工具还未适配
+				let len = 0;
+				if (Array.isArray(this.navigate)) {
+					len = this.navigate.length
+				}
+				return len;
+			}
+		},
+		data() {
+			return {
+				iphoneX: false
+			}
+		},
+		created() {
+			// #ifdef APP-IOS  || MP || H5
+			this.iphoneX = this.isPhoneX();
+			// #endif
+		},
+		methods: {
+			// #ifdef APP-IOS  || MP || H5
+			isPhoneX() : boolean {
+				if (!this.safeArea) return false;
+				//34px
+				const res : GetSystemInfoResult = uni.getSystemInfoSync();
+				let iphonex = false;
+				let models = ['iphonex', 'iphonexr', 'iphonexsmax']
+				for (let i = 11; i < 20; i++) {
+					models.push(`iphone${i}`)
+					models.push(`iphone${i}mini`)
+					models.push(`iphone${i}pro`)
+					models.push(`iphone${i}promax`)
+				}
+				const model = res.model.replace(/\s/g, "").toLowerCase()
+				const newModel = model.split('<')[0]
+				if (models.includes(model) || models.includes(newModel) || res.safeAreaInsets.bottom > 0) {
+					iphonex = true;
+				}
+				return iphonex;
+			},
+			// #endif
+			onTap(item : FuiFooterNavigateParam) {
+				this.$emit('click', item)
+				if ((item.url != null || item.openType == 'navigateBack') && !this.cancelNav) {
+					//navigate、redirect、switchTab、reLaunch、navigateBack
+					//delta
+					if (item.openType == null || item.openType == 'navigate') {
+						uni.navigateTo({
+							url: item.url as string
+						})
+					} else if (item.openType == 'redirect') {
+						uni.redirectTo({
+							url: item.url as string
+						})
+					} else if (item.openType == 'switchTab') {
+						uni.switchTab({
+							url: item.url as string
+						})
+					} else if (item.openType == 'reLaunch') {
+						uni.reLaunch({
+							url: item.url as string
+						})
+					} else if (item.openType == 'navigateBack') {
+						uni.navigateBack({
+							delta: item.delta == null ? 1 : item.delta as number
+						})
+					}
+				}
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-link: #465CFF !default;
+
+	.fui-footer {
+		width: 100%;
+		/* #ifndef UNI-APP-X */
+		word-break: break-all;
+		/* #endif */
+		overflow: hidden;
+		padding: 32rpx;
+		box-sizing: border-box;
+	}
+
+	.fui-footer__fixed-bottom {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 9;
+	}
+
+	.fui-footer__link {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.fui-link__color {
+		color: $fui-color-link !important;
+	}
+
+	.fui-link__text {
+		padding: 0 18rpx;
+		border-right-width: 0.5px;
+		border-right-style: solid;
+		font-weight: 400;
+	}
+
+	.fui-link__text-border {
+		border-right-width: 0;
+	}
+
+	.fui-link-hover {
+		opacity: 0.5
+	}
+
+	.fui-footer__text {
+		width: 100%;
+		padding-top: 8rpx;
+		font-weight: 400;
+		text-align: center;
+	}
+
+	/* #ifdef APP-IOS */
+	.fui-as__safe-weex {
+		padding-bottom: 34px;
+	}
+
+	/* #endif */
+</style>

@@ -1,0 +1,538 @@
+<template>
+	<view class="fui-textarea__wrap"
+		:class="{'fui-textarea__flex-start':flexStart,'fui-textarea__border-uvue':textareaBorder,'fui-textarea__border-color':textareaBorder && borderColor=='','fui-textarea__border-top':!textareaBorder && borderTop,'fui-textarea__bordertop-color':!textareaBorder && borderTop && borderColor=='','fui-textarea__border-bottom':!textareaBorder && borderBottom,'fui-textarea__borderbtm-color':!textareaBorder && borderBottom && borderColor=='','fui-textarea__disabled-styl':disabled && disabledStyle}"
+		:style="getStyle" @tap="fieldClick">
+		<view class="fui-textarea__required" :class="{'fui-textarea__required-top':flexStart}" v-if="required">
+			<text class="fui-textarea__asterisk-text" :class="{'fui-textarea__asterisk-color':requiredColor==''}"
+				:style="{color:requiredColor}">*</text>
+		</view>
+		<view class="fui-textarea__label" :style="{minWidth:labelWidth+'rpx'}" v-if="label">
+			<text :class="{'fui-textarea__label-size':labelSize==0}"
+				:style="{fontSize:`${labelSize}rpx`,lineHeight:`${labelSize}rpx`,color:labelColor}">{{label}}</text>
+		</view>
+		<slot name="left"></slot>
+		<view class="fui-textarea__flex-1">
+			<textarea :ref="refId" class="fui-textarea__self"
+				:class="{'fui-textarea__disabled':disabled,'fui-textarea__size':size==0}"
+				:style="{textAlign:textAlign, height:height,minHeight:minHeight,fontSize:`${size}rpx`,color:color}"
+				placeholder-class="fui-textarea-placeholder" :name="name" :value="val" :placeholder="placeholder"
+				:placeholderStyle="placeholderStyle" :disabled="disabled" :cursor-spacing="cursorSpacing"
+				:maxlength="maxlength" :auto-height="autoHeight" :show-confirm-bar="showConfirmBar" :cursor="cursor"
+				:selection-start="selectionStart" :selection-end="selectionEnd" :adjust-position="adjustPosition"
+				:hold-keyboard="holdKeyboard" @focus="onFocus" @blur="onBlur" @input="onInput" @confirm="onConfirm"
+				@linechange="onLinechange" @keyboardheightchange="onKeyboardheightchange"></textarea>
+			<view class="fui-textarea__counter" v-if="isCounter">
+				<text
+					:style="{fontSize:`${counterSize}rpx`,color:counterColor}">{{maxlength!=-1?`${count}/${maxlength}`:count}}</text>
+			</view>
+		</view>
+		<slot></slot>
+	</view>
+</template>
+
+<script>
+	import { ComponentPublicInstance } from 'vue'
+	/**
+	 * Textarea 多行输入框
+	 * @description Textarea 多行输入框，该组件是对原生textarea组件的增强，内置了常用布局样式，同时包含 textarea 所有功能。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Boolean} required	{Boolean} 是否显示必填图标
+	 * @property {String} requiredColor {String} 必填图标颜色
+	 * @property {String} label {String} 左侧标题
+	 * @property {Number} labelSize {Number} 标题字体大小
+	 * @property {String} labelColor {String} 标题字体颜色
+	 * @property {Number} labelWidth {Number} 标题最小宽度，单位rpx
+	 * @property {Boolean} focus {Boolean} 获取焦点
+	 * @property {Boolean} autoHeight {Boolean} 是否自动增高，设置auto-height时，style.height不生效
+	 * @property {String} placeholder {String} 输入框为空时占位符
+	 * @property {String} placeholderStyle {String} 指定 placeholder 的样式
+	 * @property {String} name {String} 输入框名称
+	 * @property {String} value	{String} 输入框值，vue2使用
+	 * @property {String} modelValue {String} 输入框值，vue3使用
+	 * @property {Boolean} disabled	{Boolean} 是否禁用
+	 * @property {Boolean} disabledStyle {Boolean} 是否启用禁用状态下的样式，与正常输入框样式略有区别，仅disabled为true时有效
+	 * @property {Number} maxlength {Number} 最大输入长度，设置为 -1 的时候不限制最大长度
+	 * @property {Number} cursorSpacing {Number} 指定光标与键盘的距离，单位 px
+	 * @property {Boolean} showConfirmBar {Boolean} 是否显示键盘上方带有”完成“按钮那一栏。
+	 * @property {Number} cursor {Number} 指定focus时的光标位置
+	 * @property {Number} selectionStart {Number} 光标起始位置，自动聚集时有效，需与selection-end搭配使用
+	 * @property {Number} selectionEnd {Number} 光标结束位置，自动聚集时有效，需与selection-start搭配使用
+	 * @property {Boolean} adjustPosition {Boolean} 键盘弹起时，是否自动上推页面
+	 * @property {Boolean} holdKeyboard	{Boolean} focus时，点击页面的时候不收起键盘
+	 * @property {String} height {String} 输入框高度，需要带单位，如40rpx
+	 * @property {String} minHeight {String} 输入框最小高度，需要带单位，如40rpx
+	 * @property {Boolean} flexStart {Boolean} 标题与输入框是否顶端对齐
+	 * @property {Number} size {Number}	输入框字体大小，单位 rpx
+	 * @property {String} color {String} 输入框字体颜色	
+	 * @property {Boolean} textareaBorder {Boolean}	是否显示textarea边框，为true则属性borderTop，borderBottom失效
+	 * @property {Boolean} borderTop {Boolean} 是否显示上边框
+	 * @property {Boolean} borderBottom {Boolean} 是否显示下边框
+	 * @property {String} borderColor {String} 边框颜色
+	 * @property {Number} radius {Number} 圆角值，单位rpx
+	 * @property {Boolean} trim {Boolean} 是否自动去除两端的空格
+	 * @property {String} textAlign {String} 输入框内容对齐方式，可选值：left、center、right
+	 * @property {String} padding {String} 输入框padding值
+	 * @property {String} backgroundColor {String} 输入框背景颜色
+	 * @property {Number} marginTop {Number} 输入框margin-top值，单位rpx
+	 * @property {Boolean} isCounter {Boolean} 是否显示底部输入长度计数
+	 * @property {String} counterColor {String} 计数文本颜色
+	 * @property {Number} counterSize {Number} 计数文本字体大小，单位rpx
+	 * @event {Function} input 当键盘输入时，触发input事件，(event: string) => void
+	 * @event {Function} update:modelValue 输入框值改变时触发，用于双向绑定，(event: string) => void
+	 * @event {Function} focus 输入框聚焦时触发，(event: TextareaFocusEvent) => void
+	 * @event {Function} blur 输入框失去焦点时触发，(event: TextareaBlurEvent) => void
+	 * @event {Function} confirm 点击完成时，触发事件，(event: InputConfirmEvent) => void
+	 * @event {Function} click 点击输入框时触发，返回name值，(event:string) => void
+	 * @event {Function} linechange 输入框行数变化时调用，(event: TextareaLineChangeEvent) => void
+	 * @event {Function} keyboardheightchange 键盘高度发生变化的时候触发此事件，(event: InputKeyboardHeightChangeEvent) => void
+	 */
+	export default {
+		name: "fui-textarea",
+		emits: ['input', 'update:modelValue', 'focus', 'blur', 'confirm', 'click', 'linechange', 'keyboardheightchange'],
+		props: {
+			required: {
+				type: Boolean,
+				default: false
+			},
+			requiredColor: {
+				type: String,
+				default: ''
+			},
+			label: {
+				type: String,
+				default: ''
+			},
+			labelSize: {
+				type: Number,
+				default: 32
+			},
+			labelColor: {
+				type: String,
+				default: '#333'
+			},
+			labelWidth: {
+				type: Number,
+				default: 140
+			},
+			focus: {
+				type: Boolean,
+				default: false
+			},
+			autoHeight: {
+				type: Boolean,
+				default: false
+			},
+			placeholder: {
+				type: String,
+				default: ''
+			},
+			placeholderStyle: {
+				type: String,
+				default: ''
+			},
+			name: {
+				type: String,
+				default: ''
+			},
+			value: {
+				type: Object,
+				default: ''
+			},
+			modelValue: {
+				type: Object,
+				default: ''
+			},
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			disabledStyle: {
+				type: Boolean,
+				default: false
+			},
+			maxlength: {
+				type: Number,
+				default: 140
+			},
+			cursorSpacing: {
+				type: Number,
+				default: 0,
+			},
+			showConfirmBar: {
+				type: Boolean,
+				default: true
+			},
+			cursor: {
+				type: Number,
+				default: -1
+			},
+			selectionStart: {
+				type: Number,
+				default: -1
+			},
+			selectionEnd: {
+				type: Number,
+				default: -1
+			},
+			adjustPosition: {
+				type: Boolean,
+				default: true
+			},
+			holdKeyboard: {
+				type: Boolean,
+				default: false
+			},
+			height: {
+				type: String,
+				default: '200rpx'
+			},
+			minHeight: {
+				type: String,
+				default: '30rpx'
+			},
+			flexStart: {
+				type: Boolean,
+				default: false
+			},
+			size: {
+				type: Number,
+				default: 32
+			},
+			color: {
+				type: String,
+				default: '#333'
+			},
+			textareaBorder: {
+				type: Boolean,
+				default: false
+			},
+			borderTop: {
+				type: Boolean,
+				default: true
+			},
+			borderBottom: {
+				type: Boolean,
+				default: true
+			},
+			borderColor: {
+				type: String,
+				default: ''
+			},
+			radius: {
+				type: Number,
+				default: 0
+			},
+			trim: {
+				type: Boolean,
+				default: true
+			},
+			textAlign: {
+				type: String,
+				default: 'left'
+			},
+			padding: {
+				type: String,
+				default: '32rpx'
+			},
+			backgroundColor: {
+				type: String,
+				default: '#FFFFFE'
+			},
+			marginTop: {
+				type: Number,
+				default: 0
+			},
+			isCounter: {
+				type: Boolean,
+				default: false
+			},
+			counterColor: {
+				type: String,
+				default: '#B2B2B2'
+			},
+			counterSize: {
+				type: Number,
+				default: 28
+			}
+		},
+		computed: {
+			getStyle() : object {
+				const mp : Map<string, string> = new Map();
+				mp.set('padding', this.padding);
+				mp.set('background', this.backgroundColor);
+				mp.set('margin-top', `${this.marginTop}rpx`);
+				mp.set('border-radius', `${this.radius}rpx`);
+				if (this.textareaBorder && this.borderColor != '') mp.set('border-color', this.borderColor);
+				if (!this.textareaBorder && this.borderTop && this.borderColor != '') mp.set('border-top-color', this.borderColor);
+				if (!this.textareaBorder && this.borderBottom && this.borderColor != '') mp.set('border-bottom-color', this.borderColor);
+				return mp;
+			}
+		},
+		data() {
+			const refTextAreatId = `fui_textarea_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				refId: refTextAreatId,
+				count: 0,
+				val: '',
+				fuiForm: null as null | ComponentPublicInstance
+			};
+		},
+		watch: {
+			focus(val) {
+				this.$nextTick(() => {
+					setTimeout(() => {
+						this.setFocusOrBlur(val)
+					}, 50)
+				})
+			},
+			modelValue(newVal) {
+				this.val = this.getStringVal(newVal)
+				this.count = this.getCount(this.val.length)
+			},
+			value(newVal) {
+				this.val = this.getStringVal(newVal)
+				this.count = this.getCount(this.val.length)
+			}
+		},
+		created() {
+			setTimeout(() => {
+				const value = this.getStringVal(this.value)
+				const modelValue = this.getStringVal(this.modelValue)
+				if (value != '') {
+					this.val = value
+				} else if (modelValue != '') {
+					this.val = modelValue
+				}
+				this.count = this.getCount(this.val.length)
+				//用于submit、reset事件
+				const isForm = this.getParent('fui-form');
+				if (isForm) {
+					const form = this.fuiForm as ComponentPublicInstance
+					(form.$data['formChildren'] as ComponentPublicInstance[]).push(this);
+				}
+			}, 50)
+		},
+		mounted() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					this.setFocusOrBlur(this.focus)
+				}, 300)
+			})
+		},
+		methods: {
+			getStringVal(val : any) : string {
+				let str : string;
+				if (typeof val == 'string') {
+					str = val as string;
+				} else if (typeof val == 'number') {
+					str = (val as number).toString()
+				} else if (val instanceof Int) {
+					str = Number.from(val).toString()
+				} else {
+					//不应该走到这里
+					str = val.toString()
+				}
+				return str;
+			},
+			setFocusOrBlur(focus : boolean) {
+				if (focus) {
+					(this.$refs[this.refId] as Element).focus()
+				} else {
+					(this.$refs[this.refId] as Element).blur()
+				}
+			},
+			getCount(len : number) : number {
+				const max = this.maxlength;
+				return len > max && max != -1 ? max : len
+			},
+			onInput(event : InputEvent) {
+				let value = event.detail.value;
+				if (this.trim) value = this.trimStr(value);
+				let len = value.length as number;
+				const max = this.maxlength;
+				if (len > max && max != -1) {
+					len = max;
+					value = value.substring(0, max - 1)
+				}
+				this.count = len;
+				this.val = value;
+				this.$emit('input', value);
+				this.$emit('update:modelValue', value)
+			},
+			onFocus(event : TextareaFocusEvent) {
+				this.$emit('focus', event);
+			},
+			onBlur(event : TextareaBlurEvent) {
+				this.$emit('blur', event);
+			},
+			onConfirm(event : InputConfirmEvent) {
+				this.$emit('confirm', event);
+			},
+			fieldClick() {
+				this.$emit('click', this.name);
+			},
+			onLinechange(event : TextareaLineChangeEvent) {
+				this.$emit('linechange', event)
+			},
+			onKeyboardheightchange(event : InputKeyboardHeightChangeEvent) {
+				this.$emit('keyboardheightchange', event)
+			},
+			trimStr(str : string) : string {
+				return str.replace(/^\s+|\s+$/g, '');
+			},
+			clear() {
+				this.val = '';
+				this.count = 0;
+				this.$emit('input', '');
+				this.$emit('update:modelValue', '')
+			},
+			getParent(name : string) : boolean {
+				if (this.$parent == null) return false;
+				let parent = this.$parent as ComponentPublicInstance;
+				let parentName = parent.$options['name'];
+				while (parentName != name) {
+					if (parent.$parent == null) return false;
+					parent = parent.$parent as ComponentPublicInstance;
+					if (parent.$options['name'] == '') return false;
+					parentName = parent.$options['name'];
+				}
+				this.fuiForm = parent;
+				return true;
+			},
+			//暂时做重置处理（还原需记录初始值）
+			reset() {
+				this.setFocusOrBlur(false)
+				this.clear()
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-danger: #FF2B2B !default;
+	$fui-color-border: #EEEEEE !default;
+	$fui-placeholder-color: #CCCCCC !default;
+	$fui-textarea-border-width: 0.5px !default;
+	$fui-textarea-label-size: 32rpx !default;
+	$fui-textarea-size: 32rpx !default;
+
+	.fui-textarea__wrap {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		position: relative;
+		border-width: 0;
+		box-sizing: border-box;
+	}
+
+	.fui-textarea__flex-start {
+		align-items: flex-start !important;
+	}
+
+	.fui-textarea__border-uvue {
+		border-width: $fui-textarea-border-width;
+		border-style: solid;
+	}
+
+	.fui-textarea__border-color {
+		border-color: $fui-color-border !important;
+	}
+
+	.fui-textarea__border-top {
+		border-top-width: $fui-input-border-width;
+		border-top-style: solid;
+	}
+
+	.fui-textarea__bordertop-color {
+		border-top-color: $fui-color-border !important;
+	}
+
+	.fui-textarea__border-bottom {
+		border-bottom-width: $fui-input-border-width;
+		border-bottom-style: solid;
+	}
+
+	.fui-textarea__borderbtm-color {
+		border-bottom-color: $fui-color-border !important;
+	}
+
+
+	.fui-textarea__required {
+		position: absolute;
+		left: 12rpx;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding-top: 2rpx;
+	}
+
+	.fui-textarea__required-top {
+		flex-direction: row;
+		align-items: flex-start;
+	}
+
+	.fui-textarea__asterisk-text {
+		font-size: 32rpx;
+		height: 32rpx;
+		line-height: 32rpx;
+	}
+
+	.fui-textarea__asterisk-color {
+		color: $fui-color-danger !important;
+	}
+
+
+	.fui-required__flex-start {
+		transform: translateY(0);
+	}
+
+
+	.fui-textarea__label {
+		padding-right: 12rpx;
+		flex-shrink: 0;
+	}
+
+	.fui-textarea__label-size {
+		font-size: $fui-textarea-label-size !important;
+		line-height: $fui-textarea-label-size !important;
+	}
+
+	.fui-textarea__self {
+		width: 100%;
+		overflow: visible;
+		box-sizing: border-box;
+		padding: 0;
+	}
+
+	.fui-textarea__size {
+		font-size: $fui-textarea-size !important;
+	}
+
+	.fui-textarea-placeholder {
+		color: $fui-placeholder-color;
+		overflow: visible;
+	}
+
+	.fui-textarea__flex-1 {
+		flex: 1;
+	}
+
+	.fui-textarea__counter {
+		width: 100%;
+		padding-top: 8rpx;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+	}
+
+
+	.fui-textarea__disabled {
+		pointer-events: none;
+	}
+
+	.fui-textarea__disabled-styl {
+		opacity: .6;
+	}
+</style>

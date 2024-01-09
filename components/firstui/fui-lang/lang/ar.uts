@@ -1,0 +1,11 @@
+// 阿拉伯语
+export default {
+	actionsheet: {
+		cancel: 'إلغاء'
+	} as UTSJSONObject,
+	dialog: {
+		title: 'العنوان',
+		cancel: 'إلغاء',
+		confirm: 'موافق'
+	} as UTSJSONObject
+} as UTSJSONObject

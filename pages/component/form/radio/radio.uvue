@@ -1,0 +1,154 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Radio</text>
+				<text class="fui-page__desc">Radio 单项选择器。</text>
+			</view>
+			<view class="fui-page__bd">
+				<text class="fui-section__title fui-mtop--0">基本使用</text>
+				<fui-radio-group name="radio" @change="change">
+					<view class="fui-list__item">
+						<fui-label>
+							<view class="fui-align__center">
+								<fui-radio value="1"></fui-radio>
+								<text class="fui-text">选中</text>
+							</view>
+						</fui-label>
+						<fui-label margin="0 0 0 40rpx">
+							<view class="fui-align__center">
+								<fui-radio value="2"></fui-radio>
+								<text class="fui-text">未选中</text>
+							</view>
+						</fui-label>
+					</view>
+				</fui-radio-group>
+				<text class="fui-section__title">推荐布局</text>
+				<fui-radio-group v-model="val">
+					<fui-label v-for="(item,index) in radioItems" :key="index">
+						<fui-list-cell>
+							<view class="fui-align__center">
+								<fui-radio :checked="item.checked" :value="item.value" color="#FFB703"
+									borderColor="#B2B2B2">
+								</fui-radio>
+								<text class="fui-text">{{item.name}}</text>
+							</view>
+						</fui-list-cell>
+					</fui-label>
+				</fui-radio-group>
+				<text class="fui-section__title">推荐布局</text>
+				<fui-radio-group>
+					<fui-label v-for="(item,index) in radioItems" :key="index">
+						<fui-list-cell>
+							<view class="fui-list__cell">
+								<text>{{item.name}}</text>
+								<fui-radio :checked="item.checked" :value="item.value">
+								</fui-radio>
+							</view>
+						</fui-list-cell>
+					</fui-label>
+				</fui-radio-group>
+				<text class="fui-section__title">推荐布局</text>
+				<fui-radio-group>
+					<fui-label v-for="(item,index) in radioItems" :key="index">
+						<fui-list-cell>
+							<view class="fui-list__cell">
+								<text>{{item.name}}</text>
+								<fui-radio :isCheckMark="true" checkMarkColor="#FF2B2B" :scaleRatio="1.3"
+									:checked="item.checked" :value="item.value">
+								</fui-radio>
+							</view>
+						</fui-list-cell>
+					</fui-label>
+				</fui-radio-group>
+				<text class="fui-section__title">修改圆角值</text>
+				<fui-radio-group>
+					<fui-label v-for="(item,index) in radioItems" :key="index">
+						<fui-list-cell>
+							<view class="fui-align__center">
+								<fui-radio :checked="item.checked" :value="item.value" color="#FFB703"
+									borderColor="#B2B2B2" borderRadius="8rpx">
+								</fui-radio>
+								<text class="fui-text">{{item.name}}</text>
+							</view>
+						</fui-list-cell>
+					</fui-label>
+				</fui-radio-group>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	type RadioItem = {
+		name : string;
+		value : string;
+		checked : boolean;
+	}
+	export default {
+		data() {
+			return {
+				val: '1',
+				radioItems: [{
+					name: '小于18岁',
+					value: '1',
+					checked: true
+				},
+				{
+					name: '18~28岁',
+					value: '2',
+					checked: false
+				},
+				{
+					name: '29~40岁',
+					value: '3',
+					checked: false
+				}] as RadioItem[]
+			}
+		},
+		watch: {
+			val(newValue : string) {
+				console.log(newValue)
+			}
+		},
+		methods: {
+			change(value : string) {
+				console.log('change:' + value)
+				this.fui.toast(`您选的值为：${value}`)
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-section__title {
+		margin-left: 32rpx;
+	}
+
+	.fui-list__item {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		background-color: #FFFFFF;
+		padding: 28rpx 32rpx;
+		box-sizing: border-box;
+	}
+
+	.fui-text {
+		font-size: 30rpx;
+		padding-left: 16rpx;
+	}
+
+	.fui-list__cell {
+		flex: 1;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+</style>

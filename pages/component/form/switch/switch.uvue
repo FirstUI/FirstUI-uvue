@@ -1,0 +1,123 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Switch</text>
+				<text class="fui-page__desc">Switch 开关选择器，原生组件增强。</text>
+			</view>
+			<view class="fui-page__bd">
+				<text class="fui-section__title fui-mtop--0">基础使用</text>
+				<fui-list-cell :highlight="false" padding="28rpx 32rpx">
+					<view class="fui-cells">
+						<text class="fui-text">状态：{{status?'ON':'OFF'}}</text>
+						<fui-switch @change="change"></fui-switch>
+					</view>
+				</fui-list-cell>
+				<text class="fui-section__title">带文字</text>
+				<fui-list-cell :highlight="false" padding="28rpx 32rpx">
+					<view class="fui-cells">
+						<text class="fui-text">slot插槽</text>
+						<fui-switch v-model:checked="isOpen">
+							<text class="fui-switch--text">{{isOpen?'ON':'OFF'}}</text>
+						</fui-switch>
+					</view>
+				</fui-list-cell>
+				<text class="fui-section__title">带图标</text>
+				<fui-list-cell :highlight="false" padding="28rpx 32rpx">
+					<view class="fui-cells">
+						<text class="fui-text">slot插槽</text>
+						<fui-switch normal-color="#f2f2f2" transition-color="#2C2C2C" btnColor="#3d3d3d" color="#2C2C2C"
+							v-model:checked="isOpen2">
+							<image :src="`/static/images/component/icon_${isOpen2?'moon':'sun'}.png`"
+								class="fui-icon--img"></image>
+						</fui-switch>
+					</view>
+				</fui-list-cell>
+				<text class="fui-section__title">默认打开</text>
+				<fui-list-cell :highlight="false" padding="28rpx 32rpx">
+					<view class="fui-cells">
+						<text>checked</text>
+						<fui-switch :checked="true"></fui-switch>
+					</view>
+				</fui-list-cell>
+				<text class="fui-section__title">禁用状态</text>
+				<fui-list-cell :highlight="false" padding="28rpx 32rpx">
+					<view class="fui-cells">
+						<text>checked/disabled</text>
+						<fui-switch :checked="true" :disabled="true"></fui-switch>
+					</view>
+				</fui-list-cell>
+				<text class="fui-section__title">改变大小、颜色</text>
+				<fui-label>
+					<fui-list-cell>
+						<view class="fui-cells">
+							<text>scaleRatio</text>
+							<fui-switch :scaleRatio="0.8" scale-align="right" color="#FFB703"></fui-switch>
+						</view>
+					</fui-list-cell>
+				</fui-label>
+				<text class="fui-section__title">展示为checkbox</text>
+				<fui-label>
+					<fui-list-cell>
+						<view class="fui-cells" style="overflow: visible;">
+							<text class="fui-text">type=checkbox</text>
+							<fui-switch type="checkbox" color="#FFB703"></fui-switch>
+						</view>
+					</fui-list-cell>
+				</fui-label>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				status: false,
+				isOpen: false,
+				isOpen2: false
+			}
+		},
+		watch: {
+			isOpen(val : boolean) {
+				console.log(val)
+			}
+		},
+		methods: {
+			change(checked : boolean) {
+				this.status = checked
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-section__title {
+		margin-left: 32rpx;
+	}
+
+	.fui-cells {
+		flex: 1;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.fui-switch--text {
+		font-size: 20rpx;
+		font-weight: bold;
+		color: #333;
+		text-align: center;
+	}
+
+	.fui-icon--img {
+		width: 36rpx;
+		height: 36rpx;
+	}
+</style>

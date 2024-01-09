@@ -1,0 +1,17 @@
+//简体中文【不可删除已有配置项，只可修改值】
+export default {
+	/* ActionSheet 上拉菜单组件*/
+	actionsheet: {
+		cancel: '取消'
+	} as UTSJSONObject,
+	/* Dialog 对话框组件 */
+	dialog: {
+		/* 标题 */
+		title: '提示',
+		/* 取消按钮文本 */
+		cancel: '取消',
+		/* 确定按钮文本 */
+		confirm: '确定'
+	} as UTSJSONObject
+
+} as UTSJSONObject

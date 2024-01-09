@@ -1,0 +1,68 @@
+/*!
+* fuiLang：组件内props属性以及提示语默认值配置，支持多语言设置 
+* 注：语言可以根据自己需要添加，不可删除已有配置项【只能修改值】，如发现翻译错误，可反馈给我们或自行调整。
+* fui-lang - v1.0.0 (2023/12/12, 10:01 AM)
+*
+* 官网地址：https://firstui.cn/
+* 文档地址：https://unix.firstui.cn/
+*/
+
+import { reactive } from 'vue'
+import cn from './lang/cn.uts'
+import tc from './lang/tc.uts'
+import en from './lang/en.uts'
+import th from './lang/th.uts'
+import ru from './lang/ru.uts'
+import ar from './lang/ar.uts'
+
+export type FuiLocaleLangParam = {
+	locale : string;
+	messages : UTSJSONObject;
+}
+export const fuiLang = reactive({
+	// 指定语言类型：cn、tc、en、th、ru、ar ...
+	locale: '',
+	// 将语言包加入到globalData数据里
+	messages: {
+		// 简体中文
+		cn: cn,
+		// 繁体中文（Traditional Chinese 传统中文)
+		tc: tc,
+		// 美国英语
+		en: en,
+		//泰语
+		th: th,
+		//俄语
+		ru: ru,
+		// 阿拉伯语
+		ar: ar
+	}
+} as FuiLocaleLangParam)
+/**
+* getFuiLocaleLang：获取语言包数据
+* @description 获取语言包数据
+* @param {string} locale {null | string} 指定语言类型
+*/
+export const getFuiLocaleLang = (locale : null | string) : UTSJSONObject => {
+	let initLangData : UTSJSONObject;
+	if (locale != null && locale != '') {
+		initLangData = fuiLang.messages[locale] as UTSJSONObject;
+	} else {
+		let key = uni.getStorageSync('fui_locale_lang')
+		if (key == null) {
+			key = fuiLang.locale == '' ? 'cn' : fuiLang.locale;
+		}
+		initLangData = fuiLang.messages[key] as UTSJSONObject;
+	}
+	return initLangData;
+}
+/**
+* setFuiLocale：设置语言类型
+* @description 设置语言类型
+* @param {string} locale {string} 语言类型：cn、tc、en、th、ru、ar ...
+*/
+export const setFuiLocale = (locale : string) => {
+	const lang = locale == '' ? 'cn' : locale;
+	fuiLang.locale = lang
+	uni.setStorageSync('fui_locale_lang', lang)
+}

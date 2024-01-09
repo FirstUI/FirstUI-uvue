@@ -1,0 +1,67 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Textarea</text>
+				<text class="fui-page__desc">Textarea 多行输入框，该组件是对原生textarea组件的增强，内置了常用布局样式，同时包含 textarea 所有功能。</text>
+			</view>
+			<view class="fui-page__bd">
+				<text class="fui-section__title fui-mtop--0">基本使用</text>
+				<fui-textarea placeholder="请输入内容" @input="onInput"></fui-textarea>
+				<text class="fui-section__title">带标题</text>
+				<fui-textarea :required="true" :flexStart="true" label="标题" placeholder="请输入内容"></fui-textarea>
+				<text class="fui-section__title">调整高度、必填</text>
+				<fui-textarea :required="true" height="40rpx" label="标题" placeholder="请输入内容"></fui-textarea>
+				<text class="fui-section__title">输入长度计数、双向绑定</text>
+				<fui-textarea :isCounter="true" placeholder="请输入内容" v-model="text"></fui-textarea>
+				<text class="fui-section__title">带边框</text>
+				<view class="fui-textarea__box">
+					<fui-textarea :textareaBorder="true" placeholder="请输入简介"></fui-textarea>
+				</view>
+				<text class="fui-section__title">设置圆角</text>
+				<view class="fui-textarea__box">
+					<fui-textarea :radius="24" :textareaBorder="true" border-color="#FFB703" background-color="#f8f8f8"
+						placeholder="请输入内容"></fui-textarea>
+				</view>
+
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				text: ''
+			}
+		},
+		watch: {
+			text(newValue : string) {
+				console.log(newValue)
+			}
+		},
+		methods: {
+			onInput(value : string) {
+				console.log(value)
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-section__title {
+		margin-left: 32rpx;
+	}
+
+	.fui-textarea__box {
+		width: 100%;
+		padding: 32rpx;
+		box-sizing: border-box;
+		background-color: #FFFFFF;
+	}
+</style>

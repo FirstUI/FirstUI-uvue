@@ -1,0 +1,79 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Button</text>
+				<text class="fui-page__desc">Button 按钮，支持自定义大小、颜色等。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<fui-section title="按钮类型" padding="0" :margin-bottom="32" :is-line="true"></fui-section>
+				<fui-button text="默认按钮" @click="btnClick"></fui-button>
+				<!-- 注：使用插槽文本样式需自行定义，且需text 标签 包裹 -->
+				<fui-button margin="24rpx 0" type="success">
+					<fui-text color="#fff" text="success"></fui-text>
+				</fui-button>
+				<fui-button type="warning">
+					<text class="fui-color__white">warning</text>
+				</fui-button>
+				<fui-button margin="24rpx 0" type="danger" text="danger"></fui-button>
+				<fui-button type="purple" text="purple"></fui-button>
+				<fui-button margin="24rpx 0" type="link" color="#465CFF" text="链接 link"></fui-button>
+				<fui-section title="禁用状态" padding="0" :margin-bottom="32" :margin-top="96"></fui-section>
+				<fui-button :disabled="true" text="禁用按钮"></fui-button>
+				<fui-button margin="24rpx 0" :disabled="true" :loading="true" text="禁用按钮"></fui-button>
+				<fui-button :disabled="true" disabledBackground="#F8F8F8" disabledColor="#CCCCCC" text="禁用按钮">
+				</fui-button>
+				<fui-section title="按钮形状" padding="0" :margin-bottom="32" :margin-top="96"
+					:is-line="true"></fui-section>
+				<fui-button radius="0" text="方形按钮"></fui-button>
+				<fui-button radius="96rpx" margin="24rpx 0" text="圆形按钮"></fui-button>
+				<fui-section title="按钮大小" padding="0" :margin-bottom="32" :margin-top="96"
+					:is-line="true"></fui-section>
+				<fui-button btn-size="medium" text="medium"></fui-button>
+				<fui-button type="warning" margin="24rpx 0" btn-size="small" text="small"></fui-button>
+				<fui-button type="danger" btn-size="mini" text="mini"></fui-button>
+				<fui-section title="自定义按钮大小" padding="0" :margin-bottom="32" :margin-top="96" is-line></fui-section>
+				<fui-button :plain="true" color="#465CFF" borderColor="#465CFF" text="默认大小"></fui-button>
+				<fui-button type="purple" margin="24rpx 0" width="224rpx" height="84rpx" :size="28"
+					text="小型按钮"></fui-button>
+				<fui-button type="danger" width="200rpx" height="72rpx" :size="28" text="小型按钮"></fui-button>
+				<fui-section title="自定义颜色" padding="0" :margin-bottom="32" :margin-top="96" is-line></fui-section>
+				<fui-button background="#fff" color="#465CFF" borderColor="#465CFF" text="朴素按钮"></fui-button>
+				<fui-button margin="24rpx 0" background="#fff" color="#6831FF" borderColor="#6831FF"
+					text="朴素按钮"></fui-button>
+				<fui-button background="linear-gradient(to bottom right, #6831FF, #465CFF)" border-width="0"
+					text="渐变按钮">
+				</fui-button>
+				<fui-button margin="24rpx 0" background="linear-gradient(to bottom right, #FF416C, #FF2B2B)"
+					border-width="0" text="渐变按钮">
+				</fui-button>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+			btnClick() {
+				this.fui.toast('click~')
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-color__white {
+		color: white;
+		font-size: 32rpx;
+	}
+</style>

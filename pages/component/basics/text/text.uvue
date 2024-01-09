@@ -1,0 +1,67 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Text</text>
+				<text class="fui-page__desc">Text 文本，用于包裹文本内容。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<fui-section title="基本使用" :is-line="true" padding="0" :margin-bottom="32"></fui-section>
+				<fui-text :text="text" :size="28"></fui-text>
+				<fui-section title="不同样式类型" :is-line="true" padding="0" :margin-top="96"
+					:marginBottom="32"></fui-section>
+				<view class="fui-flex">
+					<fui-text text="primary" type="primary"></fui-text>
+					<fui-text text="success" type="success"></fui-text>
+					<fui-text text="warning" type="warning"></fui-text>
+					<fui-text text="danger" type="danger"></fui-text>
+					<fui-text text="purple" type="purple"></fui-text>
+					<fui-text text="gray" type="gray"></fui-text>
+					<fui-text text="black" type="black"></fui-text>
+				</view>
+				<fui-section title="自定义颜色" :isLine="true" padding="0" :margin-top="96" :marginBottom="32"></fui-section>
+				<fui-text text="block" color="brown"></fui-text>
+				<fui-text text="yellow" color="yellow"></fui-text>
+				<fui-section title="数据脱敏-姓名" :isLine="true" padding="0" :margin-top="96"
+					:marginBottom="32"></fui-section>
+				<fui-text text="张三" text-type="name" :format="true"></fui-text>
+				<fui-text text="王小仙" text-type="name" :format="true"></fui-text>
+				<fui-section title="数据脱敏-手机号" :isLine="true" padding="0" :margin-top="96"
+					:marginBottom="32"></fui-section>
+				<fui-text text="13544339908" text-type="mobile" :highlight="true" :format="true" :call="true"></fui-text>
+				<fui-section title="金额格式化" :isLine="true" padding="0" :margin-top="96" :marginBottom="32"></fui-section>
+				<fui-text text="20000" text-type="amount" :format="true">￥</fui-text>
+				<fui-section title="点击效果" :isLine="true" padding="0" :margin-top="96" :marginBottom="32"></fui-section>
+				<fui-text text="https://firstui.cn" :highlight="true" @click="handleClick"></fui-text>
+			</view>
+		</view>
+
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	import { FuiTextClickParam } from '@/components/firstui/fui-types/index.uts'
+	export default {
+		data() {
+			return {
+				text: 'First UI是一套超高性能、超高颜值的移动端UI综合解决方案，包含业内顶尖的组件库、强大的功能库、丰富精美的模板库，提供uni-app(完美支持nvue)、uni-app x、微信小程序 等版本，兼顾高效率与高性能，让您的开发获得百倍提质提速！'
+			}
+		},
+		methods: {
+			handleClick(e : FuiTextClickParam) {
+				console.log(e)
+				this.fui.toast('点击了~');
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-wrap {
+		padding-bottom: 96rpx;
+	}
+</style>

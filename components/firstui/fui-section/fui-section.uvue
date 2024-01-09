@@ -1,0 +1,250 @@
+<template>
+	<view class="fui-sections__wrap"
+		:style="{marginTop:`${marginTop}rpx`,marginBottom:`${marginBottom}rpx`,background:background,padding:padding}">
+		<view class="fui-sections__title" @tap="handleClick">
+			<view class="fui-sections__line" :class="{'fui-sections__line-color':lineColor==''}"
+				:style="{background:lineColor,width:lineWidth,top:`${lineGap}rpx`,bottom:`${lineGap}rpx`,borderRadius:lineCap=='circle'?lineWidth:'0',left:`${lineRight > 0 ? 0 : lineRight}rpx`}"
+				v-if="showLine">
+			</view>
+			<slot></slot>
+			<text class="fui-sections__title-text" :style="getTitleStyle"
+				:class="{'fui-sections__title-size':size==0,'fui-sections__title-color':color=='','fui-sections__title-weight':fontWeight=='0'}"
+				v-if="title">{{title}}</text>
+			<slot name="right"></slot>
+		</view>
+		<view class="fui-sections__descr" :style="getDescrTop"
+			:class="{'fui-sections__descr-top':descrTop==0}"
+			v-if="descr">
+			<text class="fui-sections__descr-text" :class="{'fui-sections__descr-size':descrSize==0,'fui-sections__descr-color':descrColor==''}" :style="getDescrStyle">{{descr}}</text>
+		</view>
+		<slot name="descr"></slot>
+	</view>
+</template>
+
+<script>
+	/**
+	 * Section 标题栏
+	 * @description Section 标题栏，主要用于文章、列表详情等标题展示。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} title {String} 标题内容
+	 * @property {Number} size {Number}	标题字体大小，单位rpx
+	 * @property {Number} lineHeight {Number} 标题行高，单位rpx，默认与字体大小相等
+	 * @property {String} color {String} 标题颜色
+	 * @property {Number} fontWeight {Number} 标题字重，注意：值仅支持 normal、bold、'400'、'700'
+	 * @property {String} descr {String} 描述文本
+	 * @property {Number} descrSize {Number} 描述文本字体大小
+	 * @property {String} descrColor {String} 描述文本字体颜色
+	 * @property {Number} descrTop {Number} 描述文本与标题的间距，单位rpx
+	 * @property {Boolean} isLine	{Boolean} 是否显示修饰线条
+	 * @property {String} lineWidth {String} 线条宽度，需自行带单位
+	 * @property {String} lineColor	{String} 线条颜色
+	 * @property {String} lineCap {String} 线条两端样式，可选值：square(直角)、circle（圆角）
+	 * @property {Number} lineRight {Number} 线条距离标题的距离	
+	 * @property {Number} lineGap {Number} 线条上下间距，单位rpx，默认为0，与标题同高
+	 * @property {String} background {String} 组件背景色
+	 * @property {String} padding {String} 组件外层容器padding值
+	 * @property {Number} marginTop	{Number} 组件 margin-top 值，单位rpx
+	 * @property {Number} marginBottom {Number} 组件 margin-bottom 值，单位rpx
+	 * @event {Function} click 点击标题时触发，(event: string) => void
+	 */
+	export default {
+		name: "fui-section",
+		emits: ['click'],
+		props: {
+			title: {
+				type: String,
+				default: ''
+			},
+			size: {
+				type: Number,
+				default: 0
+			},
+			lineHeight: {
+				type: Number,
+				default: 0
+			},
+			color: {
+				type: String,
+				default: ''
+			},
+			fontWeight: {
+				type: String,
+				default: '0'
+			},
+			descr: {
+				type: String,
+				default: ''
+			},
+			descrSize: {
+				type: Number,
+				default: 0
+			},
+			descrColor: {
+				type: String,
+				default: ''
+			},
+			descrTop: {
+				type: Number,
+				default: 0
+			},
+			isLine: {
+				type: Object,
+				default: false
+			},
+			lineWidth: {
+				type: String,
+				default: '2px'
+			},
+			lineColor: {
+				type: String,
+				default: ''
+			},
+			lineCap: {
+				type: String,
+				default: 'circle'
+			},
+			lineRight: {
+				type: Number,
+				default: 16
+			},
+			lineGap: {
+				type: Number,
+				default: 0
+			},
+			background: {
+				type: String,
+				default: 'transparent'
+			},
+			padding: {
+				type: String,
+				default: '0 32rpx'
+			},
+			marginTop: {
+				type: Number,
+				default: 0
+			},
+			marginBottom: {
+				type: Number,
+				default: 0
+			}
+		},
+		computed: {
+			showLine() : boolean {
+				let visible : boolean;
+				if (typeof this.isLine == 'boolean') {
+					visible = this.isLine as boolean;
+				} else {
+					visible = true
+				}
+				return visible;
+			},
+			getTitleStyle() : object {
+				const style : Map<string, any> = new Map()
+				style.set('padding-left', `${this.lineRight <= 0 || !this.showLine ? 0 : this.lineRight}rpx`);
+				if (this.size != 0) style.set('font-size', `${this.size}rpx`);
+				if (this.color != '') style.set('color', this.color);
+				if (this.fontWeight != '0') style.set('font-weight', this.fontWeight);
+				if (this.size != 0 || this.lineHeight != 0) {
+					style.set('line-height', `${this.lineHeight == 0 ? this.size : this.lineHeight}rpx`);
+				}
+				return style;
+			},
+			getDescrStyle() : object {
+				const style : Map<string, any> = new Map()
+				if (this.descrSize != 0) style.set('font-size', `${this.descrSize}rpx`);
+				if (this.descrColor != '') style.set('color', this.descrColor);
+				return style;
+			},
+			getDescrTop() : object {
+				const style : Map<string, any> = new Map()
+				if (this.descrTop != 0) style.set('padding-top', `${this.descrTop}rpx`)
+				return style;
+			}
+		},
+		methods: {
+			handleClick() {
+				this.$emit('click', this.title)
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-primary: #465CFF !default;
+	$fui-section-title-size: 32rpx !default;
+	$fui-section-title-color: #181818 !default;
+	$fui-section-title-weight: 700 !default;
+	$fui-section-descr-size: 28rpx !default;
+	$fui-section-descr-color: #B2B2B2 !default;
+	$fui-section-descr-top: 12rpx !default;
+
+	/* 全局样式中包含 fui-section 避免影响*/
+	.fui-sections__wrap {
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.fui-sections__title {
+		position: relative;
+		display: flex;
+		/* #ifndef UNI-APP-X */
+		word-break: break-all;
+		/* #endif */
+		flex-shrink: 0;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.fui-sections__title-text {
+		/* #ifndef UNI-APP-X */
+		word-break: break-all;
+		/* #endif */
+	}
+
+	.fui-sections__line {
+		position: absolute;
+		left: 0;
+	}
+
+	.fui-sections__descr {
+		/* #ifndef UNI-APP-X */
+		word-break: break-all;
+		/* #endif */
+	}
+
+	.fui-sections__descr-text {
+		/* #ifndef UNI-APP-X */
+		word-break: break-all;
+		/* #endif */
+		font-weight: 400;
+	}
+
+	.fui-sections__line-color {
+		background: $fui-color-primary !important;
+	}
+
+	.fui-sections__title-size {
+		font-size: $fui-section-title-size !important;
+		line-height: $fui-section-title-size !important;
+	}
+
+	.fui-sections__title-color {
+		color: $fui-section-title-color !important;
+	}
+
+	.fui-sections__title-weight {
+		font-weight: $fui-section-title-weight !important;
+	}
+
+	.fui-sections__descr-size {
+		font-size: $fui-section-descr-size !important;
+	}
+
+	.fui-sections__descr-color {
+		color: $fui-section-descr-color !important;
+	}
+
+	.fui-sections__descr-top {
+		padding-top: $fui-section-descr-top !important;
+	}
+</style>

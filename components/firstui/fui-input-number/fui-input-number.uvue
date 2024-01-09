@@ -1,0 +1,326 @@
+<template>
+	<view class="fui-input__number">
+		<view class="fui-number__minus" :class="[getMinDisabled]" @tap="onMinus"
+			:style="{ minHeight:`${height-8}rpx` }">
+			<slot>
+				<view class="fui-minus__sign" :style="{backgroundColor:signColor,width:`${signWidth}rpx`}">
+				</view>
+			</slot>
+		</view>
+		<input ref="fui_input_number" :confirm-hold="false" :type="type" v-model="inputValue" :disabled="disabled"
+			@blur="blur" @confirm="onConfirm" class="fui-number__input"
+			:style="{ color: color, fontSize: size + 'rpx', background: backgroundColor, height: `${height}rpx`, minHeight: `${height}rpx`, width: `${width}rpx`,borderRadius:`${radius}rpx`,marginLeft:`${margin}rpx`,marginRight:`${margin}rpx`}" />
+		<view class="fui-number__plus" :style="{minWidth:signWidth+'rpx',minHeight:signWidth+'rpx'}"
+			:class="[getMaxDisabled]" @tap="onPlus">
+			<slot name="plus">
+				<view class="fui-plus__sign-col"
+					:style="{height:`${signWidth}rpx`,background:signColor,left:`${signWidth/2}rpx`}">
+				</view>
+				<view class="fui-plus__sign-row" :style="{width:`${signWidth}rpx`,background:signColor}">
+				</view>
+			</slot>
+		</view>
+	</view>
+</template>
+
+<script>
+	import { ComponentPublicInstance } from 'vue';
+	import { FuiInputNumberChangeParam } from '../fui-types/index.uts';
+	/**
+	 * InputNumber 数字输入框
+	 * @description InputNumber 数字输入框，该组件多用于购物车加减商品等场景。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} modelValue {Number,String} 输入框值
+	 * @property {String} type {String} 	输入框类型，可选值：number、text（主要用于输入负号小数点
+	 * @property {Number} min {Number} 最小值，支持负数
+	 * @property {Number} max {Number} 最大值
+	 * @property {Number} step {Number} 每次点击改变的间隔大小
+	 * @property {Boolean} disabled	{Boolean} 是否禁用操作
+	 * @property {Number} signWidth {Number} 加减号宽度，单位rpx
+	 * @property {Number} height {Number} 输入框高度，单位rpx
+	 * @property {Number} width	{Number} 输入框宽度，单位rpx
+	 * @property {Number} radius {Number} 输入框圆角，单位rpx
+	 * @property {Number} size {Number} 输入框字体大小，单位rpx
+	 * @property {String} backgroundColor {String} 输入框背景颜色
+	 * @property {String} color {String} 输入框字体颜色
+	 * @property {Number} margin {Number} 输入框 margin-left，margin-right值，单位rpx
+	 * @property {Number} index {Number} 索引值，列表中使用
+	 * @property {String} param {String} 自定义参数
+	 * @event {Function} change 数字输入框值改变时触发，(event: FuiInputNumberChangeParam) => void
+	 * @event {Function} input 数字输入框值改变时触发，(event: number) => void
+	 * @event {Function} blur 数字输入框失去焦点时触发，(event: InputBlurEvent) => void
+	 * @event {Function} update:modelValue 输入框值改变时触发，用于双向绑定 (event: number) => void
+	 */
+	export default {
+		name: 'fui-input-number',
+		emits: ['change', 'update:modelValue', 'input', 'blur'],
+		props: {
+			modelValue: {
+				type: Object,
+				default: 1
+			},
+			type: {
+				type: String,
+				default: 'number'
+			},
+			min: {
+				type: Number,
+				default: 1
+			},
+			max: {
+				type: Number,
+				default: 99
+			},
+			step: {
+				type: Number,
+				default: 1
+			},
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			signWidth: {
+				type: Number,
+				default: 24
+			},
+			signColor: {
+				type: String,
+				default: '#181818'
+			},
+			height: {
+				type: Number,
+				default: 40
+			},
+			width: {
+				type: Number,
+				default: 80
+			},
+			radius: {
+				type: Number,
+				default: 8
+			},
+			size: {
+				type: Number,
+				default: 26
+			},
+			backgroundColor: {
+				type: String,
+				default: '#EEEEEE'
+			},
+			color: {
+				type: String,
+				default: '#181818'
+			},
+			margin: {
+				type: Number,
+				default: 16
+			},
+			index: {
+				type: Number,
+				default: 0
+			},
+			param: {
+				type: String,
+				default: ''
+			}
+		},
+		created() {
+			this.inputValue = this.getValue(this.modelValue);
+			//用于submit、reset事件
+			const isForm = this.getParent('fui-form');
+			if (isForm) {
+				const form = this.fuiForm as ComponentPublicInstance
+				(form.$data['formChildren'] as ComponentPublicInstance[]).push(this);
+			}
+		},
+		data() {
+			return {
+				inputValue: '0',
+				oldValue: '0',
+				fuiForm: null as null | ComponentPublicInstance
+			};
+		},
+		computed: {
+			getMinDisabled() : string {
+				return this.disabled || this.min >= parseFloat(this.inputValue) ? 'fui-number__disabled' : ''
+			},
+			getMaxDisabled() : string {
+				return this.disabled || parseFloat(this.inputValue) >= this.max ? 'fui-number__disabled' : ''
+			}
+		},
+		watch: {
+			modelValue(val : any) {
+				this.inputValue = this.getValue(val);
+			},
+			inputValue(newVal : string, oldVal : string) {
+				if (!isNaN(parseFloat(newVal)) && newVal != oldVal) {
+					const val = this.getValue(newVal)
+					this.oldValue = val
+					const returnNum = parseFloat(val)
+					this.$emit("change", {
+						value: returnNum,
+						index: this.index,
+						param: this.param
+					} as FuiInputNumberChangeParam);
+					this.$emit("input", returnNum);
+					this.$emit("update:modelValue", returnNum);
+				}
+			}
+		},
+		methods: {
+			getCompareNumber(val : number) : string {
+				if (val < this.min) {
+					val = this.min
+				} else if (val > this.max) {
+					val = this.max
+				}
+				return val.toString()
+			},
+			getValue(val : any) : string {
+				let str : string;
+				if (typeof val == 'string') {
+					str = this.getCompareNumber(parseFloat(val as string));
+				} else if (typeof val == 'number') {
+					str = this.getCompareNumber(val as number)
+				} else if (val instanceof Int) {
+					str = this.getCompareNumber(Number.from(val))
+				} else {
+					str = this.getCompareNumber(parseFloat(val.toString()))
+				}
+				return str;
+			},
+			isInteger(val : number) : boolean {
+				let isInt = true;
+				if (val > Math.floor(val)) {
+					isInt = false
+				}
+				return isInt;
+			},
+			getScale(val : number, step : number) : number {
+				let scale = 1;
+				let scaleVal = 1;
+				//浮点型
+				if (!this.isInteger(step)) {
+					scale = Math.pow(10, step.toString().split('.')[1].length);
+				}
+				if (!this.isInteger(val)) {
+					scaleVal = Math.pow(10, val.toString().split('.')[1].length);
+				}
+				return Math.max(scale, scaleVal);
+			},
+			calcNum(type : string) {
+				const num_val = parseFloat(this.inputValue)
+				if (this.disabled || (num_val == this.min && type == 'reduce') || (num_val == this
+					.max && type == 'plus')) return;
+				const scale = this.getScale(num_val, this.step);
+				let num = num_val * scale;
+				let step = this.step * scale;
+				if (type == 'reduce') {
+					num -= step;
+				} else if (type == 'plus') {
+					num += step;
+				}
+				let value = parseFloat((num / scale).toFixed(scale.toString().length - 1));
+				if (value < this.min) {
+					value = this.min;
+				} else if (value > this.max) {
+					value = this.max;
+				}
+				this.inputValue = value.toString();
+			},
+			onPlus() {
+				this.calcNum('plus');
+			},
+			onMinus() {
+				this.calcNum('reduce');
+			},
+			blur(e : InputBlurEvent) {
+				let value = e.detail.value;
+				if (value != '' && !isNaN(parseFloat(value))) {
+					if (value.indexOf('.') != -1 && this.isInteger(parseFloat(value))) {
+						value = value.split('.')[0];
+					}
+					value = this.getValue(value)
+				} else {
+					value = this.oldValue;
+				}
+				setTimeout(() => {
+					this.$emit('blur', e)
+					this.inputValue = value;
+				}, this.type == 'text' ? 100 : 50)
+			},
+			onConfirm() {
+				(this.$refs['fui_input_number'] as Element).blur()
+			},
+			getParent(name : string) : boolean {
+				if (this.$parent == null) return false;
+				let parent = this.$parent as ComponentPublicInstance;
+				let parentName = parent.$options['name'];
+				while (parentName != name) {
+					if (parent.$parent == null) return false;
+					parent = parent.$parent as ComponentPublicInstance;
+					if (parent.$options['name'] == '') return false;
+					parentName = parent.$options['name'];
+				}
+				this.fuiForm = parent;
+				return true;
+			},
+			//暂时做重置处理（还原需记录初始值）
+			reset() {
+				this.onConfirm()
+				this.inputValue = this.getValue(this.min);
+			}
+		}
+	};
+</script>
+
+<style scoped lang="scss">
+	.fui-input__number {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.fui-number__minus {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.fui-minus__sign {
+		height: 2px;
+		border-radius: 2px;
+	}
+
+	.fui-number__plus {
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.fui-plus__sign-col {
+		position: absolute;
+		top: 0;
+		transform: translateX(-1px);
+		width: 2px;
+		border-radius: 2px;
+	}
+
+	.fui-plus__sign-row {
+		height: 2px;
+		border-radius: 2px;
+	}
+
+	.fui-number__input {
+		text-align: center;
+		border-width: 0;
+	}
+
+	.fui-number__disabled {
+		opacity: 0.6;
+	}
+</style>

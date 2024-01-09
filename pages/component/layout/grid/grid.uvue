@@ -1,0 +1,109 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Grid</text>
+				<text class="fui-page__desc">Grid 宫格，主要使用场景如：热门内容等。</text>
+			</view>
+			<view class="fui-page__bd">
+				<text class="fui-section__title fui-mtop--0">九宫格</text>
+				<view class="fui-aa">
+					<fui-grid>
+						<fui-grid-item :index="index" v-for="(item,index) in nums" :key="index">
+							<view class="fui-grid__cell">
+								<image src="/static/images/common/icon_tabbar_3x.png" class="fui-icon" mode="widthFix">
+								</image>
+								<text class="fui-text">{{item}}</text>
+							</view>
+						</fui-grid-item>
+					</fui-grid>
+				</view>
+				<text class="fui-section__title fui-mtop__96">高度自适应</text>
+				<fui-grid :square="false">
+					<fui-grid-item v-for="(item,index) in nums" :key="index">
+						<view class="fui-grid__cell fui-padding">
+							<image src="/static/images/common/icon_tabbar_2x.png" class="fui-icon__2x" mode="widthFix">
+							</image>
+							<text class="fui-text">{{item}}</text>
+						</view>
+					</fui-grid-item>
+				</fui-grid>
+				<text class="fui-section__title fui-mtop__96">改变列数（4列）</text>
+				<fui-grid :columns="4">
+					<fui-grid-item v-for="(item,index) in arrs" :key="index">
+						<view class="fui-grid__cell fui-padding">
+							<image src="/static/images/common/icon_tabbar_2x.png" class="fui-icon__2x" mode="widthFix">
+							</image>
+							<text class="fui-text">{{item}}</text>
+						</view>
+					</fui-grid-item>
+				</fui-grid>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				nums: ['Grid', 'Grid', 'Grid', 'Grid', 'Grid', 'Grid', 'Grid', 'Grid', 'Grid'] as string[],
+				arrs: ['Grid', 'Grid', 'Grid', 'Grid', 'Grid', 'Grid', 'Grid', 'Grid', 'Grid', 'Grid', 'Grid', 'Grid'] as string[]
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+<style>
+	.fui-wrap {
+		background-color: #fff;
+	}
+
+	.fui-section__title {
+		margin-left: 32rpx;
+	}
+
+	.fui-mtop__96 {
+		margin-top: 96rpx;
+	}
+
+	.fui-grid__cell {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		flex: 1;
+	}
+
+	.fui-text {
+		font-size: 28rpx;
+		font-weight: 400;
+	}
+
+	.fui-padding {
+		padding: 36rpx 0;
+	}
+
+	.fui-icon {
+		width: 96rpx;
+		height: 96rpx;
+		margin-bottom: 16rpx;
+	}
+
+	.fui-icon__2x {
+		width: 64rpx;
+		height: 64rpx;
+		margin-bottom: 16rpx;
+	}
+
+	.fui-flex__column {
+		flex: 1;
+	}
+</style>

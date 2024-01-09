@@ -1,0 +1,200 @@
+<template>
+	<view :ref="refId" class="fui-popup__animation" :style="getStyle" @tap="change" @transitionend="onEnd">
+		<slot></slot>
+	</view>
+</template>
+
+<script lang="uts">
+	import type { PropType } from 'vue';
+	/**
+	 * Animation 动画
+	 * @description Animation 动画，过渡效果。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Boolean} visible {Boolean} 是否显示
+	 * @property {Array} animationType { Array&lt;string&gt; }	过渡动画类型，可取值：fade、slide-top、slide-right、slide-bottom、slide-left、zoom-in、zoom-out
+	 * @property {Number} duration {Number}	动画过渡的时间，单位ms
+	 * @property {Object} styles {Object} 组件外层样式，替换默认值或与默认值合并
+	 * @event {Function} click 点击动画弹层时触发，返回显示状态，(event: boolean) => void
+	 * @event {Function} change 动画执行时触发，返回显示状态，(event: boolean) => void
+	 * @event {Function} transitionend 动画执行结束时触发（注意：设置mode属性也会触发此事件），无返回参数，() => void 
+	 */
+	export default {
+		name: 'fui-animation',
+		emits: ['click', 'change', 'transitionend'],
+		props: {
+			//是否显示
+			visible: {
+				type: Boolean,
+				default: false
+			},
+			/*
+			 过渡动画类型
+			  ['fade,'slide-top','slide-right','slide-bottom','slide-left','zoom-in','zoom-out']
+			*/
+			animationType: {
+				type: Array as PropType<string[]>,
+				default: () : string[] => [] as string[]
+			},
+			duration: {
+				type: Number,
+				default: 300
+			},
+			//styles 组件样式，同 css 样式
+			styles: {
+				type: Object as PropType<UTSJSONObject>,
+				default: () : UTSJSONObject => ({} as UTSJSONObject)
+			}
+		},
+		data() {
+			const refAniId = `fui_animation_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				refId: refAniId,
+				isShow: false,
+				aniShow: false,
+				isAction: false,
+				element: null as Element | null
+			};
+		},
+		watch: {
+			visible: {
+				handler(newVal : boolean) {
+					if (newVal) {
+						this.open();
+					} else {
+						if (this.isShow) this.close();
+						this.isAction = true;
+					}
+				},
+				immediate: true
+			}
+
+		},
+		computed: {
+			getStyle() : object {
+				//默认值
+				const defStyles = {
+					position: 'fixed',
+					bottom: 0,
+					top: 0,
+					left: 0,
+					right: 0,
+					display: 'flex',
+					'justify-content': 'center',
+					'align-items': 'center',
+					'transition-duration': `0s`
+				};
+				// const mergeStyles = Object.assign({}, defStyles, this.styles);
+				for (let key in this.styles) {
+					defStyles[key] = this.styles[key]
+				}
+
+				const animationType = JSON.parse<string[]>(JSON.stringify(this.animationType))
+				if (animationType != null) {
+					if (animationType.includes('fade')) {
+						defStyles['opacity'] = (this.visible ? 1 : 0).toString()
+					} else {
+						defStyles['opacity'] = '1'
+					}
+					defStyles['transform'] = this.getTransform(animationType, this.visible)
+				}
+				return JSON.parse<UTSJSONObject>(JSON.stringify(defStyles))!.toMap();
+			}
+		},
+		mounted() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					if (!this.visible) {
+						this.close();
+					}
+				}, 50);
+			})
+		},
+		methods: {
+			change() {
+				this.$emit('click', this.isShow);
+			},
+			open() {
+				this.$nextTick(() => {
+					setTimeout(() => {
+						this.isShow = true;
+						this.setAni(true);
+						this.isAction = true;
+					}, 50);
+				});
+			},
+			close() {
+				this.setAni(false);
+			},
+			getTransform(animationType : string[], show : boolean) : string {
+				let transform = ''
+				animationType.forEach((mode : string) => {
+					switch (mode) {
+						case 'slide-top':
+							transform += `translateY(${show ? '0' : '-100%'}) `;
+							break;
+						case 'slide-right':
+							transform += `translateX(${show ? '0' : '100%'}) `;
+							break;
+						case 'slide-bottom':
+							transform += `translateY(${show ? '0' : '100%'}) `;
+							break;
+						case 'slide-left':
+							transform += `translateX(${show ? '0' : '-100%'}) `;
+							break;
+						case 'zoom-in':
+							transform += `scale(${show ? 1 : 0.8}) `;
+							break;
+						case 'zoom-out':
+							transform += `scale(${show ? 1 : 1.2}) `;
+							break;
+					}
+				});
+
+				return transform;
+			},
+			setAni(show : boolean) {
+				this.aniShow = show;
+				const animationType = JSON.parse<string[]>(JSON.stringify(this.animationType))
+				let transform : string;
+				if (animationType != null) {
+					transform = this.getTransform(animationType, show)
+					if (this.element == null) {
+						this.element = this.$refs[this.refId] as Element;
+					}
+					this.element!.style.setProperty('transition-duration', this.duration.toString())
+					if (animationType.includes('fade')) {
+						this.element!.style.setProperty('opacity', (show ? 1 : 0).toString())
+					} else {
+						this.element!.style.setProperty('opacity', '1')
+					}
+					if (transform != '') this.element!.style.setProperty('transform', transform);
+					if (show) this.element!.style.setProperty('visibility', 'visible');
+				}
+
+			},
+			onEnd() {
+				if (!this.aniShow && this.isAction) {
+					this.element!.style.setProperty('visibility', 'hidden');
+					this.isShow = false;
+					this.element = null;
+				}
+				this.$emit('transitionend')
+				if (this.isAction) {
+					this.$emit('change', this.isShow);
+					this.isAction = false
+				}
+			}
+		}
+	};
+</script>
+
+<style scoped>
+	.fui-popup__animation {
+		transition-timing-function: ease;
+		transition-duration: 0.3s;
+		transition-property: transform, visibility, opacity;
+		position: relative;
+		z-index: 99;
+		visibility: hidden;
+	}
+</style>

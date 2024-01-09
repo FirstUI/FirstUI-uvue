@@ -1,0 +1,105 @@
+<template>
+	<view :style="{
+		paddingLeft:`${gutter}rpx`,
+		paddingRight:`${gutter}rpx`,
+		width:`${nvueWidth}rpx`,
+		position:'relative',
+		marginLeft:`${marginLeft}rpx`,
+		left:`${right == 0 ? left : -right}rpx`
+	}">
+		<slot></slot>
+	</view>
+</template>
+
+<script>
+	import { ComponentPublicInstance } from 'vue'
+	/**
+	 * Layout 栅格布局
+	 * @description Layout 栅格布局，将整个屏幕宽度分为 24 单位，每个单位的大小，由当前屏幕尺寸决定。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Number} span {Number} 栅格占据的列数
+	 * @property {Number} offset {Number} 栅格左侧的间隔格数
+	 * @property {Number} pushLeft {Number} 栅格向右移动格数
+	 * @property {Number} pullRight {Number} 栅格向左移动格数
+	 */
+	export default {
+		name: "fui-col",
+		inject: ['fuiRow'],
+		props: {
+			span: {
+				type: Number,
+				default: 24
+			},
+			offset: {
+				type: Number,
+				default: 0
+			},
+			pushLeft: {
+				type: Number,
+				default: -1
+			},
+			pullRight: {
+				type: Number,
+				default: -1
+			}
+		},
+		data() {
+			return {
+				gutter: 0,
+				parentWidth: 0,
+				nvueWidth: 0,
+				marginLeft: 0,
+				right: 0,
+				left: 0
+			};
+		},
+		created() {
+			if (this.fuiRow != null) {
+				let parent = this.fuiRow as ComponentPublicInstance;
+				this.updateGutter(parent.$props['gutter'] as number)
+				parent.$watch('gutter', (gutter : number) => {
+					this.updateGutter(gutter)
+				})
+				this.updateWidth(parent.$props['width'] as number)
+				parent.$watch('width', (width : number) => {
+					this.updateWidth(width)
+				})
+			}
+		},
+		computed: {
+			sizeChange() : string {
+				return `${this.span}-${this.offset}-${this.pullRight}-${this.pushLeft}`;
+			}
+		},
+		watch: {
+			sizeChange: {
+				immediate: true,
+				handler() {
+					this.updateWidth(this.parentWidth);
+				}
+			}
+		},
+		methods: {
+			updateGutter(parentGutter : number) {
+				if (!isNaN(parentGutter)) {
+					this.gutter = parentGutter / 2
+				}
+			},
+			getRpx(value : number, width : number) : number {
+				return 1 / 24 * value * width
+			},
+			updateWidth(width : number) {
+				// 用于span，offset，pull，push的计算
+				this.parentWidth = width;
+				if (this.span >= 0)
+					this.nvueWidth = this.getRpx(this.span, width)
+				if (this.offset >= 0)
+					this.marginLeft = this.getRpx(this.offset, width)
+				if (this.pullRight >= 0)
+					this.right = this.getRpx(this.pullRight, width)
+				if (this.pushLeft >= 0)
+					this.left = this.getRpx(this.pushLeft, width)
+			}
+		}
+	};
+</script>

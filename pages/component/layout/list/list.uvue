@@ -1,0 +1,166 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">List</text>
+				<text class="fui-page__desc">List 列表，常用的布局组件。</text>
+			</view>
+			<view class="fui-page__bd">
+				<text class="fui-section__title fui-mtop--0">基础使用</text>
+				<fui-list>
+					<fui-list-cell>
+						<text class="fui-text">标题文字</text>
+					</fui-list-cell>
+					<fui-list-cell>
+						<text class="fui-text">标题文字</text>
+						<text class="fui-text__explain">说明文字</text>
+					</fui-list-cell>
+					<fui-list-cell :arrow="true">
+						<text class="fui-text">标题文字</text>
+					</fui-list-cell>
+					<fui-list-cell :arrow="true">
+						<view class="fui-list__item">
+							<text class="fui-text">标题文字</text>
+							<text class="fui-text__explain">说明文字</text>
+						</view>
+					</fui-list-cell>
+					<fui-list-cell :arrow="true" :bottomLeft="0">
+						<view class="fui-list__item">
+							<text class="fui-text">标题文字</text>
+							<fui-badge value="1" type="danger"></fui-badge>
+						</view>
+					</fui-list-cell>
+				</fui-list>
+				<text class="fui-section__title" style="margin-bottom: 0;">无点击效果、带标题</text>
+				<fui-list :bottomBorder="true" title="带标题的列表">
+					<fui-list-cell :highlight="false">标题文字</fui-list-cell>
+					<fui-list-cell :bottomBorder="false" :highlight="false" :arrow="true">标题文字</fui-list-cell>
+				</fui-list>
+				<text class="fui-section__title">带图标的列表</text>
+				<fui-list-cell :topBorder="true">
+					<view class="fui-align__center">
+						<image class="fui-list__icon" src="/static/images/common/icon_tabbar.png" mode="widthFix">
+						</image>
+						<text class="fui-text">标题文字</text>
+					</view>
+				</fui-list-cell>
+				<fui-list-cell>
+					<view class="fui-align__center">
+						<image class="fui-list__icon" src="/static/images/common/icon_tabbar.png" mode="widthFix">
+						</image>
+						<text class="fui-text">标题文字</text>
+					</view>
+					<text class="fui-text__explain">说明文字</text>
+				</fui-list-cell>
+				<fui-list-cell :arrow="true">
+					<view class="fui-align__center">
+						<image class="fui-list__icon" src="/static/images/common/icon_tabbar.png" mode="widthFix">
+						</image>
+						<text class="fui-text">标题文字</text>
+					</view>
+				</fui-list-cell>
+				<fui-list-cell :arrow="true" :bottomLeft="0">
+					<view class="fui-list__item">
+						<view class="fui-align__center">
+							<image class="fui-list__icon" src="/static/images/common/icon_tabbar.png" mode="widthFix">
+							</image>
+							<text class="fui-text">标题文字</text>
+						</view>
+						<text class="fui-text__explain">说明文字</text>
+					</view>
+				</fui-list-cell>
+
+				<text class="fui-section__title">改变底部线条左侧偏移距离</text>
+				<fui-list-cell :topBorder="true" :bottomLeft="104">
+					<view class="fui-align__center">
+						<image class="fui-list__icon" src="/static/images/common/icon_tabbar.png" mode="widthFix">
+						</image>
+						<text class="fui-text">标题文字</text>
+					</view>
+				</fui-list-cell>
+				<fui-list-cell :bottomLeft="0">
+					<view class="fui-align__center">
+						<image class="fui-list__icon" src="/static/images/common/icon_tabbar.png" mode="widthFix">
+						</image>
+						<text class="fui-text">标题文字</text>
+					</view>
+				</fui-list-cell>
+				<text class="fui-section__title">改变底部线条右侧偏移距离</text>
+				<fui-list-cell :bottomRight="32">
+					<view class="fui-align__center">
+						<image class="fui-list__icon" src="/static/images/common/icon_tabbar.png" mode="widthFix">
+						</image>
+						<text class="fui-text">标题文字</text>
+					</view>
+				</fui-list-cell>
+				<fui-list-cell :bottomBorder="false">
+					<view class="fui-align__center">
+						<image class="fui-list__icon" src="/static/images/common/icon_tabbar.png" mode="widthFix">
+						</image>
+						<text class="fui-text">标题文字</text>
+					</view>
+				</fui-list-cell>
+				<text class="fui-section__title">无线条</text>
+				<fui-list-cell :bottomBorder="false" :arrow="true">
+					<view class="fui-align__center">
+						<image class="fui-list__icon" src="/static/images/common/icon_tabbar.png" mode="widthFix">
+						</image>
+						<text class="fui-text">标题文字</text>
+					</view>
+				</fui-list-cell>
+				<fui-list-cell :bottomBorder="false" :arrow="true">
+					<view class="fui-align__center">
+						<image class="fui-list__icon" src="/static/images/common/icon_tabbar.png" mode="widthFix">
+						</image>
+						<text class="fui-text">标题文字</text>
+					</view>
+				</fui-list-cell>
+			</view>
+			
+			
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+<style>
+	.fui-section__title {
+		margin-left: 32rpx;
+	}
+
+	.fui-list__item {
+		flex: 1;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.fui-text__explain {
+		font-size: 28rpx;
+		color: #7F7F7F;
+		flex-shrink: 0;
+	}
+
+	.fui-list__icon {
+		width: 48rpx;
+		height: 48rpx;
+		margin-right: 24rpx;
+	}
+</style>

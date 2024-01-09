@@ -1,0 +1,238 @@
+<template>
+	<view class="fui-radio__input"
+		:class="[scaleRatio!=1?`fui-radio__scale-${scaleAlign}`:'',disabled?'fui-radio__disabled':'',color=='' && styleVal && !isCheckMark?'fui-radio__color':'',normalColor=='' && !styleVal && !isCheckMark?'fui-radio__background':'',borderColor=='' && !styleVal && !isCheckMark?'fui-radio__normal-border':'']"
+		:style="getStyl" @tap.stop="radioChange">
+		<view class="fui-check__mark" :class="{'fui-radio__mark-color':checkMarkColor==''}"
+			:style="{borderBottomColor:checkMarkColor,borderRightColor:checkMarkColor}" v-if="val"></view>
+		<radio class="fui-radio__hidden" style="opacity: 0;position: absolute;" :disabled="disabled" :value="value"
+			:checked="val"></radio>
+	</view>
+</template>
+
+<script>
+	import { ComponentPublicInstance } from 'vue'
+	/**
+	 * Radio 单选框
+	 * @description Radio 单项选择器，需结合fui-radio-group和fui-radio组件一起使用。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} value {String} value值，当选中时会携带该值	
+	 * @property {Boolean} checked {Boolean} 是否选中
+	 * @property {Boolean} disabled	 {Boolean} 是否禁用
+	 * @property {String} color	{String} 选中时背景颜色	
+	 * @property {String} normalColor {String} 未选中时背景颜色
+	 * @property {String} borderColor {String} 未选中时边框颜色
+	 * @property {String} borderRadius {String}	圆角值
+	 * @property {Boolean} isCheckMark {Boolean} 是否只展示对号，无边框背景
+	 * @property {String} checkMarkColor {String} 对号颜色
+	 * @property {Number} scaleRatio {Number} 缩放比例，当比例大于1时，外层容器需要设置 overflow: visible或者留出足够空间，避免显示不全
+	 * @property {String} scaleAlign {String} 缩放后对齐方式,可选值：left、center、right
+	 */
+	export default {
+		name: "fui-radio",
+		inject: ['fuiRadioGroup'],
+		props: {
+			value: {
+				type: String,
+				default: ''
+			},
+			checked: {
+				type: Boolean,
+				default: false
+			},
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			color: {
+				type: String,
+				default: ''
+			},
+			normalColor: {
+				type: String,
+				default: ''
+			},
+			borderColor: {
+				type: String,
+				default: ''
+			},
+			borderRadius: {
+				type: String,
+				default: '100px'
+			},
+			isCheckMark: {
+				type: Boolean,
+				default: false
+			},
+			checkMarkColor: {
+				type: String,
+				default: ''
+			},
+			scaleRatio: {
+				type: Number,
+				default: 1
+			},
+			scaleAlign: {
+				type: String,
+				default: 'center'
+			}
+		},
+		created() {
+			this.val = this.checked;
+			if (this.fuiRadioGroup != null) {
+				const group = this.fuiRadioGroup as ComponentPublicInstance;
+				(group.$data['childrens'] as ComponentPublicInstance[]).push(this);
+				if (group.$props['modelValue'] != '') {
+					this.val = this.value == group.$props['modelValue']
+				}
+			}
+			const parent = this.getParent('fui-label')
+			if (parent) {
+				const label = this.fuiLabel as ComponentPublicInstance
+				(label.$data['childrens'] as ComponentPublicInstance[]).push(this);
+			}
+		},
+		watch: {
+			checked(newVal : boolean) {
+				this.val = newVal;
+			},
+			val(newVal : boolean) {
+				if (newVal && this.fuiRadioGroup != null) {
+					const group = this.fuiRadioGroup as ComponentPublicInstance;
+					group.$callMethod('changeValue', this.value, this);
+				}
+				setTimeout(() => {
+					this.styleVal = newVal;
+				}, 0)
+			}
+		},
+		computed: {
+			getStyl() : object {
+				const mp : Map<string, string> = new Map();
+				mp.set('transform', `scale(${this.scaleRatio})`);
+				mp.set('border-radius', this.borderRadius);
+				let color = this.val ? this.color : (this.borderColor == '' ? this.color : this.borderColor);
+				const bgColor = this.val ? this.color : this.normalColor;
+				if (this.isCheckMark) {
+					mp.set('border-color', 'transparent')
+					mp.set('background', 'transparent')
+				} else {
+					if (color != '') mp.set('border-color', color)
+					if (bgColor != '') mp.set('background', bgColor)
+				}
+				return mp;
+			}
+		},
+		data() {
+			return {
+				val: false,
+				styleVal: false,
+				fuiLabel: null as null | ComponentPublicInstance
+			};
+		},
+		methods: {
+			radioChange() {
+				if (this.disabled || this.val) return;
+				this.val = true;
+			},
+			getParent(name : string) : boolean {
+				if (this.$parent == null) return false;
+				let parent = this.$parent as ComponentPublicInstance;
+				let parentName = parent.$options['name'];
+				while (parentName != name) {
+					if (parent.$parent == null) return false;
+					parent = parent.$parent as ComponentPublicInstance;
+					if (parent.$options['name'] == '') return false;
+					parentName = parent.$options['name'];
+				}
+				this.fuiLabel = parent;
+				return true;
+			},
+			labelClick() {
+				this.radioChange()
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-primary: #465CFF !default;
+	$fui-radio-border-color: #CCCCCC !default;
+	$fui-radio-background: #fff !default;
+	$fui-radio-mark-color: #fff !default;
+
+	.fui-radio__input {
+		width: 40rpx;
+		height: 40rpx;
+		border-width: 1px;
+		border-style: solid;
+		border-radius: 100px;
+		display: flex;
+		box-sizing: border-box;
+		flex-shrink: 0;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		position: relative;
+	}
+
+	.fui-radio__scale-left {
+		transform-origin: 0 center;
+	}
+
+	.fui-radio__scale-center {
+		transform-origin: center center;
+	}
+
+	.fui-radio__scale-right {
+		transform-origin: 100% center;
+	}
+
+	.fui-radio__color {
+		background: $fui-color-primary !important;
+		border-color: $fui-color-primary !important;
+	}
+
+	.fui-radio__normal-border {
+		border-color: $fui-radio-border-color !important;
+	}
+
+	.fui-radio__background {
+		background: $fui-radio-background !important;
+	}
+
+	.fui-radio__mark-color {
+		border-bottom-color: $fui-radio-mark-color !important;
+		border-right-color: $fui-radio-mark-color !important;
+	}
+
+	.fui-check__mark {
+		width: 20rpx;
+		height: 40rpx;
+		border-bottom-style: solid;
+		border-bottom-width: 3px;
+		border-bottom-color: #FFFFFF;
+		border-right-style: solid;
+		border-right-width: 3px;
+		border-right-color: #FFFFFF;
+		box-sizing: border-box;
+		transform: rotate(45deg) scale(0.5);
+		transform-origin: 54% 48%;
+	}
+
+	.fui-radio__hidden {
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+		border-width: 0;
+		position: absolute;
+		top: 0;
+		left: 0;
+		opacity: 0;
+		z-index: 2;
+	}
+
+	.fui-radio__disabled {
+		opacity: 0.6;
+	}
+</style>

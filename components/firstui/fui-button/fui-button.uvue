@@ -1,0 +1,407 @@
+<template>
+	<view class="fui-button__wrap"
+		:class="[getWidth=='' || getWidth=='100%'?'fui-button__flex-1':'',disabled && disabledBackground=='' ? 'fui-button__opacity' : '',background=='' && disabledBackground=='' && !plain?`fui-button__${type}`:'',height=='' && btnSize==''?'fui-button__height':'',radius==''?'fui-button__radius':'']"
+		:style="{width: getWidth,height: getHeight,margin:margin,borderRadius: radius,background:getBackground,borderWidth:borderColor==''?'0px':borderWidth,borderColor:getBorderColor}"
+		@touchstart="handleStart" @touchend="handleEnd" @touchcancel="handleEnd" @tap="handleTap">
+		<view ref="fui_button_loading" @transitionend="onEnd" class="fui-button__spin" :style="getStyl" v-if="loading">
+		</view>
+		<text class="fui-button__text"
+			:class="{'fui-btn__gray-color':background=='' && disabledBackground=='' && !plain && type=='gray' && color=='#fff','fui-text__bold':bold,'fui-button__size':size==0 && btnSize==''}"
+			v-if="text"
+			:style="{fontSize: getSize,color:getColor,height: getHeight,lineHeight:getHeight}">{{text}}</text>
+		<slot></slot>
+		<view ref="fui_button_hover" class="fui-button__hover" :style="{borderRadius: radius}"
+			:class="{'fui-button__radius':radius==''}" v-if="highlight"></view>
+	</view>
+</template>
+
+<script>
+	/**
+	 * Button 按钮
+	 * @description Button 按钮，支持自定义大小、颜色等。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} type {String} 按钮类型，可取值：primary、success、 warning、danger、link、purple、gray
+	 * @property {String} background {String} 按钮背景色，当传入值时type失效
+	 * @property {String} text {String}	按钮显示文本
+	 * @property {String} color	{String} 按钮字体颜色
+	 * @property {String} disabledBackground {String} 按钮禁用状态下背景色
+	 * @property {String} disabledColor {String} 按钮禁用状态下字体颜色
+	 * @property {String} borderWidth {String} 按钮边框宽度
+	 * @property {String} borderColor {String} 按钮边框颜色
+	 * @property {String} btnSize {String} 按钮大小，可选值：medium、small、mini，优先级高于width和height属性
+	 * @property {String} width	{String} 按钮宽度
+	 * @property {String} height 按钮高度
+	 * @property {Number} size {Number} 字体大小，单位rpx
+	 * @property {Boolean} bold {Boolean} 字体是否加粗
+	 * @property {String} margin {String} margin值：
+	 * @property {String} radius {String} 圆角大小
+	 * @property {Boolean} plain {Boolean} 是否镂空
+	 * @property {Boolean} highlight {Boolean} 是否需要点击效果 
+	 * @property {Boolean} disabled	{Boolean} 是否禁用
+	 * @property {Boolean}loading {Boolean} 是否显示加载图标
+	 * @property {String} iconColor	{String} loading圆环背景色
+	 * @property {String} activeColor loading圆环高亮部分颜色
+	 * @event {Function} click 按钮点击事件，(event: MouseEvent) => void
+	 */
+	export default {
+		name: 'fui-button',
+		emits: ['click'],
+		props: {
+			type: {
+				type: String,
+				default: 'primary'
+			},
+			background: {
+				type: String,
+				default: ''
+			},
+			text: {
+				type: String,
+				default: ''
+			},
+			color: {
+				type: String,
+				default: ''
+			},
+			disabledBackground: {
+				type: String,
+				default: ''
+			},
+			disabledColor: {
+				type: String,
+				default: ''
+			},
+			borderWidth: {
+				type: String,
+				default: '0.5px'
+			},
+			borderColor: {
+				type: String,
+				default: ''
+			},
+			btnSize: {
+				type: String,
+				default: ''
+			},
+			width: {
+				type: String,
+				default: '100%'
+			},
+			height: {
+				type: String,
+				default: ''
+			},
+			size: {
+				type: Number,
+				default: 0
+			},
+			bold: {
+				type: Boolean,
+				default: false
+			},
+			margin: {
+				type: String,
+				default: ''
+			},
+			radius: {
+				type: String,
+				default: ''
+			},
+			plain: {
+				type: Boolean,
+				default: false
+			},
+			highlight: {
+				type: Boolean,
+				default: true
+			},
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			loading: {
+				type: Boolean,
+				default: false
+			},
+			iconColor: {
+				type: String,
+				default: "#B2B2B2"
+			},
+			activeColor: {
+				type: String,
+				default: "#FFFFFF"
+			}
+		},
+		computed: {
+			getStyl() : object {
+				const mp : Map<string, string> = new Map()
+				mp.set('border-left-color', this.activeColor)
+				mp.set('border-right-color', this.iconColor)
+				mp.set('border-top-color', this.iconColor)
+				mp.set('border-bottom-color', this.iconColor)
+				return mp;
+			},
+			getBackground() : string {
+				let color = this.background;
+				if (this.disabled && this.disabledBackground != '') {
+					color = this.disabledBackground;
+				}
+				color = this.type == 'link' || this.plain ? 'rgba(0,0,0,0)' : color;
+				return color
+			},
+			getBorderColor() : string {
+				let color = this.borderColor
+				if (color == '') {
+					color = this.disabled && this.disabledBackground != '' ? this.disabledBackground : this.background
+				}
+				color = this.type == 'link' ? 'rgba(0,0,0,0)' : color;
+				return color;
+			},
+			getColor() : string {
+				let color : string;
+				if (this.color != '') {
+					color = this.disabled && this.disabledBackground != '' ? this.disabledColor : this.color
+				} else {
+					if (this.disabled && this.disabledBackground != '') {
+						color = this.disabledColor == '' ? '#FFFFFF' : this.disabledColor
+					} else {
+						color = this.type == 'gray' ? '#465CFF' : '#FFFFFF'
+					}
+				}
+				return color;
+			},
+			getSize() : string {
+				let size = this.size;
+				if (this.btnSize != '') {
+					size = size == 0 ? 32 : size;
+					if (this.btnSize == 'small') {
+						size = size > 28 ? 28 : size;
+					} else if (this.btnSize == 'mini') {
+						size = size > 28 ? 24 : size;
+					}
+				}
+				return `${size}rpx`
+			},
+			getWidth() : string {
+				//medium 400*84 / small 200*84/ mini 120 * 64
+				let width = this.width;
+				if (this.btnSize != '') {
+					width = ({
+						medium: '400rpx',
+						small: '200rpx',
+						mini: '120rpx'
+					}[this.btnSize]) as string
+				}
+				return width
+			},
+			getHeight() : string {
+				let height = this.height;
+				if (this.btnSize != '') {
+					height = ({
+						medium: '84rpx',
+						small: '72rpx',
+						mini: '64rpx'
+					}[this.btnSize]) as string
+				}
+				return height
+			}
+		},
+		watch: {
+			loading(newValue : boolean) {
+				if (newValue) {
+					this.$nextTick(() => {
+						setTimeout(() => {
+							this.startSpin()
+						}, 50)
+					})
+				} else {
+					this.endSpin()
+				}
+			}
+		},
+		data() {
+			return {
+				times: 0,
+				isSpin: false,
+				element: null as Element | null,
+				hoverEle: null as Element | null
+			};
+		},
+		mounted() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					if (this.loading) this.startSpin();
+				}, 150)
+			})
+		},
+		beforeUnmount() {
+			this.isSpin = false
+			this.element = null;
+			this.hoverEle = null
+		},
+
+		methods: {
+			handleStart() {
+				this.switchHover(true)
+			},
+			handleTap(e : MouseEvent) {
+				if (this.disabled) return;
+				this.$emit('click', e);
+			},
+			handleEnd() {
+				this.switchHover(false)
+			},
+			switchHover(show : boolean) {
+				if (!this.highlight || this.disabled) return;
+				if (this.hoverEle == null) {
+					this.hoverEle = this.$refs['fui_button_hover'] as Element;
+				}
+				this.hoverEle!.style.setProperty('visibility', show ? 'visible' : 'hidden')
+			},
+			startSpin() {
+				if (this.element != null && this.isSpin) return;
+				if (this.element == null) {
+					this.element = this.$refs['fui_button_loading'] as Element;
+				}
+				this.times = this.times + 1
+				this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
+				this.element!.style.setProperty('transition-duration', '600')
+				this.isSpin = true
+			},
+			endSpin() {
+				this.isSpin = false
+				this.times = 0
+				this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
+				this.element!.style.setProperty('transition-duration', '0')
+				this.element = null;
+			},
+			onEnd() {
+				if (this.isSpin && this.loading) {
+					this.times = this.times + 1
+					this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
+				}
+			}
+		}
+	};
+</script>
+
+<style scoped lang="scss">
+	$fui-color-primary: #465CFF !default;
+	$fui-color-success: #09BE4F !default;
+	$fui-color-warning: #FFB703 !default;
+	$fui-color-danger: #FF2B2B !default;
+	$fui-color-purple: #6831FF !default;
+	$fui-bg-color-content: #F8F8F8 !default;
+	$fui-bg-color-hover: rgba(0, 0, 0, 0.2) !default;
+	$fui-button-height: 96rpx !default;
+	$fui-button-size: 32rpx !default;
+	$fui-button-radius: 16rpx !default;
+
+	.fui-button__wrap {
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		border-style: solid;
+		box-sizing: border-box;
+		overflow: hidden;
+	}
+
+	.fui-button__flex-1 {
+		width: 100%;
+	}
+
+	.fui-button__opacity {
+		opacity: .5;
+	}
+
+	.fui-button__hover {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		background-color: $fui-bg-color-hover;
+		z-index: 2;
+		border-radius: 0;
+		visibility: hidden;
+		pointer-events: none;
+	}
+
+	.fui-button__spin {
+		width: 32rpx;
+		height: 32rpx;
+		border-width: 2px;
+		border-style: solid;
+		border-radius: 100px;
+		transition-duration: 600;
+		transition-property: transform;
+		transition-timing-function: linear;
+		transform: rotate(0deg);
+		box-sizing: border-box;
+		margin-right: 8rpx;
+	}
+
+	.fui-button__text {
+		text-align: center;
+	}
+
+	.fui-text__bold {
+		font-weight: bold;
+	}
+
+	.fui-button__link {
+		border-color: rgba(0, 0, 0, 0) !important;
+		background-color: rgba(0, 0, 0, 0) !important;
+	}
+
+
+	.fui-button__primary {
+		border-color: $fui-color-primary !important;
+		background: $fui-color-primary !important;
+	}
+
+
+	.fui-button__success {
+		border-color: $fui-color-success !important;
+		background: $fui-color-success !important;
+	}
+
+	.fui-button__warning {
+		border-color: $fui-color-warning !important;
+		background: $fui-color-warning !important;
+	}
+
+	.fui-button__danger {
+		border-color: $fui-color-danger !important;
+		background: $fui-color-danger !important;
+	}
+
+	.fui-button__purple {
+		border-color: $fui-color-purple !important;
+		background: $fui-color-purple !important;
+	}
+
+	.fui-button__gray {
+		border-color: $fui-bg-color-content !important;
+		background: $fui-bg-color-content !important;
+	}
+
+	.fui-btn__gray-color {
+		color: $fui-color-primary !important;
+	}
+
+	.fui-button__height {
+		height: $fui-button-height !important;
+	}
+
+	.fui-button__size {
+		font-size: $fui-button-size !important;
+		line-height: $fui-button-height !important;
+	}
+
+	.fui-button__radius {
+		border-radius: $fui-button-radius !important;
+	}
+</style>

@@ -1,0 +1,172 @@
+<template>
+	<view class="fui-grid__wrap" :class="[isShow?'fui-grid__wrap-show':'fui-grid__wrap-hidden']">
+		<view :id="elemId" ref="fui_grid" class="fui-grid">
+			<view class="fui-grid__border-top" v-if="showBorder"></view>
+			<view class="fui-grid__border-left" v-if="showBorder"></view>
+			<slot></slot>
+		</view>
+	</view>
+</template>
+
+<script>
+	import { ComponentPublicInstance } from 'vue'
+	/**
+	 * Grid 宫格
+	 * @description Grid 宫格，主要使用场景如：热门内容等。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Number} columns {Number} 每行显示item数
+	 * @property {Boolean} showBorder {Boolean}	是否显示边框
+	 * @property {Boolean} square {Boolean} item是否显示为正方形
+	 * @event {Function} click 点击时触发，返回传入的索引值(event: number) => void
+	 */
+	export default {
+		name: "fui-grid",
+		emits: ['click'],
+		props: {
+			columns: {
+				type: Number,
+				default: 3
+			},
+			showBorder: {
+				type: Boolean,
+				default: true
+			},
+			square: {
+				type: Boolean,
+				default: true
+			}
+		},
+		provide() {
+			return {
+				fuiGrid: this
+			}
+		},
+		data() {
+			const elemId = `fui_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				elemId: elemId,
+				width: '0',
+				height: '0',
+				isShow: false,
+				children: [] as Array<ComponentPublicInstance>
+			};
+		},
+		created() {
+			const sys : GetSystemInfoResult = uni.getSystemInfoSync()
+			this.width = (100 / this.columns) + '%'
+			if (this.square) {
+				this.height = `${(sys.windowWidth - 1) / this.columns}px`
+			}
+		},
+		watch: {
+			columns() {
+				this.$nextTick(() => {
+					this.init()
+				})
+			},
+			showBorder() {
+				this.childChange()
+			}
+		},
+		mounted() {
+			this.$nextTick(() => {
+				this.init()
+			})
+		},
+		methods: {
+			init() {
+				setTimeout(() => {
+					this.getWidth((width : string, height : string) => {
+						this.children.forEach((item : ComponentPublicInstance) => {
+							item.$data['width'] = width
+							item.$data['height'] = height
+						})
+						this.isShow = true
+					})
+				}, 50)
+			},
+			childChange() {
+				this.children.forEach((item : ComponentPublicInstance) => {
+					item.$data['showBorder'] = this.showBorder
+				})
+			},
+			handleClick(index : number) {
+				this.$emit('click', index)
+			},
+			getWidth(fn : (width : string, height : string) => void) {
+				let isNoSupported = false
+				//这个值误差较大
+				this.width = `${100 / this.columns}%`
+				if (this.square || isNoSupported) {
+					uni.createSelectorQuery()
+						.in(this)
+						.select(`#${this.elemId}`)
+						.boundingClientRect()
+						.exec(ret => {
+							const node = ret[0] as NodeInfo;
+							let width = ((node.width as number) - 1) / this.columns
+							// width = Math.floor(width * 100) / 100
+							if (this.square)
+								this.height = `${width}px`;
+							if (isNoSupported)
+								this.width = `${width}px`;
+							fn(this.width, this.height)
+						})
+				} else {
+					fn(this.width, this.height)
+				}
+
+			}
+		}
+
+	}
+</script>
+
+<style lang="scss">
+	$fui-color-border: #EEEEEE !default;
+	$fui-grid-border-width: 0.5px !default;
+
+	@mixin fui_grid_wrap_border {
+		position: absolute;
+		left: 0;
+		top: 0;
+		background-color: $fui-color-border;
+		z-index: 1;
+		pointer-events: none;
+	}
+
+	.fui-grid__wrap {
+		width: 100%;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.fui-grid__wrap-hidden {
+		opacity: 0;
+	}
+
+	.fui-grid__wrap-show {
+		opacity: 1;
+	}
+
+	.fui-grid {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		position: relative;
+	}
+
+	.fui-grid__border-top {
+		height: $fui-grid-border-width;
+		right: 0;
+		@include fui_grid_wrap_border;
+	}
+
+	.fui-grid__border-left {
+		width: $fui-grid-border-width;
+		bottom: 0;
+		@include fui_grid_wrap_border;
+	}
+</style>

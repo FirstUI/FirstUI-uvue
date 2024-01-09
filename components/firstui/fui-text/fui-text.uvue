@@ -1,0 +1,284 @@
+<template>
+	<view class="fui-text__wrap" :class="['fui-text__'+align]"
+		:hover-class="x_highlight && !disable?'fui-text__active':''" :hover-stay-time="150" :style="{padding:padding}"
+		@tap="handleTap">
+		<slot></slot>
+		<text class="fui-text__content"
+			:style="{color:color,fontSize:getSize,lineHeight:lineHeight?getSize:'normal',textAlign:align,textDecoration:decoration,fontWeight:fontWeight}"
+			:class="[color==''?'fui-text__'+type:'',unShrink?'fui-text__unshrink':'',isBind?'fui-text__fontsize':'',lineHeight && isBind?'fui-text__lineheight':'']"
+			:selectable="selectable">{{getText(text, textType, format)}}</text>
+		<slot name="right"></slot>
+	</view>
+</template>
+
+<script>
+	import { FuiTextClickParam } from '../fui-types/index.uts'
+	// #ifdef APP-ANDROID
+	import Intent from 'android.content.Intent';
+	import Uri from 'android.net.Uri';
+	// #endif
+	/**
+	 * Text 文本
+	 * @description Text 文本，用于包裹文本内容。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} type {String} 样式类型，可选值：primary，success， warning，danger，purple，gray，black
+	 * @property {String} text {String} 文本内容
+	 * @property {Number} size {Number} 是否有边框
+	 * @property {String} unit {String} 字体大小单位，可选值：rpx、px
+	 * @property {String} color {String} 字体颜色，设置值则type失效
+	 * @property {String} fontWeight {String} 字重，注意：仅支持normal、bold、‘400‘，’700‘
+	 * @property {String} align {String} 文本对齐方式，可选值：left、center、right
+	 * @property {String} decoration {String} 文本的修饰，可选值：none、 underline、line-through 等
+	 * @property {Boolean} lineHeight {Boolean}	是否将行高设置与字体大小一致	
+	 * @property {String} padding {String} 文本padding值
+	 * @property {String} textType {String} 文本类型，可选值：text、mobile、amount、name
+	 * @property {Boolean} format {Boolean}	文本是否脱敏格式化，仅textType取值mobile、amount时有效
+	 * @property {Boolean} call	{Boolean} 点击时是否拨打电话，仅textType取值mobile时有效
+	 * @property {Boolean} selectable {Boolean} 文本是否可选
+	 * @property {Boolean} highlight {Boolean} 是否有点击效果
+	 * @property {Boolean} disable {Boolean} 是否禁用点击
+	 * @property {Boolean} unShrink {Boolean} flex布局下是否取消收缩，不被挤压
+	 * @property {String} param	{String} 自定义参数，点击事件中回传
+	 * @event {Function} click 点击文本时触发，(event: FuiTextClickParam) => void
+	 */
+	export default {
+		name: "fui-text",
+		emits: ['click'],
+		props: {
+			type: {
+				type: String,
+				default: 'black'
+			},
+			text: {
+				type: String,
+				default: ''
+			},
+			size: {
+				type: Object,
+				default: 0
+			},
+			unit: {
+				type: String,
+				default: 'rpx'
+			},
+			color: {
+				type: String,
+				default: ''
+			},
+			fontWeight: {
+				type: String,
+				default: 'normal'
+			},
+			align: {
+				type: String,
+				default: 'left'
+			},
+			decoration: {
+				type: String,
+				default: 'none'
+			},
+			lineHeight: {
+				type: Boolean,
+				default: false
+			},
+			padding: {
+				type: String,
+				default: '0'
+			},
+			textType: {
+				type: String,
+				default: 'text'
+			},
+			format: {
+				type: Boolean,
+				default: false
+			},
+			call: {
+				type: Boolean,
+				default: false
+			},
+			selectable: {
+				type: Boolean,
+				default: false
+			},
+			//Boolean 类型特殊处理
+			highlight: {
+				type: Object,
+				default: false
+			},
+			disable: {
+				type: Boolean,
+				default: false
+			},
+			unShrink: {
+				type: Boolean,
+				default: false
+			},
+			param: {
+				type: String,
+				default: ''
+			}
+		},
+		computed: {
+			getSize() : string {
+				let size : string;
+				if (typeof this.size == 'number') {
+					size = (this.size as number).toString() + this.unit;
+				} else if (typeof this.size == 'string') {
+					size = (this.size as string) + this.unit;
+				} else {
+					size = this.size.toString() + this.unit;
+				}
+				return size;
+			},
+			isBind() : boolean {
+				const size = this.getSize
+				let bind = false;
+				if (size == '' || size == 'px' || size == 'rpx' || size == '0rpx' || size == '0px') {
+					bind = true;
+				}
+				return bind;
+			},
+			x_highlight() : boolean {
+				if (typeof this.highlight == 'boolean') {
+					return this.highlight as boolean
+				}
+				return true;
+			}
+		},
+		methods: {
+			getText(text : string, textType : string, format : boolean) : string {
+				let _text = text
+				if (format) {
+					if (textType == 'mobile') {
+						_text = this.numberFormatter(text)
+					} else if (textType == 'amount') {
+						_text = this.moneyFormatter(text)
+					} else if (textType == 'name') {
+						_text = this.nameFormatter(text)
+					}
+				}
+				return _text
+			},
+			numberFormatter(value : string) : string {
+				return value.length == 11 ? value.replace(/^(\d{3})\d{4}(\d{4})$/, '$1****$2') : value;
+			},
+			moneyFormatter(money : string) : string {
+				return parseFloat(money).toFixed(2).toString().split('').reverse().join('').replace(/(\d{3})/g, '$1,')
+					.replace(
+						/\,$/, '').split('').reverse().join('');
+			},
+			trimAll(value : string) : string {
+				return value.toString().replace(/\s+/g, "")
+			},
+			nameFormatter(name : string) : string {
+				let _name = this.trimAll(name)
+				if (_name != '' && _name.length >= 2) {
+					const arr = _name.split('')
+					_name = arr[0] + '*'
+					if (arr.length > 2) {
+						_name = _name + arr[arr.length - 1]
+					}
+				}
+				return _name
+			},
+			handleTap() {
+				if (this.disable) return;
+				this.$emit('click', {
+					text: this.text,
+					param: this.param
+				} as FuiTextClickParam)
+				if (this.call) {
+					// #ifdef APP-ANDROID
+					const context = UTSAndroid.getUniActivity()!;
+					const uri = Uri.parse(`tel:${this.text}`)
+					//直接拨打（Intent.ACTION_CALL）需要设置权限：<uses-permission android:name="android.permission.CALL_PHONE‌" />
+					// Intent.ACTION_DIAL 跳转到打电话页面
+					const intent = new Intent(Intent.ACTION_DIAL, uri)
+					intent.setData(uri);
+					context.startActivity(intent);
+					// #endif
+				}
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-primary: #465CFF !default;
+	$fui-color-success: #09BE4F !default;
+	$fui-color-warning: #FFB703 !default;
+	$fui-color-danger: #FF2B2B !default;
+	$fui-color-purple: #6831FF !default;
+	$fui-color-label: #B2B2B2 !default;
+	$fui-color-title: #181818 !default;
+	$fui-text-size: 32rpx !default;
+
+	.fui-text__wrap {
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+	}
+
+	.fui-text__active {
+		opacity: .5;
+		/* #ifdef H5 */
+		cursor: pointer;
+		/* #endif */
+	}
+
+	.fui-text__unshrink {
+		flex-shrink: 0;
+	}
+
+	/* #ifndef UNI-APP-X */
+	.fui-text__content {
+		word-break: break-all;
+	}
+
+	/* #endif */
+
+	.fui-text__center {
+		justify-content: center;
+	}
+
+	.fui-text__right {
+		justify-content: flex-end;
+	}
+
+	.fui-text__primary {
+		color: $fui-color-primary !important;
+	}
+
+	.fui-text__success {
+		color: $fui-color-success !important;
+	}
+
+	.fui-text__warning {
+		color: $fui-color-warning !important;
+	}
+
+	.fui-text__danger {
+		color: $fui-color-danger !important;
+	}
+
+	.fui-text__purple {
+		color: $fui-color-purple !important;
+	}
+
+	.fui-text__gray {
+		color: $fui-color-label !important;
+	}
+
+	.fui-text__black {
+		color: $fui-color-title !important;
+	}
+
+	.fui-text__fontsize {
+		font-size: $fui-text-size !important;
+	}
+
+	.fui-text__lineheight {
+		line-height: $fui-text-size !important;
+	}
+</style>

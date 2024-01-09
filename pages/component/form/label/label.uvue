@@ -1,0 +1,129 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Label</text>
+				<text class="fui-page__desc">Label 标签，用来改进表单组件的可用性，将控件放在该标签下，当点击时，就会触发对应的控件。</text>
+			</view>
+			<view class="fui-page__bd">
+				<text class="fui-section__title fui-mtop--0">Radio 单项选择器</text>
+				<fui-radio-group>
+					<fui-label v-for="(item,index) in radioItems" :key="index">
+						<fui-list-cell>
+							<view class="fui-align__center">
+								<fui-radio :checked="item.checked" :value="item.value">
+								</fui-radio>
+								<text class="fui-text">{{item.name}}</text>
+							</view>
+						</fui-list-cell>
+					</fui-label>
+				</fui-radio-group>
+				<text class="fui-section__title">Checkbox 多项选择器</text>
+				<fui-checkbox-group>
+					<fui-label v-for="(item,index) in checkboxItems" :key="index">
+						<fui-list-cell>
+							<view class="fui-list__cell">
+								<text class="fui-text--size">{{item.name}}</text>
+								<fui-checkbox :isCheckMark="true" checkMarkColor="#FFB703" :scaleRatio="1.3"
+									:checked="item.checked" :value="item.value">
+								</fui-checkbox>
+							</view>
+						</fui-list-cell>
+					</fui-label>
+				</fui-checkbox-group>
+				<text class="fui-section__title">Switch 开关选择器</text>
+				<fui-label>
+					<fui-list-cell>
+						<view class="fui-list__cell">
+							<text class="fui-text--size">scaleRatio</text>
+							<fui-switch :scaleRatio="0.8" scale-align="right" color="#FFB703"></fui-switch>
+						</view>
+					</fui-list-cell>
+				</fui-label>
+				<fui-label>
+					<fui-list-cell>
+						<view class="fui-list__cell">
+							<text class="fui-text--size">type=checkbox</text>
+							<fui-switch type="checkbox" color="#09BE4F" scale-align="right"></fui-switch>
+						</view>
+					</fui-list-cell>
+				</fui-label>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	type Item = {
+		name : string;
+		value : string;
+		checked : boolean;
+	}
+	export default {
+		data() {
+			return {
+				radioItems: [{
+					name: '小于18岁',
+					value: '1',
+					checked: true
+				},
+				{
+					name: '18~28岁',
+					value: '2',
+					checked: false
+				},
+				{
+					name: '29~40岁',
+					value: '3',
+					checked: false
+				}
+				] as Item[],
+				checkboxItems: [{
+					name: '篮球',
+					value: '1',
+					checked: true
+				},
+				{
+					name: '羽毛球',
+					value: '2',
+					checked: false
+				},
+				{
+					name: '乒乓球',
+					value: '3',
+					checked: false
+				}] as Item[]
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+<style>
+	.fui-section__title {
+		margin-left: 32rpx;
+	}
+
+	.fui-text {
+		font-size: 30rpx;
+		padding-left: 16rpx;
+	}
+
+	.fui-list__cell {
+		flex: 1;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.fui-text--size {
+		font-size: 32rpx;
+	}
+</style>

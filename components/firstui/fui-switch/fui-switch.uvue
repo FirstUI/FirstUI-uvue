@@ -1,0 +1,366 @@
+<template>
+	<view class="fui-switch__input"
+		:class="[`fui-switch__size-${type}`,scaleRatio!=1? `fui-switch__scale-${scaleAlign}`:'',disabled && disabledStyle ?'fui-switch__checkbox-disabled':'']"
+		:style="{transform:`scale(${scaleRatio})`}">
+		<view class="fui-switch__input-def"
+			:style="{background:val?color:transitionColor,borderColor:val?color:(borderColor==''?color:borderColor)}"
+			:class="{'fui-checkbox__disabled':disabled,'fui-switch__checked-color':styleVal && color=='','fui-switch__normal-bcolor':!styleVal && borderColor=='','fui-switch__normal-bg':!styleVal && transitionColor==''}"
+			v-if="type=='switch'">
+			<view class="fui-switch__input-before" :style="{background: normalColor}"
+				:class="{'fui-switch__input--before':val,'fui-switch__before-bg':!styleVal && normalColor==''}">
+			</view>
+			<view class="fui-switch__input-after" :style="getStyle"
+				:class="{'fui-switch__input--after':val,'fui-switch__after-bg':(btnColor=='' && styleVal) || (!styleVal && btnNormalColor=='')}">
+				<slot></slot>
+			</view>
+			<switch class="fui-switch__hidden" :class="{'fui-switch__pointer-events':isLabel}" @change="onChange"
+				:name="name" :checked="val" :disabled="disabled">
+			</switch>
+		</view>
+		<view class="fui-switch__checkbox-self"
+			:class="{'fui-switch__checked-color':styleVal && color=='','fui-switch__normal-bcolor':!styleVal && borderColor=='','fui-switch__circle-bg':!styleVal && normalColor==''}"
+			:style="{background:val?color:normalColor,'border-color':val?color:(borderColor==''?color:borderColor)}"
+			v-else>
+			<view class="fui-switch__check-mark" :class="{'fui-switch__mark-color':checkMarkColor==''}"
+				:style="{borderBottomColor:checkMarkColor,borderRightColor:checkMarkColor}" v-if="val"></view>
+			<switch class="fui-switch__hidden" :class="{'fui-switch__pointer-events':isLabel}" @change="onChange"
+				:name="name" :checked="val" :disabled="disabled"></switch>
+		</view>
+	</view>
+</template>
+
+<script>
+	import { ComponentPublicInstance } from 'vue'
+	/**
+	 * Switch 开关
+	 * @description Switch 开关选择器，原生组件增强。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} name {String}	开关选择器名称
+	 * @property {Boolean} checked {Boolean} 是否打开
+	 * @property {Boolean} disabled	 {Boolean} 是否禁用
+	 * @property {Boolean} disabledStyle {Boolean} 禁用后是否改变样式
+	 * @property {String} type {String}	开关显示样式，有效值：switch, checkbox
+	 * @property {String} color {String} 开关打开时颜色
+	 * @property {String} normalColor {String} 开关未选中时背景色颜色
+	 * @property {String} transitionColor {String} 开关过渡动画颜色
+	 * @property {String} btnColor {String} 开关打开时按钮背景色
+	 * @property {String} btnNormalColor {String} 开关关闭时按钮背景色
+	 * @property {String} borderColor {String} 边框颜色，type=checkbox时生效
+	 * @property {String} checkMarkColor {String} 对号颜色，type=checkbox时生效
+	 * @property {Number} scaleRatio {Number} 缩放比例，当比例大于1时，外层容器需要设置 overflow: visible或者留出足够空间，避免显示不全
+	 * @property {String} scaleAlign {String} 缩放后对齐方式,可选值：left、center、right
+	 * @event {Function} change 开关切换状态时触发，(event: boolean) => void
+	 * @event {Function} update:checked 开关切换状态时触发，用于双向绑定，v-model:checked，(event: boolean) => void
+	 */
+	export default {
+		name: "fui-switch",
+		emits: ['change', 'update:checked'],
+		props: {
+			name: {
+				type: String,
+				default: ''
+			},
+			checked: {
+				type: Boolean,
+				default: false
+			},
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			disabledStyle: {
+				type: Boolean,
+				default: true
+			},
+			type: {
+				type: String,
+				default: 'switch'
+			},
+			color: {
+				type: String,
+				default: ''
+			},
+			normalColor: {
+				type: String,
+				default: ''
+			},
+			transitionColor: {
+				type: String,
+				default: ''
+			},
+			btnColor: {
+				type: String,
+				default: ''
+			},
+			btnNormalColor: {
+				type: String,
+				default: ''
+			},
+			borderColor: {
+				type: String,
+				default: ''
+			},
+			checkMarkColor: {
+				type: String,
+				default: ''
+			},
+			scaleRatio: {
+				type: Number,
+				default: 1
+			},
+			scaleAlign: {
+				type: String,
+				default: 'center'
+			}
+		},
+		data() {
+			return {
+				val: false,
+				styleVal: false,
+				isLabel: false,
+				fuiLabel: null as null | ComponentPublicInstance,
+				fuiForm: null as null | ComponentPublicInstance
+			};
+		},
+		computed: {
+			getStyle() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.val) {
+					if (this.btnColor != '') mp.set('background', this.btnColor);
+				} else {
+					if (this.btnNormalColor != '') mp.set('background', this.btnNormalColor);
+				}
+				return mp
+			}
+		},
+		watch: {
+			checked(val : boolean) {
+				this.val = val;
+			},
+			val() {
+				setTimeout(() => {
+					this.styleVal = this.val
+				}, 0)
+			}
+		},
+		created() {
+			this.val = this.checked;
+			const parent = this.getParent('fui-label');
+			if (parent) {
+				this.isLabel = true
+				const label = this.fuiLabel as ComponentPublicInstance
+				(label.$data['childrens'] as ComponentPublicInstance[]).push(this);
+			}
+			//用于submit、reset事件
+			const isForm = this.getParent('fui-form');
+			if (isForm) {
+				const form = this.fuiForm as ComponentPublicInstance
+				(form.$data['formChildren'] as ComponentPublicInstance[]).push(this);
+			}
+		},
+		methods: {
+			onChange(e : SwitchChangeEvent) {
+				if (this.disabled) return;
+				this.emitChange(e.detail.value, false)
+			},
+			emitChange(e : boolean, label : boolean) {
+				if (this.fuiLabel != null && !label) return;
+				this.val = e;
+				this.$emit('change', e)
+				this.$emit('update:checked', e)
+			},
+			labelClick() {
+				if (this.disabled) return;
+				this.emitChange(!this.val, true)
+			},
+			//provide/inject方式（可能有警告，设置default:null也无法去除，应该是底层有bug）
+			getParent(name : string) : boolean {
+				if (this.$parent == null) return false;
+				let parent = this.$parent as ComponentPublicInstance;
+				let parentName = parent.$options['name'];
+				while (parentName != name) {
+					if (parent.$parent == null) return false;
+					parent = parent.$parent as ComponentPublicInstance;
+					if (parent.$options['name'] == '') return false;
+					parentName = parent.$options['name'];
+				}
+				if (name == 'fui-label') {
+					this.fuiLabel = parent;
+				} else if (name == 'fui-form') {
+					this.fuiForm = parent;
+				}
+				return true;
+			},
+			//考虑一下是还原还是重置，暂时做重置处理（还原需记录初始值）
+			reset() {
+				this.val = false;
+				this.$emit('change', false);
+				this.$emit('update:checked', false);
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-primary: #465CFF !default;
+	$fui-switch-background: #FFFFFF !default;
+	$fui-switch-normal-transition: #dfdfdf !default;
+	$fui-switch-border-color: #CCCCCC !default;
+	$fui-switch-circle-shadow: 0 0 3px rgba(0, 0, 0, .4) !default;
+	$fui-switch-circle-background: #FFFFFF !default;
+	$fui-switch-mark-color: #FFFFFF !default;
+
+	.fui-switch__input {
+		flex-shrink: 0;
+	}
+
+	.fui-switch__scale-left {
+		transform-origin: 0 center;
+	}
+
+	.fui-switch__scale-center {
+		transform-origin: center center;
+	}
+
+	.fui-switch__scale-right {
+		transform-origin: 100% center;
+	}
+
+	.fui-switch__size-switch {
+		width: 52px;
+		height: 32px;
+	}
+
+	.fui-switch__size-checkbox {
+		width: 40rpx;
+		height: 40rpx;
+	}
+
+	.fui-switch__checkbox-self {
+		width: 40rpx;
+		height: 40rpx;
+		border-radius: 40px;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		border-style: solid;
+		border-width: 1px;
+		border-color: $fui-switch-border-color;
+		box-sizing: border-box;
+		overflow: hidden;
+	}
+
+	.fui-switch__input-def {
+		position: relative;
+		width: 52px;
+		height: 32px;
+		border-width: 1px;
+		border-style: solid;
+		border-color: $fui-switch-border-color;
+		border-radius: 16px;
+		box-sizing: border-box;
+		transition: background-color .1s, border .1s;
+
+	}
+
+	.fui-switch__normal-bg {
+		background: $fui-switch-normal-transition !important;
+	}
+
+	.fui-switch__checked-color {
+		background: $fui-color-primary !important;
+		border-color: $fui-color-primary !important;
+	}
+
+	.fui-switch__normal-bcolor {
+		border-color: $fui-switch-border-color !important;
+	}
+
+
+	.fui-switch__input-before {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 50px;
+		height: 30px;
+		border-radius: 15px;
+
+		transition: transform .3s
+	}
+
+	.fui-switch__before-bg {
+		background: $fui-switch-background !important;
+	}
+
+	.fui-switch__input-after {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 30px;
+		height: 30px;
+		border-radius: 15px;
+		box-shadow: $fui-switch-circle-shadow;
+		transition: transform .3s;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.fui-switch__after-bg {
+		background: $fui-switch-background !important;
+	}
+
+
+	.fui-switch__input--before {
+		transform: scale(0)
+	}
+
+	.fui-switch__input--after {
+		transform: translateX(20px)
+	}
+
+
+	.fui-switch__check-mark {
+		width: 20rpx;
+		height: 40rpx;
+		border-bottom-style: solid;
+		border-bottom-width: 3px;
+		border-bottom-color: #FFFFFF;
+		border-right-style: solid;
+		border-right-width: 3px;
+		border-right-color: #FFFFFF;
+		transform: rotate(45deg) scale(0.5);
+		transform-origin: 54% 48%;
+		box-sizing: border-box;
+	}
+
+	.fui-switch__circle-bg {
+		background: $fui-switch-circle-background !important;
+	}
+
+	.fui-switch__mark-color {
+		border-bottom-color: $fui-checkbox-mark-color !important;
+		border-right-color: $fui-checkbox-mark-color !important;
+	}
+
+	.fui-switch__hidden {
+		position: absolute;
+		top: -1px;
+		left: -1px;
+		opacity: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 2;
+		border-width: 0;
+	}
+
+	.fui-switch__pointer-events {
+		pointer-events: none;
+	}
+
+	.fui-switch__checkbox-disabled {
+		opacity: 0.6;
+	}
+</style>

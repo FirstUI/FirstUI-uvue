@@ -1,0 +1,334 @@
+{
+	"pages": [{
+			"path": "pages/tabbar/index/index",
+			"style": {
+				// #ifdef H5
+				"titleNView": false,
+				// #endif
+				"navigationBarTitleText": "First UI",
+				"enablePullDownRefresh": false,
+				"mp-weixin": {
+					"disableScroll": true
+				},
+				"app-plus": {
+					"bounce": "none"
+				},
+				"mp-alipay": {
+					"allowsBounceVertical": "NO"
+				},
+				"mp-baidu": {
+					"disableScroll": true
+				}
+			}
+		},
+		{
+			"path": "pages/tabbar/layout/layout",
+			"style": {
+				// #ifdef H5
+				"titleNView": false,
+				// #endif
+				"navigationBarTitleText": "First UI",
+				"enablePullDownRefresh": false,
+				"backgroundColorTop": "#FFFFFF",
+				"backgroundColorBottom": "#FFFFFF",
+				"backgroundColor": "#FFFFFE",
+				"mp-alipay": {
+					"allowsBounceVertical": "YES"
+				}
+			}
+		},
+		{
+			"path": "pages/tabbar/my/my",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "",
+				// #ifndef MP
+				"titleNView": false,
+				// #endif
+				"navigationStyle": "custom",
+				"backgroundColor": "#FFFFFE",
+				"backgroundColorBottom": "#FFFFFF",
+				"mp-alipay": {
+					"allowsBounceVertical": "YES",
+					"transparentTitle": "always",
+					"titlePenetrate": "YES"
+				}
+			}
+		},
+		{
+			"path": "pages/tabbar/template/template",
+			"style": {
+				// #ifdef H5
+				"titleNView": false,
+				// #endif
+				"navigationBarTitleText": "First UI",
+				"enablePullDownRefresh": false,
+				"backgroundColorTop": "#FFFFFF",
+				"backgroundColorBottom": "#FFFFFF",
+				"backgroundColor": "#FFFFFE",
+				"mp-alipay": {
+					"allowsBounceVertical": "YES"
+				}
+			}
+		},
+		{
+			"path": "pages/component/basics/color/color",
+			"style": {
+				"navigationBarTitleText": "色彩",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/basics/text/text",
+			"style": {
+				"navigationBarTitleText": "文本",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/basics/number/number",
+			"style": {
+				"navigationBarTitleText": "数字",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/basics/icon/icon",
+			"style": {
+				"navigationBarTitleText": "图标",
+				"backgroundColorTop": "#FFFFFF",
+				"backgroundColorBottom": "#FFFFFF",
+				"backgroundColor": "#FFFFFE",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/basics/button/button",
+			"style": {
+				"navigationBarTitleText": "按钮",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/basics/footer/footer",
+			"style": {
+				"navigationBarTitleText": "页脚",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/basics/animation/animation",
+			"style": {
+				"navigationBarTitleText": "动画",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/layout/layout/layout",
+			"style": {
+				"navigationBarTitleText": "栅格布局",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/layout/grid/grid",
+			"style": {
+				"navigationBarTitleText": "宫格",
+				"enablePullDownRefresh": false,
+				"backgroundColorTop": "#FFFFFF",
+				"backgroundColorBottom": "#FFFFFF",
+				"backgroundColor": "#FFFFFE"
+			}
+		},
+		{
+			"path": "pages/component/data/badge/badge",
+			"style": {
+				"navigationBarTitleText": "徽章",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/layout/list/list",
+			"style": {
+				"navigationBarTitleText": "列表",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/layout/card/card",
+			"style": {
+				"navigationBarTitleText": "卡片",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/layout/section/section",
+			"style": {
+				"navigationBarTitleText": "标题栏",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/layout/whiteSpace/whiteSpace",
+			"style": {
+				"navigationBarTitleText": "上下间距",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/layout/wingBlank/wingBlank",
+			"style": {
+				"navigationBarTitleText": "左右间距",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/form/input/input",
+			"style": {
+				"navigationBarTitleText": "输入框",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/form/inputNumber/inputNumber",
+			"style": {
+				"navigationBarTitleText": "数字输入框",
+				"enablePullDownRefresh": false,
+				"backgroundColorTop": "#FFFFFF",
+				"backgroundColorBottom": "#FFFFFF",
+				"backgroundColor": "#FFFFFE"
+			}
+		},
+		{
+			"path": "pages/component/form/checkbox/checkbox",
+			"style": {
+				"navigationBarTitleText": "复选框",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/form/label/label",
+			"style": {
+				"navigationBarTitleText": "标签",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/form/radio/radio",
+			"style": {
+				"navigationBarTitleText": "单选框",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/form/switch/switch",
+			"style": {
+				"navigationBarTitleText": "开关",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/form/textarea/textarea",
+			"style": {
+				"navigationBarTitleText": "多行输入框",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/operate/actionsheet/actionsheet",
+			"style": {
+				"navigationBarTitleText": "上拉菜单",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/operate/toast/toast",
+			"style": {
+				"navigationBarTitleText": "轻提示",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/operate/backdrop/backdrop",
+			"style": {
+				"navigationBarTitleText": "遮罩层",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/operate/dialog/dialog",
+			"style": {
+				"navigationBarTitleText": "对话框",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/common/coding/coding",
+			"style": {
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/data/empty/empty",
+			"style": {
+				"navigationBarTitleText": "缺省页",
+				"enablePullDownRefresh": false,
+				"backgroundColorTop": "#FFFFFF",
+				"backgroundColorBottom": "#FFFFFF",
+				"backgroundColor": "#FFFFFE"
+			}
+		}
+	],
+	"globalStyle": {
+		"backgroundTextStyle": "dark",
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "First UI",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#F1F4FA",
+		"backgroundColorTop": "#F1F4FA",
+		"backgroundColorBottom": "#F1F4FA",
+		"h5": {
+			"rpxCalcMaxDeviceWidth": 750, // rpx 计算所支持的最大设备宽度，单位 px，默认值为 960
+			"rpxCalcBaseDeviceWidth": 375, // rpx 计算使用的基准设备宽度，设备实际宽度超出 rpx 计算所支持的最大设备宽度时将按基准宽度计算，单位 px，默认值为 375
+			"rpxCalcIncludeWidth": 750 // rpx 计算特殊处理的值，始终按实际的设备宽度计算，单位 rpx，默认值为 750
+		}
+	},
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"fui-(.*)": "@/components/firstui/fui-$1/fui-$1.uvue",
+			"f-(.*)": "@/components/views/f-$1/f-$1.uvue"
+		}
+	},
+	"tabBar": {
+		"color": "#333333",
+		"selectedColor": "#465CFF",
+		"backgroundColor": "#FFFFFF",
+		"list": [{
+				"pagePath": "pages/tabbar/index/index",
+				"text": "组件",
+				"iconPath": "static/images/tabbar/assembly_default_3x.png",
+				"selectedIconPath": "static/images/tabbar/assembly_selected_3x.png"
+			},
+			{
+				"pagePath": "pages/tabbar/layout/layout",
+				"text": "布局",
+				"iconPath": "static/images/tabbar/layout_default_3x.png",
+				"selectedIconPath": "static/images/tabbar/layout_selected_3x.png"
+			},
+			{
+				"pagePath": "pages/tabbar/template/template",
+				"text": "模板",
+				"iconPath": "static/images/tabbar/mod_default_3x.png",
+				"selectedIconPath": "static/images/tabbar/mod_selected_3x.png"
+			},
+			{
+				"pagePath": "pages/tabbar/my/my",
+				"text": "我的",
+				"iconPath": "static/images/tabbar/my_default_3x.png",
+				"selectedIconPath": "static/images/tabbar/my_selected_3x.png"
+			}
+		]
+	},
+	"uniIdRouter": {}
+}

@@ -1,0 +1,60 @@
+<template>
+	<view :style="{ height: statusBarHeight,zIndex:isFixed?zIndex:1,background:background }" class="fui-status__bar"
+		:class="{'fui-status__bar-fixed':isFixed}">
+		<slot />
+	</view>
+</template>
+
+<script>
+	var statusBarHeight = `${uni.getSystemInfoSync().statusBarHeight}px`
+	/**
+	 * StatusBar 状态栏
+	 * @description StatusBar 状态栏，主要用于自定义导航栏时状态栏占位，高度与状态栏相等。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} background {String} 状态栏背景色
+	 * @property {Boolean} isFixed {Boolean}是否固定在顶部
+	 * @property {Number} zIndex {Number} z-index值，isFixed为true时生效
+	 * @event {Function} init 初始化时触发,返回状态栏高度，(event: string) => void
+	 */
+	export default {
+		name: "fui-status-bar",
+		emits: ['init'],
+		props: {
+			background: {
+				type: String,
+				default: 'transparent'
+			},
+			isFixed: {
+				type: Boolean,
+				default: false
+			},
+			zIndex: {
+				type: Number,
+				default: 99
+			}
+		},
+		data() {
+			return {
+				statusBarHeight: statusBarHeight as string
+			};
+		},
+		created() {
+			this.$emit('init', statusBarHeight)
+		}
+	}
+</script>
+
+<style scoped>
+	.fui-status__bar {
+		width: 100%;
+		height: 20px;
+		overflow: hidden;
+	}
+
+	.fui-status__bar-fixed {
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
+	}
+</style>

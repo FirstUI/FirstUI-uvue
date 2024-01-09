@@ -1,0 +1,126 @@
+<template>
+	<text :style="{ color: color, fontSize: getSize,lineHeight:getSize, fontWeight: fontWeight}" class="fui-icon"
+		:class="{'fui-icon__fontsize':isBind,'fui-icon__active-color':primary && color=='','fui-icon__color':color=='' }"
+		@click="handleClick">{{ getIcon }}</text>
+</template>
+
+<script>
+	import icons from './fui-icon.uts';
+	/**
+	 * Icon 图标
+	 * @description Icon 图标，First UI字体图标库。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} name {String} 图标名称
+	 * @property {Number} size {Number} 图标大小
+	 * @property {String} unit {String} 图标大小单位，可选值：rpx、px
+	 * @property {String} color {String} 图标颜色
+	 * @property {String} fontWeight {String} 图标字重，注意：仅支持normal、bold、‘400‘，’700‘
+	 * @property {Boolean} disabled {Boolean} 是否禁用点击，设置为true则点击事件及效果失效
+	 * @property {String} param	{String} 自定义参数，点击事件中回传
+	 * @property {Boolean} primary	{Boolean} 是否显示为主色调，color为空时有效。【内部保留属性】
+	 * @event {Function} click 点击图标时触发，(event: string) => void
+	 */
+	export default {
+		name: "fui-icon",
+		emits: ['click'],
+		props: {
+			name: {
+				type: String,
+				default: ''
+			},
+			size: {
+				type: Object,
+				default: 0
+			},
+			unit: {
+				type: String,
+				default: 'rpx'
+			},
+			color: {
+				type: String,
+				default: ''
+			},
+			fontWeight: {
+				type: String,
+				default: 'normal'
+			},
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			param: {
+				type: String,
+				default: '0'
+			},
+			//是否显示为主色调，color为空时有效。【内部保留属性】
+			primary: {
+				type: Boolean,
+				default: false
+			}
+		},
+		computed: {
+			getSize() : string {
+				let size : string;
+				if (typeof this.size == 'number') {
+					size = (this.size as number).toString() + this.unit;
+				} else if (typeof this.size == 'string') {
+					size = (this.size as string) + this.unit;
+				} else {
+					size = this.size.toString() + this.unit;
+				}
+				return size;
+			},
+			isBind() : boolean {
+				const size = this.getSize
+				let bind = false;
+				if (size == '' || size == 'px' || size == 'rpx' || size == '0rpx' || size == '0px') {
+					bind = true;
+				}
+				return bind;
+			},
+			getIcon() : string {
+				const icon = this.icons.getString(this.name)
+				return icon == null ? '' : icon
+			}
+		},
+		data() {
+			return {
+				icons: icons as UTSJSONObject
+			};
+		},
+		methods: {
+			handleClick() {
+				if (this.disabled) return;
+				this.$emit('click', this.param);
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-section: #333333 !default;
+	$fui-color-primary: #465CFF !default;
+	$fui-icon-size: 64rpx !default;
+
+	@font-face {
+		font-family: fuiFont;
+		src: url("./fui-icon.ttf");
+	}
+
+	.fui-icon {
+		font-family: fuiFont;
+	}
+
+	.fui-icon__color {
+		color: $fui-color-section !important;
+	}
+
+	.fui-icon__active-color {
+		color: $fui-color-primary !important;
+	}
+
+	.fui-icon__fontsize {
+		font-size: $fui-icon-size !important;
+		line-height: $fui-icon-size !important;
+	}
+</style>
