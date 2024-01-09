@@ -70,7 +70,7 @@ export default {
 "easycom": {
 		"autoscan": true,
 		"custom": {
-			"fui-(.*)": "@/components/firstui/fui-$1/fui-$1.vue"
+			"fui-(.*)": "@/components/firstui/fui-$1/fui-$1.uvue"
 		}
 	}
 
@@ -80,7 +80,7 @@ export default {
 "easycom": {
 		"autoscan": true,
 		"custom": {
-			"fui-(.*)": "firstui-unix/components/fui-$1/fui-$1.vue"
+			"fui-(.*)": "firstui-unix/components/fui-$1/fui-$1.uvue"
 		}
 	}
 ```
