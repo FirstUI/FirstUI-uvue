@@ -121,9 +121,9 @@ GitHub地址：[https://github.com/FirstUI/FirstUI-uvue](https://github.com/Firs
 
 - 新增 Footer 页脚 组件。
 
-- 新增 Animation 动画 组件。（组件文档需加提示，动态切换mode时，详见页面备注）
+- 新增 Animation 动画 组件。
 
-- 新增 StatusBar 状态栏 组件。（文档中加入提示，用户需要根据init事件自行去控制高度设置padding 或者margin值 或者占位元素，uvue不支持设置占位）【ok】
+- 新增 StatusBar 状态栏 组件。
 
 - 新增 Layout 栅格布局 组件（fui-row和fui-col）。
 
