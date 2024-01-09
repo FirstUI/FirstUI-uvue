@@ -15,7 +15,7 @@
 				<fui-button type="gray" btn-size="medium" text="暗黑模式" margin="24rpx" :bold="true"
 					@click="showActionSheet(3)">
 				</fui-button>
-				<fui-button type="gray" btn-size="medium" text="无取消按钮1" :bold="true" @click="showActionSheet(4)">
+				<fui-button type="gray" btn-size="medium" text="无取消按钮" :bold="true" @click="showActionSheet(4)">
 				</fui-button>
 			</view>
 			<fui-actionsheet v-model:visible="show" :tips="tips" :itemList="itemList" :isCancel="isCancel"

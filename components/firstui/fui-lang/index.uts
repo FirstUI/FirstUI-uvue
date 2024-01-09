@@ -49,7 +49,7 @@ export const getFuiLocaleLang = (locale : null | string) : UTSJSONObject => {
 		initLangData = fuiLang.messages[locale] as UTSJSONObject;
 	} else {
 		let key = uni.getStorageSync('fui_locale_lang')
-		if (key == null) {
+		if (key == null || key=='') {
 			key = fuiLang.locale == '' ? 'cn' : fuiLang.locale;
 		}
 		initLangData = fuiLang.messages[key] as UTSJSONObject;
