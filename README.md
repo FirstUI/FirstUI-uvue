@@ -11,7 +11,7 @@ FirstUI（unix）组件库，一款适配 uni-app x 的轻量、简洁、高效�
 
 #### 方式一 ：通过 npm 安装
 
-<div class="fui-sub__text">使通过 npm 安装。</div>
+<div class="fui-sub__text">通过 npm 安装。</div>
 
 ``` js
 // # Using npm
