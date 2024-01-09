@@ -19,7 +19,7 @@ npm install firstui-unix
 ```
 
 ``` js
-注意：通过 npm 安装的组件，暂时可能无法使用easycom配置，
+注意：通过 npm 安装的组件，暂时可能无法使用easycom配置（待uni-app官方优化），
 请将 `node_modules` 文件夹下的 `firstui-unix` 文件夹整体复制到 `uni_modules` 文件夹下，
 如果项目没有 `uni_modules` 文件夹，在项目根目录创建即可，复制进去即可使用，无需其他配置。
 
