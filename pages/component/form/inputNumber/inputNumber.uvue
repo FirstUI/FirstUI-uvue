@@ -17,7 +17,7 @@
 				<text class="fui-section__title">改变数字框背景色</text>
 				<fui-input-number backgroundColor="#F1F4FA"></fui-input-number>
 				<text class="fui-section__title">自定义加减号</text>
-				<fui-input-number custom backgroundColor="#FFF" :size="30" :width="60" :margin="0">
+				<fui-input-number backgroundColor="#FFF" :size="30" :width="60" :margin="0">
 					<fui-icon name="minussign" :size="48" color="#FFB703"></fui-icon>
 					<template v-slot:plus>
 						<fui-icon name="plussign-fill" :size="48" color="#FFB703"></fui-icon>

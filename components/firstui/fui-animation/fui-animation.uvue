@@ -16,7 +16,7 @@
 	 * @property {Object} styles {Object} 组件外层样式，替换默认值或与默认值合并
 	 * @event {Function} click 点击动画弹层时触发，返回显示状态，(event: boolean) => void
 	 * @event {Function} change 动画执行时触发，返回显示状态，(event: boolean) => void
-	 * @event {Function} transitionend 动画执行结束时触发（注意：设置mode属性也会触发此事件），无返回参数，() => void 
+	 * @event {Function} transitionend 动画执行结束时触发（注意：设置animationType属性也会触发此事件），无返回参数，() => void 
 	 */
 	export default {
 		name: 'fui-animation',

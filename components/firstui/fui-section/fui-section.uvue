@@ -12,10 +12,11 @@
 				v-if="title">{{title}}</text>
 			<slot name="right"></slot>
 		</view>
-		<view class="fui-sections__descr" :style="getDescrTop"
-			:class="{'fui-sections__descr-top':descrTop==0}"
+		<view class="fui-sections__descr" :style="getDescrTop" :class="{'fui-sections__descr-top':descrTop==0}"
 			v-if="descr">
-			<text class="fui-sections__descr-text" :class="{'fui-sections__descr-size':descrSize==0,'fui-sections__descr-color':descrColor==''}" :style="getDescrStyle">{{descr}}</text>
+			<text class="fui-sections__descr-text"
+				:class="{'fui-sections__descr-size':descrSize==0,'fui-sections__descr-color':descrColor==''}"
+				:style="getDescrStyle">{{descr}}</text>
 		</view>
 		<slot name="descr"></slot>
 	</view>
@@ -30,7 +31,7 @@
 	 * @property {Number} size {Number}	标题字体大小，单位rpx
 	 * @property {Number} lineHeight {Number} 标题行高，单位rpx，默认与字体大小相等
 	 * @property {String} color {String} 标题颜色
-	 * @property {Number} fontWeight {Number} 标题字重，注意：值仅支持 normal、bold、'400'、'700'
+	 * @property {String} fontWeight {String} 标题字重，注意：值仅支持 normal、bold、'400'、'700'
 	 * @property {String} descr {String} 描述文本
 	 * @property {Number} descrSize {Number} 描述文本字体大小
 	 * @property {String} descrColor {String} 描述文本字体颜色

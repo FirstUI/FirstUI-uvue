@@ -92,7 +92,6 @@
 			borderColor: {
 				type: String,
 				default: ''
-
 			},
 			topLeft: {
 				type: Number,

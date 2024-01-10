@@ -41,10 +41,10 @@
 	 * @property {Boolean} disabledStyle {Boolean} 禁用后是否改变样式
 	 * @property {String} type {String}	开关显示样式，有效值：switch, checkbox
 	 * @property {String} color {String} 开关打开时颜色
-	 * @property {String} normalColor {String} 开关未选中时背景色颜色
-	 * @property {String} transitionColor {String} 开关过渡动画颜色
-	 * @property {String} btnColor {String} 开关打开时按钮背景色
-	 * @property {String} btnNormalColor {String} 开关关闭时按钮背景色
+	 * @property {String} normalColor {String} 开关未打开时背景色颜色
+	 * @property {String} transitionColor {String} 开关过渡动画颜色，type=switch时生效
+	 * @property {String} btnColor {String} 开关打开时按钮背景色，type=switch时生效	
+	 * @property {String} btnNormalColor {String} 开关关闭时按钮背景色，type=switch时生效	
 	 * @property {String} borderColor {String} 边框颜色，type=checkbox时生效
 	 * @property {String} checkMarkColor {String} 对号颜色，type=checkbox时生效
 	 * @property {Number} scaleRatio {Number} 缩放比例，当比例大于1时，外层容器需要设置 overflow: visible或者留出足够空间，避免显示不全

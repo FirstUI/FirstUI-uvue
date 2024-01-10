@@ -18,7 +18,7 @@
 	 * Toast 轻提示
 	 * @description Toast 轻提示，一种轻量级反馈/提示，适合用于页面转场、数据交互的等场景中。
 	 * @tutorial https://unix.firstui.cn/
-	 * @property {String} padding {String} 提示框padding值，
+	 * @property {String} padding {String} 提示框padding值
 	 * @property {String} background {String} 提示框背景颜色
 	 * @property {Number} width	{Number} 图标宽度（高度与宽度一致），单位rpx
 	 * @property {Number} radius {Number} 图标圆角大小，单位rpx

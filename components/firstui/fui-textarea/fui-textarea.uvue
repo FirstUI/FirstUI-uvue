@@ -47,8 +47,8 @@
 	 * @property {String} placeholder {String} 输入框为空时占位符
 	 * @property {String} placeholderStyle {String} 指定 placeholder 的样式
 	 * @property {String} name {String} 输入框名称
-	 * @property {String} value	{String} 输入框值，vue2使用
-	 * @property {String} modelValue {String} 输入框值，vue3使用
+	 * @property {String} value	{String} 输入框值
+	 * @property {String} modelValue {String} 输入框值，用于双向绑定
 	 * @property {Boolean} disabled	{Boolean} 是否禁用
 	 * @property {Boolean} disabledStyle {Boolean} 是否启用禁用状态下的样式，与正常输入框样式略有区别，仅disabled为true时有效
 	 * @property {Number} maxlength {Number} 最大输入长度，设置为 -1 的时候不限制最大长度

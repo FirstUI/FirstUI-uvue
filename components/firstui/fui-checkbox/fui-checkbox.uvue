@@ -21,6 +21,7 @@
 	 * @property {Boolean} checked {Boolean} 是否选中
 	 * @property {Boolean} disabled {Boolean} 是否禁用
 	 * @property {String} color	{String} 选中时背景颜色
+	 * @property {String} normalColor {String} 未选中时背景颜色
 	 * @property {String} borderColor {String} 未选中时边框颜色
 	 * @property {String} borderRadius {String} 圆角值
 	 * @property {Boolean} isCheckMark {Boolean} 是否只展示对号，无边框背景
