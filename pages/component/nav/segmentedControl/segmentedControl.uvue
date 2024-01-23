@@ -1,0 +1,79 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">SegmentedControl</text>
+				<text class="fui-page__desc">SegmentedControl 分段器。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<text class="fui-section__title fui-mtop--0">基础使用</text>
+				<fui-segmented-control :values="values" @onclick="itemClick"></fui-segmented-control>
+				<text class="fui-section__title">自定义颜色</text>
+				<fui-segmented-control :values="values" :marginTop="24" color="#FF2B2B"></fui-segmented-control>
+				<fui-segmented-control :values="values" :marginTop="24" color="#FFB703"></fui-segmented-control>
+				<fui-segmented-control :values="values" :marginTop="24" color="#09BE4F"></fui-segmented-control>
+				<fui-segmented-control :values="values" :marginTop="24" color="#6831FF"></fui-segmented-control>
+				<fui-segmented-control :values="values" :marginTop="24" color="#333333"></fui-segmented-control>
+				<text class="fui-section__title">text类型</text>
+				<fui-segmented-control :values="values" :marginTop="24" color="#333" activeColor="#FFB703" type="text"
+					:height="100" :size="32"></fui-segmented-control>
+				<text class="fui-section__title">调整选项卡数</text>
+				<fui-segmented-control :values="values2" @onclick="itemClick"></fui-segmented-control>
+				<text class="fui-section__title">禁用状态</text>
+				<fui-segmented-control :values="values2" :disabled="true"></fui-segmented-control>
+				<text class="fui-section__title">默认选中</text>
+				<fui-segmented-control :values="values2" :current="1"></fui-segmented-control>
+				<text class="fui-section__title">改变圆角值</text>
+				<fui-segmented-control :values="values2" :radius="100"></fui-segmented-control>
+				<text class="fui-section__title">单项禁用</text>
+				<fui-segmented-control :values="values3"></fui-segmented-control>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	import { FuiSegmentedControlValueParam } from '@/components/firstui/fui-types/index.uts'
+	export default {
+		data() {
+			return {
+				values: [{
+					name: 'segmented1'
+				}, {
+					name: 'segmented2'
+				}] as FuiSegmentedControlValueParam[],
+				values2: [{
+					value: 1,
+					name: 'segmented1'
+				}, {
+					value: 2,
+					name: 'segmented2'
+				}, {
+					value: 3,
+					name: 'segmented3'
+				}] as FuiSegmentedControlValueParam[],
+				values3: [{
+					name: 'segmented1'
+				}, {
+					name: 'segmented2',
+					disabled: true
+				}, {
+					name: 'segmented3'
+				}] as FuiSegmentedControlValueParam[]
+			}
+		},
+		methods: {
+			itemClick(e : FuiSegmentedControlValueParam) {
+				console.log(JSON.stringify(e))
+			}
+		}
+	}
+</script>
+
+<style>
+
+</style>

@@ -7,5 +7,20 @@ export default {
 		title: 'العنوان',
 		cancel: 'إلغاء',
 		confirm: 'موافق'
-	} as UTSJSONObject
+	} as UTSJSONObject,
+	swipeaction: {
+		delete: 'حذف'
+	} as UTSJSONObject,
+	loading: {
+		text: 'جار التحميل'
+	} as UTSJSONObject,
+	pagination: {
+		prevText: 'Prev page',// to be translated
+		nextText: 'Next page'// to be translated
+	} as UTSJSONObject,
+	loadmore: {
+		initText: 'Pull-up loading', // to be translated
+		text: 'جار التحميل',
+		noneText: 'لا أكثر'
+	} as UTSJSONObject,
 } as UTSJSONObject

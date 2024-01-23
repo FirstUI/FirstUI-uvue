@@ -5,3 +5,5 @@ unpackage
 node_modules
 /node_modules
 /.vuepress/dist
+uni_modules
+/uni_modules

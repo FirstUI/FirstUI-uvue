@@ -107,7 +107,48 @@ GitHub地址：[https://github.com/FirstUI/FirstUI-uvue](https://github.com/Firs
 
 ### 更新日志
 
-#### V1.0.0（2024-01-09）
+#### V1.1.0（2024-01-23）
+
+- 新增 DropdownMenu 下拉菜单 组件。
+
+- 新增 DropdownList 下拉菜单 组件。
+
+- 新增 Loading 加载 组件。
+
+- 新增 SwipeAction 滑动菜单 组件。
+
+- 新增 Pagination 分页器 组件。
+
+- 新增 SegmentedControl 分段器 组件。
+
+- 新增 Tabs 标签页 组件。
+
+- 新增 Drawer 抽屉 组件。
+
+- 新增 BottomPopup 底部弹出层 组件。
+
+- 新增 TopPopup 顶部弹出层 组件。
+
+- 新增 Alert 警告框 组件。
+
+- 新增 Avatar 头像 组件。
+
+- 新增 Tag 标签 组件。
+
+- 新增 Collapse 折叠面板 组件。
+
+- 新增 Divider 分割线 组件。
+
+- 新增 LoadMore 加载更多 组件。
+
+- 新增 Utils 工具类 组件。
+
+- 重要优化：unix版所有组件点击事件名调整，由 @click 调整为 @onclick，如果组件升级到最新版本，请查看文档升级指南，调整写法。
+
+- 修复已知bug。
+
+
+#### V1.0.0（2024-01-10）
 
 - 新增 Color 色彩 ，First UI用色指南。
 
@@ -153,7 +194,7 @@ GitHub地址：[https://github.com/FirstUI/FirstUI-uvue](https://github.com/Firs
 
 - 新增 Textarea 多行输入框 组件。
 
-- 新增 ActionSheet 上拉菜单 组件。
+- 新增 ActionSheet 上拉菜单 组件。 
 
 - 新增 Toast 轻提示 组件。
 

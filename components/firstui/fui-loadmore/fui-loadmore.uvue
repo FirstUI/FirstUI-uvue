@@ -1,0 +1,231 @@
+<template>
+	<view class="fui-loadmore__wrap" :class="['fui-loadmore__'+direction]" :style="{height:`${height}rpx`}">
+		<slot></slot>
+		<view class="fui-loadmore__icon" @transitionend="onEnd" :ref="refAniId"
+			:class="{'fui-loadmore__border-left':activeColor==''}"
+			:style="{width:`${iconWidth}rpx`,height:`${iconWidth}rpx`,'border-left-color':activeColor,'border-right-color':iconColor,'border-top-color':iconColor,'border-bottom-color':iconColor}"
+			v-if="src=='' && state==2">
+		</view>
+		<image class="fui-loadmore__icon-ani" @transitionend="onEnd" :ref="refAniId" :src="src"
+			:style="{width:`${iconWidth}rpx`,height:`${iconWidth}rpx`}" v-if="src!='' && state==2"></image>
+		<text :class="{'fui-loadmore__text':direction=='col'}"
+			:style="{color:color,'font-size':`${size}rpx`,'line-height':`${size}rpx`}">{{showLoadingText}}</text>
+	</view>
+</template>
+
+<script>
+	import { fuiLang, getFuiLocaleLang } from '../fui-lang/index.uts'
+	/**
+	 * LoadMore 加载更多
+	 * @description LoadMore 加载更多，主要使用场景如：上拉加载等。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Number} height {Number} 组件占据高度，单位rpx	
+	 * @property {Number} state {Number} 状态，可选值：1-上拉加载 2-正在加载... 3-没有更多了
+	 * @property {String} initText {String} 状态1提示文字
+	 * @property {String} text {String} 状态2提示文字
+	 * @property {String} noneText {String} 状态3提示文字
+	 * @property {String} color {String} 提示文字颜色
+	 * @property {Number} size {Number} 提示文字大小，单位rpx
+	 * @property {String} iconColor {String} loading图标圆环背景色	
+	 * @property {String} activeColor {String} loading图标高亮部分颜色
+	 * @property {Number} iconWidth {Number} loading 图标的宽度，单位rpx
+	 * @property {String} src {String} 自定义loading图标image路径，若自定义图标则iconColor、activeColor属性失效
+	 * @property {String} direction	{String} loading图标和文字排列方向，可取值：col，row
+	 */
+	export default {
+		name: "fui-loadmore",
+		props: {
+			height: {
+				type: Number,
+				default: 100
+			},
+			state: {
+				type: Number,
+				default: 2
+			},
+			initText: {
+				type: String,
+				default: ''
+			},
+			text: {
+				type: String,
+				default: ''
+			},
+			noneText: {
+				type: String,
+				default: ''
+			},
+			color: {
+				type: String,
+				default: "#7F7F7F"
+			},
+			size: {
+				type: Number,
+				default: 24
+			},
+			iconColor: {
+				type: String,
+				default: "#B2B2B2"
+			},
+			activeColor: {
+				type: String,
+				default: ''
+			},
+			iconWidth: {
+				type: Number,
+				default: 32
+			},
+			src: {
+				type: String,
+				default: ''
+			},
+			direction: {
+				type: String,
+				default: 'row'
+			}
+		},
+		computed: {
+			locale() : string {
+				return fuiLang.locale
+			},
+			getLoadText() : string {
+				return `${this.initText}_${this.text}_${this.noneText}_${this.state}`
+			}
+		},
+		watch: {
+			state(newValue : number) {
+				if (newValue == 2) {
+					this.$nextTick(() => {
+						setTimeout(() => {
+							this.startSpin()
+						}, 50)
+					})
+				} else {
+					this.endSpin()
+				}
+			},
+			locale: {
+				handler(val : string) {
+					this.getLoadingText(val)
+				},
+				immediate: true
+			},
+			getLoadText() {
+				this.getLoadingText(fuiLang.locale)
+			}
+		},
+		data() {
+			const refAniId = `fui_lm_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				refAniId: refAniId,
+				times: 0,
+				isSpin: false,
+				element: null as Element | null,
+				showLoadingText: ''
+			}
+		},
+		mounted() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					if (this.state == 2) this.startSpin();
+				}, 200)
+			})
+		},
+		beforeUnmount() {
+			this.isSpin = false
+			this.element = null;
+		},
+		methods: {
+			getLoadingText(val : string) {
+				const lang = getFuiLocaleLang(val)
+				const loadmoreR = lang['loadmore'] as UTSJSONObject;
+				let result : string;
+				if (this.state == 1) {
+					const initText = loadmoreR.getString('initText') as string;
+					result = this.initText == '' ? initText : this.initText;
+				} else if (this.state == 2) {
+					const text = loadmoreR.getString('text') as string;
+					result = this.text == '' ? text : this.text;
+				} else {
+					const noneText = loadmoreR.getString('noneText') as string;
+					result = this.noneText == '' ? noneText : this.noneText;
+				}
+				this.showLoadingText = result;
+			},
+			startSpin() {
+				if (this.element != null && this.isSpin) return;
+				if (this.element == null) {
+					this.element = this.$refs[this.refAniId] as Element;
+				}
+				this.times = this.times + 1
+				this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
+				this.element!.style.setProperty('transition-duration', '600')
+				this.isSpin = true
+			},
+			endSpin() {
+				this.isSpin = false
+				this.times = 0
+				this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
+				this.element!.style.setProperty('transition-duration', '0')
+				this.element = null;
+			},
+			onEnd() {
+				if (this.isSpin && this.state == 2) {
+					this.times = this.times + 1
+					this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
+				}
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-primary: #465CFF !default;
+
+	@mixin load_ani {
+		transition-duration: 600;
+		transition-property: transform;
+		transition-timing-function: linear;
+		transform: rotate(0deg);
+	}
+
+	.fui-loadmore__wrap {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: visible;
+	}
+
+	.fui-loadmore__col {
+		flex-direction: column;
+	}
+
+	.fui-loadmore__row {
+		flex-direction: row;
+	}
+
+
+	.fui-loadmore__icon {
+		margin: 0 6px;
+		border-width: 2px;
+		border-style: solid;
+		border-radius: 100px;
+		flex-shrink: 0;
+		@include load_ani;
+	}
+
+	.fui-loadmore__icon-ani {
+		margin: 0 6px;
+		flex-shrink: 0;
+		@include load_ani;
+	}
+
+	.fui-loadmore__text {
+		padding-top: 16rpx;
+	}
+
+	.fui-loadmore__border-left {
+		border-left-color: $fui-color-primary !important;
+	}
+</style>

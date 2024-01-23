@@ -1,0 +1,309 @@
+<template>
+	<view class="fui-collapse__item">
+		<view @tap.stop="onclick(!isOpen)" class="fui-collapse-item__title" :class="{'fui-collapse__disabled':disabled}"
+			:style="{background:background}">
+			<view class="fui-collapse__title">
+				<slot></slot>
+			</view>
+			<view v-if="arrow"
+				:class="{'fui-collapse__arrow-close':!isOpen,'fui-collapse__arrow-active': isOpen, 'fui-collapse__item-ani': animation}"
+				class="fui-collapse__arrow" :style="{marginRight:`${arrowRight}rpx`}">
+				<view class="fui-collapse__arrow-inner" :style="{borderColor:arrowColor}"></view>
+			</view>
+			<view v-if="isBorder" :style="{background:borderColor,left:`${borderLeft}rpx`}" class="fui-collapse__border"
+				:class="{'fui-collapse__border-color':borderColor==''}"></view>
+		</view>
+		<view :ref="elId" class="fui-collapse__content-wrap" :class="{'fui-collapse-__content-ani':animation}"
+			:style="{background:contentBackground}">
+			<view :id="elId" class="fui-collapse__content" :class="{'fui-collapse__content-open':isHeight}">
+				<slot name="content"></slot>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import { ComponentPublicInstance } from 'vue'
+	import { FuiCollapseChangeParam } from '../fui-types/index.uts'
+	/**
+	 * Collapse 折叠面板
+	 * @description Collapse 折叠面板，可以折叠/展开的内容区域，当前为 fui-collapse-item 组件。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Number} index	{Number} item项索引
+	 * @property {Boolean} disabled {Boolean} 是否禁用点击
+	 * @property {String} background {String} 标题内容背景色
+	 * @property {Boolean} animation {Boolean} 是否显示动画,如果动画卡顿严重建议不开启
+	 * @property {Boolean} expand {Boolean}	是否展开
+	 * @property {Boolean} isBorder {Boolean} 是否显示标题内容部分底部线条
+	 * @property {String} borderColor {String} 线条颜色
+	 * @property {Number} borderLeft {Number} 线条距左侧偏移距离，单位rpx
+	 * @property {Boolean} arrow {Boolean} 是否显示箭头
+	 * @property {String} arrowColor {String} 箭头颜色
+	 * @property {Number} arrowRight {Number} 箭头距右侧偏移距离，单位rpx
+	 * @property {String} contentBackground	{String} 折叠内容背景色
+	 * @event {Function} change 点击切换时触发（仅组件独立使用时生效），(event:FuiCollapseChangeParam) => void
+	 */
+	export default {
+		name: 'fui-collapse-item',
+		emits: ['change'],
+		props: {
+			index: {
+				type: Number,
+				default: 0
+			},
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			background: {
+				type: String,
+				default: '#fff'
+			},
+			animation: {
+				type: Boolean,
+				default: true
+			},
+			expand: {
+				type: Boolean,
+				default: false
+			},
+			isBorder: {
+				type: Boolean,
+				default: true
+			},
+			borderColor: {
+				type: String,
+				default: ''
+			},
+			borderLeft: {
+				type: Number,
+				default: 0
+			},
+			arrow: {
+				type: Boolean,
+				default: true
+			},
+			arrowColor: {
+				type: String,
+				default: '#B2B2B2'
+			},
+			arrowRight: {
+				type: Number,
+				default: 24
+			},
+			contentBackground: {
+				type: String,
+				default: '#fff'
+			}
+		},
+		data() {
+			const elId = `fui_ci_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				collapse: null as null | ComponentPublicInstance,
+				isOpen: false,
+				isHeight: false,
+				height: 0,
+				elId: elId,
+				isInit: false,
+				element: null as null | Element
+			}
+		},
+		watch: {
+			expand(val : boolean) {
+				this.isOpen = val
+			},
+			isOpen(val : boolean) {
+				if (this.isInit) this.setCollapseState(val)
+			}
+		},
+		updated() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					this.initSize()
+				}, 50)
+			})
+		},
+		created() {
+			const parent = this.getParent('fui-collapse')
+			if (parent) {
+				const collapse = this.collapse as ComponentPublicInstance;
+				const children = collapse.$data['children'] as ComponentPublicInstance[];
+				if (children.indexOf(this) == -1) {
+					children.push(this)
+				}
+			}
+		},
+		beforeUnmount() {
+			this.uninstall()
+		},
+		mounted() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					this.initSize()
+					this.isInit = true;
+					this.isOpen = this.expand;
+				}, 50)
+			})
+		},
+		methods: {
+			initSize() {
+				this.getCollapseHeight()
+			},
+			uninstall() {
+				if (this.collapse != null) {
+					const collapse = this.collapse as ComponentPublicInstance;
+					const children = collapse.$data['children'] as ComponentPublicInstance[];
+					children.forEach((item : ComponentPublicInstance, index : number) => {
+						if (item == this) children.splice(index, 1);
+					})
+				}
+			},
+			onclick(isOpen : boolean) {
+				if (!this.disabled) {
+					this.isOpen = isOpen
+					if (this.collapse != null) {
+						const collapse = this.collapse as ComponentPublicInstance;
+						collapse.$callMethod('collapseChange', this, isOpen, this.index)
+					} else {
+						this.$emit('change', {
+							index: this.index,
+							isOpen: isOpen
+						} as FuiCollapseChangeParam)
+					}
+				}
+			},
+			getCollapseHeight() {
+				uni.createSelectorQuery()
+					// #ifndef MP-ALIPAY
+					.in(this)
+					// #endif
+					.select(`#${this.elId}`)
+					.boundingClientRect()
+					.exec(ret => {
+						const node = ret[0] as NodeInfo;
+						this.height = node.height as number;
+						this.isHeight = true
+					})
+			},
+			getParent(name : string) : boolean {
+				if (this.$parent == null) return false;
+				let parent = this.$parent as ComponentPublicInstance;
+				let parentName = parent.$options['name'];
+				while (parentName != name) {
+					if (parent.$parent == null) return false;
+					parent = parent.$parent as ComponentPublicInstance;
+					if (parent.$options['name'] == '') return false;
+					parentName = parent.$options['name'];
+				}
+				this.collapse = parent;
+				return true;
+			},
+			setCollapseState(expand : boolean) {
+				if (this.element == null) {
+					this.element = this.$refs[this.elId] as Element;
+				}
+				this.element!.style.setProperty('height', expand ? `${this.height}px` : '0px')
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-border: #EEEEEE !default;
+	$fui-collapse-border-width: 0.5px !default;
+
+	.fui-collapse__item {
+		box-sizing: border-box;
+	}
+
+	.fui-collapse-item__title {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		position: relative;
+		box-sizing: border-box;
+	}
+
+	.fui-collapse__border {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		height: $fui-collapse-border-width;
+		pointer-events: none;
+	}
+
+	.fui-collapse__border-color {
+		background: $fui-color-border !important;
+	}
+
+	.fui-collapse__disabled {
+		opacity: .5;
+	}
+
+	.fui-collapse__title {
+		flex: 1;
+		overflow: hidden;
+	}
+
+
+	.fui-collapse__arrow-inner {
+		height: 40rpx;
+		width: 40rpx;
+		border-width: 0 3px 3px 0;
+		border-style: solid;
+		transform: rotate(45deg) scale(.5);
+		box-sizing: border-box;
+		position: absolute;
+		top: -6rpx;
+		left: 0;
+	}
+
+	.fui-collapse__arrow {
+		width: 40rpx;
+		height: 40rpx;
+		position: relative;
+		flex-shrink: 0;
+	}
+
+	.fui-collapse__arrow-close {
+		transform: rotate(0deg);
+	}
+
+	.fui-collapse__arrow-active {
+		transform: rotate(180deg);
+	}
+
+	.fui-collapse__item-ani {
+		transition-property: transform;
+		transition-duration: 0.3s;
+		transition-timing-function: ease;
+	}
+
+	.fui-collapse__content-wrap {
+		/* #ifndef UNI-APP-X */
+		will-change: height;
+		/* #endif */
+		box-sizing: border-box;
+		overflow: hidden;
+		position: relative;
+		height: 0;
+	}
+
+	.fui-collapse-__content-ani {
+		transition-property: height;
+		transition-duration: 0.3s;
+		/* #ifndef UNI-APP-X */
+		will-change: height;
+		/* #endif */
+	}
+
+	.fui-collapse__content {
+		width: 100%;
+		position: absolute;
+	}
+
+	.fui-collapse__content-open {
+		position: relative;
+	}
+</style>

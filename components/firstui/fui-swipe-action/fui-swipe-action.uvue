@@ -1,0 +1,248 @@
+<template>
+	<view class="fui-swipe__action-wrap" :style="{marginTop:`${marginTop}rpx`,marginBottom:`${marginBottom}rpx`}">
+		<view class="fui-swipe__action-inner" :class="{'fui-swipe__action-visible':!isScale}" @tap.stop="stop">
+			<view :ref="refLeft" class="fui-swipe__action-left" @touchstart="touchstart" @touchmove="touchmove"
+				@touchend="touchend" @touchcancel="touchend">
+				<slot></slot>
+			</view>
+			<view :ref="refRight" class="fui-swipe__action-right"
+				:class="[`fui-swipe__action-${isScale?'scale':'translate'}`]" :id="elId">
+				<slot name="buttons">
+					<template v-for="(item,index) in btns" :key="index">
+						<view class="fui-swipe__action-btn"
+							:class="{'fui-swipe__action-bg':item.background==null || item.background==''}"
+							:style="{background:item.background}" @tap.stop="appTouchEnd(index ,item)">
+							<text class="fui-swipe__action-text"
+								:style="{fontSize:`${item.size==null?size:item.size}rpx`,lineHeight:`${item.size==null?size:item.size}rpx`,color:`${item.color==null?color:item.color}`}">{{item.text}}</text>
+						</view>
+					</template>
+				</slot>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import { ComponentPublicInstance, type PropType } from 'vue'
+	import { unixjs } from './fui-swipe-unix.uts'
+	import { FuiSwipeActionButtonParam } from '../fui-types/index.uts'
+	import { fuiLang, getFuiLocaleLang } from '../fui-lang/index.uts'
+	/**
+	 * SwipeAction 滑动菜单
+	 * @description SwipeAction 滑动菜单，用于滑动操作的组件，结合 fui-swipeaction-group 组件使用。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Array} buttons {Array&lt;FuiSwipeActionButtonParam&gt;} 滑动菜单按钮数据
+	 * @property {Number} size {Number}	滑动菜单按钮字体大小，单位rpx（优先使用buttons中传值）
+	 * @property {String} color {String} 滑动菜单按钮字体颜色（优先使用buttons中传值）
+	 * @property {Boolean} visible {Boolean} 是否显示滑动菜单，当 autoClose 为 true 时尽量避免使用该属性
+	 * @property {Number} threshold	{Number} 滑动多少距离菜单展开，单位px
+	 * @property {Boolean} disabled {Boolean} 是否禁止滑动
+	 * @property {Boolean} autoClose {Boolean} 打开当前菜单是否自动关闭其他菜单
+	 * @property {Boolean} clickClose {Boolean} 点击菜单是否立即关闭菜单，设为false时可结合@change事件同步状态以及visible属性手动关闭菜单
+	 * @property {Boolean} isScale {Boolean} 菜单是否使用缩放动画显示
+	 * @property {Number} marginTop {Number} 同css margin-top值，单位rpx
+	 * @property {Number} marginBottom {Number} 同css margin-bottom值，单位rpx
+	 * @property {Number} param	{Number} 自定义参数，事件中回传
+	 * @event {Function} onclick 点击菜单按钮时触发，(event:FuiSwipeActionButtonParam) => void
+	 * @event {Function} change 滑动菜单打开关闭时触发，返回打开状态，(event:boolean) => void
+	 */
+	export default {
+		name: "fui-swipe-action",
+		mixins: [unixjs],
+		emits: ['onclick', 'change'],
+		props: {
+			buttons: {
+				type: Array as PropType<FuiSwipeActionButtonParam[]>,
+				default: () : FuiSwipeActionButtonParam[] => [] as FuiSwipeActionButtonParam[]
+			},
+			size: {
+				type: Number,
+				default: 32
+			},
+			color: {
+				type: String,
+				default: '#fff'
+			},
+			visible: {
+				type: Boolean,
+				default: false
+			},
+			threshold: {
+				type: Number,
+				default: 30
+			},
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			autoClose: {
+				type: Boolean,
+				default: true
+			},
+			clickClose: {
+				type: Boolean,
+				default: true
+			},
+			isScale: {
+				type: Boolean,
+				default: false
+			},
+			marginTop: {
+				type: Number,
+				default: 0
+			},
+			marginBottom: {
+				type: Number,
+				default: 0
+			},
+			param: {
+				type: Number,
+				default: 0
+			}
+		},
+		data() {
+			return {
+				group: null as null | ComponentPublicInstance,
+				btns: [] as FuiSwipeActionButtonParam[]
+			}
+		},
+		computed: {
+			locale() : string {
+				return fuiLang.locale
+			}
+		},
+		watch: {
+			locale: {
+				handler(val : string) {
+					const lang = getFuiLocaleLang(val)
+					const swipea = lang['swipeaction'] as UTSJSONObject;
+					const btns = JSON.parse<FuiSwipeActionButtonParam[]>(JSON.stringify(this.buttons))
+					if (btns == null || btns.length == 0) {
+						const param = [{
+							text: swipea.getString('delete') as string
+						}] as FuiSwipeActionButtonParam[];
+						this.getButtons(param)
+					} else {
+						this.getButtons(btns)
+					}
+				},
+				immediate: true
+			},
+			buttons(vals : FuiSwipeActionButtonParam[]) {
+				this.getButtons(vals)
+			}
+		},
+		beforeUnmount() {
+			this.unInstall()
+		},
+		methods: {
+			getButtons(vals : FuiSwipeActionButtonParam[]) {
+				this.btns = [] as FuiSwipeActionButtonParam[];
+				this.$nextTick(() => {
+					this.btns = vals;
+				})
+			},
+			unInstall() {
+				if (this.group != null) {
+					const group = this.group as ComponentPublicInstance
+					const children = group.$data['children'] as ComponentPublicInstance[];
+					children.forEach((item : ComponentPublicInstance, index : number) => {
+						if (item === this) {
+							children.splice(index, 1)
+						}
+					})
+				}
+			},
+			getParent(name : string) : boolean {
+				if (this.$parent == null) return false;
+				let parent = this.$parent as ComponentPublicInstance;
+				let parentName = parent.$options['name'];
+				while (parentName != name) {
+					if (parent.$parent == null) return false;
+					parent = parent.$parent as ComponentPublicInstance;
+					if (parent.$options['name'] == '') return false;
+					parentName = parent.$options['name'];
+				}
+				this.group = parent;
+				return true;
+			},
+			stop() {
+				if (this.clickClose) this.close();
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-danger: #FF2B2B !default;
+
+	@mixin swipe_ani {
+		transition-duration: 0s;
+		transition-property: transform;
+		transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+	}
+
+	.fui-swipe__action-wrap {
+		position: relative;
+		overflow: hidden;
+	}
+
+	.fui-swipe__action-inner {
+		display: flex;
+		flex-shrink: 0;
+		position: relative;
+	}
+
+	.fui-swipe__action-visible {
+		overflow: visible;
+	}
+
+	.fui-swipe__action-left {
+		width: 100%;
+		position: relative;
+		z-index: 2;
+		@include swipe_ani;
+	}
+
+	.fui-swipe__action-right {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		height: 100%;
+		display: flex;
+		flex-direction: row;
+		box-sizing: border-box;
+		z-index: 1;
+		@include swipe_ani;
+	}
+
+	.fui-swipe__action-translate {
+		transform: translateX(100%);
+	}
+
+	.fui-swipe__action-scale {
+		transform: scaleX(100%);
+		transform-origin: 100% 0;
+	}
+
+	.fui-swipe__action-btn {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 0 48rpx;
+		box-sizing: border-box;
+		flex-shrink: 0;
+	}
+
+	.fui-swipe__action-text {
+		flex-shrink: 0;
+		text-align: center;
+
+	}
+
+	.fui-swipe__action-bg {
+		background: $fui-color-danger !important;
+	}
+</style>

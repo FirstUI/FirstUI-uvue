@@ -9,11 +9,11 @@
 			</view>
 			<view class="fui-page__bd fui-page__spacing">
 				<fui-button type="gray" btn-size="medium" text="带图标提示" :bold="true" margin="24rpx"
-					@click="showToast(1)"></fui-button>
-				<fui-button type="gray" btn-size="medium" text="无图标提示" :bold="true" @click="showToast(2)">
+					@onclick="showToast(1)"></fui-button>
+				<fui-button type="gray" btn-size="medium" text="无图标提示" :bold="true" @onclick="showToast(2)">
 				</fui-button>
 				<fui-button type="gray" btn-size="medium" text="自定义内容" margin="24rpx" :bold="true"
-					@click="showToast(3)">
+					@onclick="showToast(3)">
 				</fui-button>
 			</view>
 			<fui-toast ref="toast" :radius="16"></fui-toast>
@@ -46,6 +46,7 @@
 				if (type == 3) {
 					//写法一：仅在easycom模式下使用
 					(this.$refs['toastRef'] as FuiToastComponentPublicInstance).show(options)
+					
 				} else {
 					if (type == 1) {
 						options.src = "/static/images/common/img_logo.png";

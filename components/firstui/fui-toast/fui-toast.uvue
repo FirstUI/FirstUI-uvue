@@ -79,6 +79,14 @@
 			this.timer = null;
 		},
 		methods: {
+			/**
+			* 类型：(options : FuiToastShowParam)=>void
+			* @tutorial https://unix.firstui.cn/
+			* @description 显示提示信息，FuiToastShowParam 参数类型引入地址 '@/.../fui-types/index.uts '
+			* @param {number} duration {number} 显示持续时间，单位ms，可选
+			* @param {string} src {string} 提示图标，可选
+			* @param {string} text {string} 提示信息，使用插槽自定义内容时可不传
+			*/
 			show(options : FuiToastShowParam) {
 				if (this.timer != null) clearTimeout(this.timer as number);
 				this.text = options.text == null ? '' : (options.text as string);

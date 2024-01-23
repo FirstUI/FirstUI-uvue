@@ -17,11 +17,11 @@
 	 * @property {Number} columns {Number} 每行显示item数
 	 * @property {Boolean} showBorder {Boolean}	是否显示边框
 	 * @property {Boolean} square {Boolean} item是否显示为正方形
-	 * @event {Function} click 点击时触发，返回传入的索引值(event: number) => void
+	 * @event {Function} onclick 点击时触发，返回传入的索引值(event: number) => void
 	 */
 	export default {
 		name: "fui-grid",
-		emits: ['click'],
+		emits: ['onclick'],
 		props: {
 			columns: {
 				type: Number,
@@ -91,7 +91,7 @@
 				})
 			},
 			handleClick(index : number) {
-				this.$emit('click', index)
+				this.$emit('onclick', index)
 			},
 			getWidth(fn : (width : string, height : string) => void) {
 				let isNoSupported = false
@@ -99,7 +99,9 @@
 				this.width = `${100 / this.columns}%`
 				if (this.square || isNoSupported) {
 					uni.createSelectorQuery()
+						// #ifndef MP-ALIPAY
 						.in(this)
+						// #endif
 						.select(`#${this.elemId}`)
 						.boundingClientRect()
 						.exec(ret => {

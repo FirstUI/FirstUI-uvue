@@ -1,0 +1,238 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Utils</text>
+				<text class="fui-page__desc">Utils 工具类，更多使用请查看文档。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<text class="fui-section__title">等待多少毫秒再执行 ，同步阻塞</text>
+				<view class="fui-btn__flex-center">
+					<fui-button type="gray" btn-size="medium" text="等待 1000毫秒" :bold="true" margin="24rpx 0"
+						@onclick="sleep"></fui-button>
+				</view>
+				<text class="fui-section__title">去字符串左右空格</text>
+				<view class="fui-btn__flex-center">
+					<text class="fui-page__desc">字符串 abcd </text>
+					<fui-button type="gray" btn-size="medium" text="去左右空格" :bold="true" margin="24rpx 0"
+						@onclick="trim"></fui-button>
+				</view>
+				<text class="fui-section__title">去字符串所有空格</text>
+				<view class="fui-btn__flex-center">
+					<text class="fui-page__desc">字符串 a b c d </text>
+					<fui-button type="gray" btn-size="medium" text="去所有空格" :bold="true" margin="24rpx 0"
+						@onclick="trimAll"></fui-button>
+				</view>
+				<text class="fui-section__title">替换所有相同字符串</text>
+				<view class="fui-btn__flex-center">
+					<text class="fui-page__desc">将字符串：##a###b#######c# 中#替换为空</text>
+					<fui-button type="gray" btn-size="medium" text="替换" :bold="true" margin="24rpx 0"
+						@onclick="replaceAll"></fui-button>
+				</view>
+				<text class="fui-section__title">格式化手机号码</text>
+				<view class="fui-btn__flex-center">
+					<text class="fui-page__desc">手机号：15715600012</text>
+					<fui-button type="gray" btn-size="medium" text="格式化" :bold="true" margin="24rpx 0"
+						@onclick="numberFormatter"></fui-button>
+				</view>
+				<text class="fui-section__title">格式化金额，保留两位小数</text>
+				<view class="fui-btn__flex-center">
+					<text class="fui-page__desc">金额：2021</text>
+					<fui-button type="gray" btn-size="medium" text="格式化" :bold="true" margin="24rpx 0"
+						@onclick="moneyFormatter"></fui-button>
+				</view>
+
+				<text class="fui-section__title">格式化日期</text>
+				<view class="fui-btn__flex-center">
+					<text class="fui-page__desc">日期原数据：2023-10-30 22:36:15</text>
+					<fui-button type="gray" btn-size="medium" text="年-月-日 时:分" :bold="true" margin="24rpx 0"
+						@onclick="dateFormatter(1)"></fui-button>
+					<fui-button type="gray" btn-size="medium" text="年/月/日" :bold="true"
+						@onclick="dateFormatter(2)"></fui-button>
+					<fui-button type="gray" btn-size="medium" text="月-日" :bold="true" margin="24rpx 0"
+						@onclick="dateFormatter(3)"></fui-button>
+					<fui-button type="gray" btn-size="medium" text="时:分" :bold="true"
+						@onclick="dateFormatter(4)"></fui-button>
+					<fui-button type="gray" btn-size="medium" text="分:秒" :bold="true" margin="24rpx 0"
+						@onclick="dateFormatter(5)"></fui-button>
+					<fui-button type="gray" btn-size="medium" text="*年*月*日 *时*分*秒" :bold="true"
+						@onclick="dateFormatter(6)"></fui-button>
+				</view>
+				<text class="fui-section__title">RGB颜色转十六进制颜色</text>
+				<view class="fui-btn__flex-center">
+					<text class="fui-page__desc">颜色：rgb(33,33,33)</text>
+					<fui-button type="gray" btn-size="medium" text="转化" :bold="true" margin="24rpx 0"
+						@onclick="rgbToHex"></fui-button>
+				</view>
+				<text class="fui-section__title">十六进制颜色转RGB颜色</text>
+				<view class="fui-btn__flex-center">
+					<text class="fui-page__desc">颜色：#333</text>
+					<fui-button type="gray" btn-size="medium" text="转化" :bold="true" margin="24rpx 0"
+						@onclick="hexToRGB"></fui-button>
+				</view>
+				<text class="fui-section__title">唯一标识，随机数</text>
+				<view class="fui-btn__flex-center">
+					<fui-button type="gray" btn-size="medium" text="获取标识" :bold="true" margin="24rpx 0"
+						@onclick="getUnique"></fui-button>
+				</view>
+
+				<text class="fui-section__title">获取Url参数</text>
+				<view class="fui-btn__flex-center">
+					<text class="fui-page__desc">url：https://abc.com?a=1&b=2</text>
+					<fui-button type="gray" btn-size="medium" text="转化" :bold="true" margin="24rpx 0"
+						@onclick="getUrlParam"></fui-button>
+				</view>
+				<text class="fui-section__title">获取时间段</text>
+				<view class="fui-btn__flex-center">
+					<!-- 1-今天 2-昨天 3-本周 4-本月 5-本年 -->
+					<fui-button type="gray" btn-size="medium" text="今天" :bold="true" margin="24rpx 0"
+						@onclick="getDateSlot(1)"></fui-button>
+					<fui-button type="gray" btn-size="medium" text="昨天" :bold="true"
+						@onclick="getDateSlot(2)"></fui-button>
+					<fui-button type="gray" btn-size="medium" text="本周(不超过当日)" :bold="true" margin="24rpx 0"
+						@onclick="getDateSlot(3)"></fui-button>
+					<fui-button type="gray" btn-size="medium" text="本月(不超过当日)" :bold="true"
+						@onclick="getDateSlot(4)"></fui-button>
+					<fui-button type="gray" btn-size="medium" text="本年(不超过当日)" :bold="true" margin="24rpx 0"
+						@onclick="getDateSlot(5)"></fui-button>
+				</view>
+				<text class="fui-section__title">rpx 转 px</text>
+				<view class="fui-btn__flex-center">
+					<text class="fui-page__desc">rpx：750</text>
+					<fui-button type="gray" btn-size="medium" text="转化" :bold="true" margin="24rpx 0"
+						@onclick="rpxtopx"></fui-button>
+				</view>
+				<text class="fui-section__title">日期格式化为多久之前</text>
+				<view class="fui-btn__flex-center">
+					<text class="fui-page__desc">之前日期：2023-10-15 22:56:15</text>
+					<fui-button type="gray" btn-size="medium" text="格式化(简体中文)" :bold="true" margin="24rpx 0"
+						@onclick="dateFormatAgo('cn')"></fui-button>
+					<fui-button type="gray" btn-size="medium" text="格式化(英文)" :bold="true"
+						@onclick="dateFormatAgo('en')"></fui-button>
+					<fui-button type="gray" btn-size="medium" text="格式化(繁体中文)" :bold="true" margin="24rpx 0"
+						@onclick="dateFormatAgo('tc')"></fui-button>
+				</view>
+				<text class="fui-section__title">其他功能</text>
+				<text class="fui-page__desc">待扩展...</text>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	import {
+		sleep,
+		trim,
+		trimAll,
+		replaceAll,
+		numberFormatter,
+		moneyFormatter,
+		dateFormatter,
+		rgbToHex,
+		hexToRGB,
+		unique,
+		getUrlParam,
+		getDateTimeSlot,
+		formatTimeAgo,
+		rpx2px
+	} from '@/components/firstui/fui-utils/index.uts';
+	export default {
+		data() {
+			return {}
+		},
+		methods: {
+			sleep() {
+				sleep(1000)
+				this.fui.toast('1000ms后执行！')
+			},
+			trim() {
+				const text = ' abcd ';
+				const val = trim(text);
+				console.log(val);
+				this.fui.toast(`字符串${val}`)
+			},
+			trimAll() {
+				const text = ' a b c d ';
+				const val = trimAll(text);
+				console.log(val);
+				this.fui.toast(`字符串${val}`)
+			},
+			replaceAll() {
+				const text = '##a###b#######c#';
+				const val = replaceAll(text, '#', '');
+				console.log(val);
+				this.fui.toast(val)
+			},
+			numberFormatter() {
+				const text = '15715600012';
+				const val = numberFormatter(text);
+				console.log(val);
+				this.fui.toast(val)
+			},
+			moneyFormatter() {
+				const text = 2021;
+				const val = moneyFormatter(text);
+				console.log(val);
+				this.fui.toast(val)
+			},
+			dateFormatter(type : number) {
+				const date = '2023-10-30 22:36:15'
+				// y-m-d h:i:s
+				const format = ['y-m-d h:i', 'y/m/d', 'm-d', 'h:i', 'i:s', 'y年m月d日 h时i分s秒'][type - 1]
+				const val = dateFormatter(date, format);
+				console.log(val)
+				this.fui.toast(val)
+			},
+			rgbToHex() {
+				const hex = rgbToHex(33, 33, 33)
+				this.fui.toast(hex)
+			},
+			hexToRGB() {
+				const rgb = hexToRGB('#333')
+				this.fui.toast(`rgb(${rgb.get('r')},${rgb.get('g')},${rgb.get('b')})`)
+			},
+			getUnique() {
+				this.fui.toast(unique())
+			},
+			getUrlParam() {
+				const url = 'https://abc.com?a=1&b=2'
+				const param = getUrlParam(url)
+				this.fui.toast(`参数a：${param.get('a')},参数b：${param.get('b')}`)
+			},
+			getDateSlot(type : number) {
+				const slot = getDateTimeSlot(type)
+				const start = slot.get('start') as string
+				const end = slot.get('end') as string
+				console.log(start, end)
+				this.fui.toast(`${start}至${end}`)
+			},
+			rpxtopx() {
+				this.fui.toast(rpx2px(750).toString())
+			},
+			dateFormatAgo(lang : string) {
+				const date = '2023-10-15 22:56:15'
+				const val = formatTimeAgo(date, 1, lang)
+				console.log(val)
+				this.fui.toast(val)
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-btn__flex-center {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+
+	.fui-section__title {
+		margin-top: 72rpx;
+	}
+</style>

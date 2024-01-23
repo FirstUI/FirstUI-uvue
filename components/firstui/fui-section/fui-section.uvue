@@ -12,11 +12,10 @@
 				v-if="title">{{title}}</text>
 			<slot name="right"></slot>
 		</view>
-		<view class="fui-sections__descr" :style="getDescrTop" :class="{'fui-sections__descr-top':descrTop==0}"
+		<view class="fui-sections__descr" :style="getDescrTop"
+			:class="{'fui-sections__descr-top':descrTop==0}"
 			v-if="descr">
-			<text class="fui-sections__descr-text"
-				:class="{'fui-sections__descr-size':descrSize==0,'fui-sections__descr-color':descrColor==''}"
-				:style="getDescrStyle">{{descr}}</text>
+			<text class="fui-sections__descr-text" :class="{'fui-sections__descr-size':descrSize==0,'fui-sections__descr-color':descrColor==''}" :style="getDescrStyle">{{descr}}</text>
 		</view>
 		<slot name="descr"></slot>
 	</view>
@@ -46,11 +45,11 @@
 	 * @property {String} padding {String} 组件外层容器padding值
 	 * @property {Number} marginTop	{Number} 组件 margin-top 值，单位rpx
 	 * @property {Number} marginBottom {Number} 组件 margin-bottom 值，单位rpx
-	 * @event {Function} click 点击标题时触发，(event: string) => void
+	 * @event {Function} onclick 点击标题时触发，(event: string) => void
 	 */
 	export default {
 		name: "fui-section",
-		emits: ['click'],
+		emits: ['onclick'],
 		props: {
 			title: {
 				type: String,
@@ -164,7 +163,7 @@
 		},
 		methods: {
 			handleClick() {
-				this.$emit('click', this.title)
+				this.$emit('onclick', this.title)
 			}
 		}
 	}

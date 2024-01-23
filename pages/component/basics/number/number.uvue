@@ -18,7 +18,7 @@
 					<fui-number text="678" color="#FFB703" :size="48"></fui-number>
 				</view>
 				<text class="fui-section__title">加粗/点击效果</text>
-				<fui-number :text="520" color="#09BE4F" :size="64" fontWeight="bold" :highlight="true" @click="onTap"></fui-number>
+				<fui-number :text="520" color="#09BE4F" :size="64" fontWeight="bold" :highlight="true" @onclick="onTap"></fui-number>
 			</view>
 		</view>
 	<!-- #ifdef APP -->

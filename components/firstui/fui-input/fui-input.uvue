@@ -80,7 +80,7 @@
 	 * @property {String} padding {String} 输入框padding值
 	 * @property {String} backgroundColor {String} 输入框背景颜色
 	 * @property {Number} marginTop {Number} 输入框margin-top值,单位rpx
-	 * @event {Function} click 点击输入框时触发，(event:string) => void
+	 * @event {Function} onclick 点击输入框时触发，(event:string) => void
 	 * @event {Function} input 当键盘输入时，触发input事件，(event: string) => void
 	 * @event {Function} update:modelValue 输入框值改变时触发，用于双向绑定 (event: string) => void
 	 * @event {Function} focus 输入框聚焦时触发，(event: InputFocusEvent) => void
@@ -394,7 +394,7 @@
 				this.$emit('update:modelValue', '')
 			},
 			fieldClick() {
-				this.$emit('click', this.name);
+				this.$emit('onclick', this.name);
 			},
 			onKeyboardheightchange(e : InputKeyboardHeightChangeEvent) {
 				this.$emit('keyboardheightchange', e)

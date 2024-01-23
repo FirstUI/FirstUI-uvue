@@ -1,0 +1,69 @@
+import { FuiDropdownMenuOptionParam } from '@/components/firstui/fui-types/index.uts';
+
+export const menus = [{
+	text: '综合推荐',
+	value: '1',
+	checked: true
+}, {
+	text: '新品优先',
+	value: '2'
+}, {
+	text: '评论数从高到低',
+	value: '3'
+}] as FuiDropdownMenuOptionParam[]
+
+export const menus1 = [{
+	text: '默认排序',
+	value: '11',
+	checked: true
+}, {
+	text: '销量排序',
+	value: '12'
+}, {
+	text: '价格排序',
+	value: '13'
+}] as FuiDropdownMenuOptionParam[]
+
+export const menus2 = [{
+	text: '注册激活'
+}, {
+	text: '站长工具'
+}, {
+	text: '投递文章'
+}, {
+	text: '媒体合作'
+}, {
+	text: '素材相关'
+}, {
+	text: '报告错误'
+}, {
+	text: '论坛事务'
+}, {
+	text: '发布软件'
+}, {
+	text: '网站排行榜'
+}, {
+	text: '其他事务'
+}] as FuiDropdownMenuOptionParam[]
+
+export const menus3 = [{
+	text: '最新车讯'
+}, {
+	text: '降价排行'
+}, {
+	text: 'SUV'
+}, {
+	text: '违章罚单'
+}, {
+	text: '提车试驾'
+}, {
+	text: '测评体验'
+}, {
+	text: '选车指南'
+}, {
+	text: '美女车模'
+}, {
+	text: '加油优惠卡'
+}, {
+	text: '维修保养'
+}] as FuiDropdownMenuOptionParam[]

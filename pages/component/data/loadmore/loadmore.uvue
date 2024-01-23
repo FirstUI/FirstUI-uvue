@@ -1,0 +1,44 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">LoadMore</text>
+				<text class="fui-page__desc">LoadMore 加载更多，主要使用场景如：上拉加载等。</text>
+			</view>
+			<view class="fui-page__bd">
+				<text class="fui-section__title fui-mtop--0">基本使用</text>
+				<fui-loadmore></fui-loadmore>
+				<fui-loadmore activeColor="#FFB703"></fui-loadmore>
+				<fui-loadmore iconColor="rgba(255, 183, 3, .2)" activeColor="#FFB703" color="#FFB703"></fui-loadmore>
+				<text class="fui-section__title">direction:col</text>
+				<fui-loadmore direction="col" color="#465CFF"></fui-loadmore>
+				<text class="fui-section__title">自定义图标</text>
+				<fui-loadmore src="/static/images/component/loading_gray.png" :iconWidth="36" text="加载中...">
+				</fui-loadmore>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+<style>
+	.fui-section__title {
+		margin-left: 32rpx;
+	}
+</style>

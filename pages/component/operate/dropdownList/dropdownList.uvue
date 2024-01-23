@@ -1,0 +1,172 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">DropdownList</text>
+				<text class="fui-page__desc">DropdownList 下拉菜单，用于弹出一个菜单给用户选择操作，居中弹出。</text>
+			</view>
+			<view class="fui-page__bd">
+				<text class="fui-section__title fui-mtop--0">基础使用</text>
+				<fui-list-cell :highlight="false">
+					<view class="fui-list__cell fui-flex__center">
+						<text class="fui-text">资产类别：</text>
+						<view class="fui-select fui-flex__between" @tap="assetsTap">
+							<input placeholder="请选择" :value="assets" class="fui-input" :disabled="true" />
+							<view class="fui-filter__icon" :class="{'fui-icon__ani':assetsShow}">
+								<fui-icon name="turningdown" :size="32"></fui-icon>
+							</view>
+						</view>
+					</view>
+				</fui-list-cell>
+				<text class="fui-section__title">固定高度、宽度 / 可滚动</text>
+				<fui-list-cell :highlight="false">
+					<view class="fui-list__cell fui-flex__center">
+						<text class="fui-text">问题分类：</text>
+						<view class="fui-select fui-flex__between" @tap="quesTap">
+							<input placeholder="请选择" :value="question" class="fui-input" :disabled="true" />
+							<view class="fui-filter__icon" :class="{'fui-icon__ani':quesShow}">
+								<fui-icon name="turningdown" :size="32"></fui-icon>
+							</view>
+						</view>
+					</view>
+				</fui-list-cell>
+				<text class="fui-section__title">不显示选择框</text>
+				<fui-list-cell :highlight="false">
+					<view class="fui-list__cell fui-flex__center">
+						<text class="fui-text">问题分类：</text>
+						<view class="fui-select fui-flex__between" @tap="tagTap">
+							<input placeholder="请选择" :value="tag" class="fui-input" :disabled="true" />
+							<view class="fui-filter__icon" :class="{'fui-icon__ani':tagShow}">
+								<fui-icon name="turningdown" :size="32"></fui-icon>
+							</view>
+						</view>
+					</view>
+				</fui-list-cell>
+			</view>
+
+			<fui-dropdown-list :menus="menus" ref="ddlAssets" @onclick="assetsItemClick" @close="assetsClose">
+			</fui-dropdown-list>
+			<fui-dropdown-list :height="600" :width="480" checkboxColor="#FFB703" :menus="menus2" ref="ddlQues"
+				@onclick="quesItemClick" @close="quesClose"></fui-dropdown-list>
+			<fui-dropdown-list :isCheckbox="false" selectedColor="#FF2B2B" :splitLine="true" :height="600" :width="400"
+				:menus="menus3" ref="ddlTag" @onclick="tagItemClick" @close="tagClose"></fui-dropdown-list>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	import { FuiDropdownMenuOptionParam } from '@/components/firstui/fui-types/index.uts';
+	import { menusdata, menus2, menus3 } from './index.uts';
+	export default {
+		data() {
+			return {
+				menus: menusdata as FuiDropdownMenuOptionParam[],
+				assets: '',
+				assetsShow: false,
+				menus2: menus2 as FuiDropdownMenuOptionParam[],
+				question: '',
+				quesShow: false,
+				menus3: menus3 as FuiDropdownMenuOptionParam[],
+				tag: '',
+				tagShow: false
+			}
+		},
+		methods: {
+			assetsTap() {
+				(this.$refs['ddlAssets'] as FuiDropdownListComponentPublicInstance).show()
+				this.assetsShow = true;
+			},
+			assetsItemClick(e : FuiDropdownMenuOptionParam) {
+				console.log(JSON.stringify(e))
+				this.assets = e.text
+				this.assetsClose()
+			},
+			assetsClose() {
+				this.assetsShow = false;
+			},
+			quesTap() {
+				(this.$refs['ddlQues'] as FuiDropdownListComponentPublicInstance).show()
+				this.quesShow = true;
+			},
+			quesItemClick(e : FuiDropdownMenuOptionParam) {
+				console.log(e)
+				this.question = e.text
+				this.quesClose()
+			},
+			quesClose() {
+				this.quesShow = false;
+			},
+			tagTap() {
+				(this.$refs['ddlTag'] as FuiDropdownListComponentPublicInstance).show()
+				this.tagShow = true;
+			},
+			tagItemClick(e : FuiDropdownMenuOptionParam) {
+				console.log(e)
+				this.tag = e.text
+				this.tagClose()
+			},
+			tagClose() {
+				this.tagShow = false;
+			},
+		}
+	}
+</script>
+
+<style>
+	.fui-wrap {
+		padding-bottom: 120rpx;
+	}
+
+	.fui-flex__center {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.fui-section__title {
+		margin-left: 32rpx;
+	}
+
+
+	.fui-filter__icon {
+		flex-shrink: 0;
+		transition-property: transform;
+		transition-duration: .15s;
+		transition-timing-function: linear;
+		transform: rotate(0deg);
+	}
+
+	.fui-icon__ani {
+		transform: rotate(180deg);
+	}
+
+	.fui-list__cell {
+		flex: 1;
+	}
+
+	.fui-select {
+		flex: 1;
+		height: 80rpx;
+		padding: 32rpx;
+		position: relative;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.fui-input {
+		font-size: 32rpx;
+		flex: 1;
+		padding-right: 8rpx;
+		pointer-events: none;
+	}
+
+	.fui-select {
+		border: 0.5px solid #eee;
+	}
+</style>

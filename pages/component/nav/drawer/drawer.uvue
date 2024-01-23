@@ -1,0 +1,98 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Drawer</text>
+				<text class="fui-page__desc">Drawer 抽屉，抽屉式导航，用于展示侧滑菜单，侧滑导航。</text>
+			</view>
+			<view class="fui-page__bd">
+				<fui-button type="gray" btn-size="medium" text="从右往左开" :bold="true" margin="24rpx"
+					@click="showDrawer(1)"></fui-button>
+				<fui-button type="gray" btn-size="medium" text="从左往右开" :bold="true" @click="showDrawer(2)">
+				</fui-button>
+			</view>
+			<fui-drawer v-model:visible="visible">
+				<scroll-view :scroll-y="true" class="fui-scroll__view">
+					<view>
+						<fui-list-cell :arrow="true" v-for="(item,index) in itemList" :key="index">
+							<text class="fui-text">item{{item}}</text>
+						</fui-list-cell>
+					</view>
+				</scroll-view>
+			</fui-drawer>
+
+			<fui-drawer :visible="visible2" direction="left" :radius="24" :maskClosable="false">
+				<view class="fui-scroll__view">
+					<text class="fui-title">左侧菜单栏</text>
+					<scroll-view :scroll-y="true" style="height: 720rpx;">
+						<view>
+							<fui-list-cell v-for="(item,index) in itemList" :key="index">
+								<text class="fui-text">item{{item}}</text>
+							</fui-list-cell>
+						</view>
+					</scroll-view>
+					<view class="fui-btn__box">
+						<fui-button type="warning" btn-size="medium" text="关闭菜单栏" :bold="true" @click="closeDrawer">
+						</fui-button>
+					</view>
+				</view>
+			</fui-drawer>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				visible: false,
+				visible2: false,
+				itemList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+			}
+		},
+		methods: {
+			showDrawer(type : number) {
+				if (type == 1) {
+					this.visible = true
+				} else {
+					this.visible2 = true
+				}
+			},
+			closeDrawer() {
+				this.visible2 = false
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-page__bd {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+
+	.fui-scroll__view {
+		width: 520rpx;
+		flex: 1;
+		overflow: hidden;
+	}
+
+	.fui-title {
+		padding: 64rpx 32rpx 32rpx;
+		box-sizing: border-box;
+		font-weight: bold;
+	}
+
+	.fui-btn__box {
+		padding: 40rpx 0;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+</style>

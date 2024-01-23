@@ -1,0 +1,229 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">DropdownMenu</text>
+				<text class="fui-page__desc">DropdownMenu 下拉菜单，用于弹出一个下拉菜单给用户选择操作。</text>
+			</view>
+			<view class="fui-page__bd">
+				<text class="fui-section__title fui-mtop--0">选择框位置、样式改变</text>
+				<view class="fui-filter__bar">
+					<view class="fui-flex__1">
+						<fui-dropdown-menu :maxHeight="324" :size="28" selectedColor="#465CFF" :menus="menus"
+							@onclick="rangeItemClick" @close="rangeClose" ref="ddmRange">
+							<view class="fui-filter__item" @tap="filterTap(1)">
+								<text class="fui-text">{{range}}</text>
+								<view class="fui-filter__icon" :class="{'fui-icon__ani':rangeShow}">
+									<fui-icon name="turningdown" :size="32"></fui-icon>
+								</view>
+							</view>
+						</fui-dropdown-menu>
+					</view>
+					<view class="fui-flex__1">
+						<fui-dropdown-menu :maxHeight="324" :minWidth="300" :right="0" :size="28"
+							selectedColor="#465CFF" :isCheckMark="true" checkmarkColor="#465CFF" :isReverse="true"
+							:menus="menus1" @onclick="sortItemClick" @close="sortClose" ref="ddmSort">
+							<view class="fui-filter__item" @tap="filterTap(2)">
+								<text class="fui-text">{{sort}}</text>
+								<view class="fui-filter__icon" :class="{'fui-icon__ani':sortShow}">
+									<fui-icon name="turningdown" :size="32"></fui-icon>
+								</view>
+							</view>
+						</fui-dropdown-menu>
+					</view>
+				</view>
+				<text class="fui-section__title">可滚动、改变选择框颜色</text>
+				<fui-list-cell :highlight="false">
+					<view class="fui-list__cell fui-flex__center">
+						<text class="fui-text">问题分类：</text>
+						<view class="fui-flex__1">
+							<fui-dropdown-menu checkboxColor="#FFB703" :minWidth="400" :splitLine="true"
+								:menus="menus2" ref="ddmQues" @onclick="quesItemClick" @close="quesClose">
+								<view class="fui-select fui-flex__between" @tap="quesTap">
+									<input placeholder="请选择" :value="question" class="fui-input" :disabled="true" />
+									<view class="fui-filter__icon" :class="{'fui-icon__ani':quesShow}">
+										<fui-icon name="turningdown" :size="32"></fui-icon>
+									</view>
+								</view>
+							</fui-dropdown-menu>
+						</view>
+					</view>
+				</fui-list-cell>
+				<text class="fui-section__title">向上展开、不显示选择框</text>
+				<fui-list-cell :highlight="false">
+					<view class="fui-list__cell fui-flex__center">
+						<text class="fui-text">选择标签：</text>
+						<view class="fui-flex__1">
+							<fui-dropdown-menu :isCheckbox="false" selectedColor="#FF2B2B" :splitLine="true"
+								:menus="menus3" ref="ddmTag" direction="up" @onclick="tagItemClick" @close="tagClose">
+								<view class="fui-select fui-flex__between" @tap="tagTap">
+									<input placeholder="请选择" :value="tag" class="fui-input" :disabled="true" />
+									<view class="fui-filter__icon" :class="{'fui-icon__ani':tagShow}">
+										<fui-icon name="turningdown" :size="32"></fui-icon>
+									</view>
+								</view>
+							</fui-dropdown-menu>
+						</view>
+					</view>
+				</fui-list-cell>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	import { FuiDropdownMenuOptionParam } from '@/components/firstui/fui-types/index.uts';
+	import { menus, menus1, menus2, menus3 } from './index.uts'
+	export default {
+		data() {
+			return {
+				menus: menus as FuiDropdownMenuOptionParam[],
+				menus1: menus1 as FuiDropdownMenuOptionParam[],
+				range: '综合推荐',
+				rangeShow: false,
+				sort: '默认排序',
+				sortShow: false,
+				//数据格式二
+				menus2: menus2 as FuiDropdownMenuOptionParam[],
+				question: '',
+				quesShow: false,
+				menus3: menus3 as FuiDropdownMenuOptionParam[],
+				tag: '',
+				tagShow: false
+			}
+		},
+		methods: {
+			filterTap(type : number) {
+				if (type == 1) {
+					(this.$refs['ddmRange'] as FuiDropdownMenuComponentPublicInstance).show()
+					this.rangeShow = true;
+				} else {
+					(this.$refs['ddmSort'] as FuiDropdownMenuComponentPublicInstance).show()
+					this.sortShow = true;
+				}
+			},
+			rangeItemClick(e : FuiDropdownMenuOptionParam) {
+				console.log(e)
+				this.range = e.text
+				this.rangeClose()
+			},
+			rangeClose() {
+				this.rangeShow = false;
+			},
+			sortItemClick(e : FuiDropdownMenuOptionParam) {
+				console.log(e)
+				this.sort = e.text
+				this.sortClose()
+			},
+			sortClose() {
+				this.sortShow = false;
+			},
+			quesTap() {
+				(this.$refs['ddmQues'] as FuiDropdownMenuComponentPublicInstance).show()
+				this.quesShow = true;
+			},
+			quesItemClick(e : FuiDropdownMenuOptionParam) {
+				console.log(e)
+				this.question = e.text
+				this.quesClose()
+			},
+			quesClose() {
+				this.quesShow = false;
+			},
+			tagTap() {
+				(this.$refs['ddmTag'] as FuiDropdownMenuComponentPublicInstance).show()
+				this.tagShow = true;
+			},
+			tagItemClick(e : FuiDropdownMenuOptionParam) {
+				console.log(e)
+				this.tag = e.text
+				this.tagClose()
+			},
+			tagClose() {
+				this.tagShow = false;
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-wrap {
+		padding-bottom: 120rpx;
+	}
+
+	.fui-section__title {
+		margin-left: 32rpx;
+	}
+
+	.fui-flex__center {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.fui-filter__bar {
+		width: 100%;
+		height: 88rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		background-color: #fff;
+		margin-bottom: 40rpx;
+	}
+
+	.fui-filter__item {
+		height: 88rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.fui-filter__icon {
+		transition-property: transform;
+		transition-duration: .15s;
+		transition-timing-function: linear;
+		transform: rotate(0deg);
+	}
+
+	.fui-icon__ani {
+		transform: rotate(180deg);
+	}
+
+	.fui-list__cell,
+	.fui-flex__1 {
+		flex: 1;
+	}
+
+	.fui-select {
+		position: relative;
+		height: 80rpx;
+		padding: 32rpx;
+		box-sizing: border-box;
+		flex: 1;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.fui-select {
+		border: 0.5px solid #eee;
+	}
+
+
+	.fui-input {
+		font-size: 30rpx;
+		flex: 1;
+		padding-right: 8rpx;
+		color: #181818;
+		pointer-events: none;
+	}
+
+	.fui-text {
+		font-size: 30rpx;
+	}
+</style>

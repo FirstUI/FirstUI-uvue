@@ -1,0 +1,209 @@
+<template>
+	<view class="fui-alert__wrap" :class="[background==''?`fui-alert__${type}`:'']"
+		:style="{background:background,borderRadius:`${radius}rpx`,padding:padding,marginTop:`${marginTop}rpx`,marginBottom:`${marginBottom}rpx`}">
+		<view class="fui-alert__shrink" @tap.stop="leftClick">
+			<slot></slot>
+		</view>
+		<view class="fui-alert__content" :class="{'fui-alert__p-left':spacing,'fui-alert__p-right':closable}"
+			@tap.stop="onTap">
+			<text class="fui-alert__text" :style="{fontSize:`${size}rpx`,color:color}" v-if="title">{{title}}</text>
+			<text class="fui-alert__text fui-desc__padding" :class="{'fui-alert__single':single}"
+				:style="{fontSize:`${descSize}rpx`,color:descColor}" v-if="desc">{{desc}}</text>
+			<slot name="content"></slot>
+		</view>
+		<view class="fui-alert__shrink">
+			<slot name="right"></slot>
+		</view>
+		<view :class="{'fui-alert__icon-close':desc}" v-if="closable" @tap.stop="close">
+			<fui-icon name="clear" :size="closeSize" :color="closeColor"></fui-icon>
+		</view>
+	</view>
+</template>
+
+<script>
+	/**
+	 * Alert 警告框
+	 * @description Alert 警告框，可自定义颜色，图标等。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} type {String} 类型，有效值：info, success, warning, waiting,danger
+	 * @property {String} background {String} 背景色，如果设置则type对应颜色失效
+	 * @property {String} padding {String} padding值,格式同css
+	 * @property {Number} marginTop	{Number} margin-top值，单位rpx
+	 * @property {Number} marginBottom {Number} margin-bottom值，单位rpx
+	 * @property {Number} radius {Number} 圆角值，单位rpx
+	 * @property {Boolean} closable {Boolean} 是否显示关闭按钮
+	 * @property {String} closeColor {String} 关闭按钮颜色
+	 * @property {Number} closeSize {Number} 关闭按钮icon字体大小，单位rpx
+	 * @property {Boolean} spacing {Boolean} 内容是否与左侧自定义内容之间有间隔
+	 * @property {String} title {String} 标题内容
+	 * @property {String} color {String} 标题字体颜色
+	 * @property {Number} size {Number} 标题字体大小，单位rpx
+	 * @property {String} desc {String}	描述内容
+	 * @property {String} descColor {String} 描述内容的字体颜色	
+	 * @property {Number} descSize {Number} 描述内容字体大小，单位rpx	
+	 * @property {Boolean} single {Boolean} 描述内容是否单行展示，超出隐藏
+	 * @event {Function} leftClick 点击左侧自定义内容区域时触发，() => void
+	 * @event {Function} onclick 点击内容区域时触发，() => void
+	 * @event {Function} close 点击关闭按钮时触发，() => void
+	 */
+	export default {
+		name: "fui-alert",
+		emits: ['leftClick', 'onclick', 'close'],
+		props: {
+			type: {
+				type: String,
+				default: 'info'
+			},
+			background: {
+				type: String,
+				default: ''
+			},
+			padding: {
+				type: String,
+				default: '20rpx 32rpx'
+			},
+			marginTop: {
+				type: Number,
+				default: 0
+			},
+			marginBottom: {
+				type: Number,
+				default: 0
+			},
+			radius: {
+				type: Number,
+				default: 16
+			},
+			closable: {
+				type: Boolean,
+				default: false
+			},
+			closeColor: {
+				type: String,
+				default: '#fff'
+			},
+			closeSize: {
+				type: Number,
+				default: 48
+			},
+			spacing: {
+				type: Boolean,
+				default: false
+			},
+			title: {
+				type: String,
+				default: ''
+			},
+			color: {
+				type: String,
+				default: '#fff'
+			},
+			size: {
+				type: Number,
+				default: 28
+			},
+			desc: {
+				type: String,
+				default: ''
+			},
+			descColor: {
+				type: String,
+				default: '#fff'
+			},
+			descSize: {
+				type: Number,
+				default: 24
+			},
+			single: {
+				type: Boolean,
+				default: false
+			}
+		},
+		methods: {
+			leftClick() {
+				this.$emit('leftClick')
+			},
+			onTap() {
+				this.$emit('onclick')
+			},
+			close() {
+				this.$emit('close')
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-primary: #465CFF !default;
+	$fui-color-success: #09BE4F !default;
+	$fui-color-warning: #FFB703 !default;
+	$fui-color-danger: #FF2B2B !default;
+
+	.fui-alert__wrap {
+		width: 100%;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		position: relative;
+	}
+
+	.fui-alert__info,
+	.fui-alert__waiting {
+		background: $fui-color-primary !important;
+	}
+
+	.fui-alert__success {
+		background: $fui-color-success !important;
+	}
+
+	.fui-alert__warning {
+		background: $fui-color-warning !important;
+	}
+
+	.fui-alert__danger {
+		background: $fui-color-danger !important;
+	}
+
+	.fui-alert__shrink {
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.fui-alert__content {
+		flex: 1;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	.fui-alert__text {
+		box-sizing: border-box;
+	}
+
+	.fui-desc__padding {
+		padding-top: 3px;
+	}
+
+	.fui-alert__p-left {
+		padding-left: 20rpx;
+	}
+
+	.fui-alert__p-right {
+		padding-right: 60rpx;
+	}
+
+	.fui-alert__single {
+		lines: 1;
+		width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.fui-alert__icon-close {
+		position: absolute;
+		right: 30rpx;
+		top: 16rpx;
+	}
+</style>

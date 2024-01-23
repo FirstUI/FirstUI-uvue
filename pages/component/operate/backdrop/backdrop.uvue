@@ -8,11 +8,11 @@
 				<text class="fui-page__desc">Backdrop 遮罩层，在组件中设置显示蒙层。</text>
 			</view>
 			<view class="fui-page__bd">
-				<fui-button type="gray" btn-size="medium" text="打开遮罩层" :bold="true" margin="24rpx" @click="open">
+				<fui-button type="gray" btn-size="medium" text="打开遮罩层" :bold="true" margin="24rpx" @onclick="open">
 				</fui-button>
 			</view>
 			<!--closable为true时click事件才生效-->
-			<fui-backdrop v-model:visible="show" :closable="true" @click="close"></fui-backdrop>
+			<fui-backdrop v-model:visible="show" :closable="true" @onclick="close"></fui-backdrop>
 		</view>
 	<!-- #ifdef APP -->
 	</scroll-view>

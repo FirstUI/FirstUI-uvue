@@ -9,7 +9,7 @@
 			</view>
 			<view class="fui-page__bd fui-page__spacing">
 				<fui-section title="按钮类型" padding="0" :margin-bottom="32" :is-line="true"></fui-section>
-				<fui-button text="默认按钮" @click="btnClick"></fui-button>
+				<fui-button text="默认按钮" @onclick="btnClick"></fui-button>
 				<!-- 注：使用插槽文本样式需自行定义，且需text 标签 包裹 -->
 				<fui-button margin="24rpx 0" type="success">
 					<fui-text color="#fff" text="success"></fui-text>

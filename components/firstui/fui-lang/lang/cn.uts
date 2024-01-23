@@ -12,6 +12,32 @@ export default {
 		cancel: '取消',
 		/* 确定按钮文本 */
 		confirm: '确定'
+	} as UTSJSONObject,
+	/* SwipeAction 滑动菜单 */
+	swipeaction: {
+		/* 默认数据删除按钮文本 */
+		delete: '删除'
+	} as UTSJSONObject,
+	/* Loading 加载 */
+	loading: {
+		/* 默认数据删除按钮文本 */
+		text: '加载中'
+	} as UTSJSONObject,
+	/* Pagination 分页器 */
+	pagination: {
+		/* 上一页按钮显示文本 */
+		prevText: '上一页',
+		/* 下一页按钮显示文本 */
+		nextText: '下一页'
+	} as UTSJSONObject,
+	/* LoadMore 加载更多 */
+	loadmore: {
+		/* 状态1提示文字 */
+		initText: '上拉加载',
+		/* 状态2提示文字 */
+		text: '正在加载...',
+		/* 状态3提示文字 */
+		noneText: '没有更多了'
 	} as UTSJSONObject
 
 } as UTSJSONObject

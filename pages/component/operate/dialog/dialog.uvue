@@ -9,15 +9,31 @@
 			</view>
 			<view class="fui-page__bd fui-page__spacing">
 				<fui-button type="gray" btn-size="medium" text="基础使用" :bold="true" margin="24rpx"
-					@click="showDialog(1)"></fui-button>
-				<fui-button type="gray" btn-size="medium" text="自定义按钮" :bold="true" @click="showDialog(2)">
+					@onclick="showDialog(1)"></fui-button>
+				<fui-button type="gray" btn-size="medium" text="自定义按钮" :bold="true" @onclick="showDialog(2)">
 				</fui-button>
 			</view>
-			<fui-dialog v-model:visible="show" content="弹窗内容，告知当前状态、信息和解决方法，描述文字尽量控制在三行内" :maskClosable="true"
-				@click="onClick" @close="onClose"></fui-dialog>
+			<!-- 弹窗内容，告知当前状态、信息和解决方法，描述文字尽量控制在三行内 -->
+			<fui-dialog v-model:visible="show" :content="content" :maskClosable="true" @onclick="onclick"
+				@close="onClose"></fui-dialog>
 
 			<fui-dialog :visible="visible" title="我是标题" content="我是自定义的对话框！" :buttons="buttons"
-				@click="onTap"></fui-dialog>
+				@onclick="onTap"></fui-dialog>
+
+			<view class="fui-lang--box">
+				<fui-button type="gray" btn-size="small" text="英文" :bold="true" @onclick="switchLang('en')">
+				</fui-button>
+				<fui-button type="gray" btn-size="small" text="阿拉伯" :bold="true" @onclick="switchLang('ar')">
+				</fui-button>
+				<fui-button type="gray" btn-size="small" text="简体中文" :bold="true" @onclick="switchLang('cn')">
+				</fui-button>
+				<fui-button type="gray" btn-size="small" text="繁体中文" :bold="true" @onclick="switchLang('tc')">
+				</fui-button>
+				<fui-button type="gray" btn-size="small" text="俄语" :bold="true" @onclick="switchLang('ru')">
+				</fui-button>
+				<fui-button type="gray" btn-size="small" text="泰语" :bold="true" @onclick="switchLang('th')">
+				</fui-button>
+			</view>
 		</view>
 	<!-- #ifdef APP -->
 	</scroll-view>
@@ -26,6 +42,7 @@
 
 <script>
 	import { FuiDialogButtonsParam } from '@/components/firstui/fui-types/index.uts'
+	import { setFuiLocale } from '@/components/firstui/fui-lang/index.uts'
 	export default {
 		data() {
 			return {
@@ -34,7 +51,8 @@
 				buttons: [{
 					text: '确定',
 					color: '#FF2B2B'
-				}] as FuiDialogButtonsParam[]
+				}] as FuiDialogButtonsParam[],
+				content: 'cn～'
 			}
 		},
 		methods: {
@@ -45,7 +63,11 @@
 					this.visible = true
 				}
 			},
-			onClick(e : FuiDialogButtonsParam) {
+			switchLang(locale : string) {
+				this.content = `${locale}~`
+				setFuiLocale(locale)
+			},
+			onclick(e : FuiDialogButtonsParam) {
 				console.log(e)
 				this.onClose()
 			},
@@ -67,5 +89,19 @@
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
+	}
+
+	.fui-lang--box {
+		width: 100%;
+		position: fixed;
+		z-index: 1002;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: row;
+		flex-wrap: wrap;
 	}
 </style>

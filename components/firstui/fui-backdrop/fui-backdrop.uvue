@@ -15,12 +15,12 @@
 	 * @property {Boolean} absolute {Boolean} 是否绝对定位，默认为固定定位fixed
 	 * @property {Number} zIndex {Number} 遮罩层z-index值
 	 * @property {Boolean} closable {Boolean} 是否可点击遮罩层，设为true后点击事件生效
-	 * @event {Function} click 点击遮罩层且closable设为true时触发，() => void
+	 * @event {Function} onclick 点击遮罩层且closable设为true时触发，() => void
 	 * @event {Function} update:visible 点击遮罩层且closable设为true时触发，用于双向绑定，(event:boolean) => void
 	 */
 	export default {
 		name: "fui-backdrop",
-		emits: ['click', 'update:visible'],
+		emits: ['onclick', 'update:visible'],
 		props: {
 			visible: {
 				type: Boolean,
@@ -96,7 +96,7 @@
 			},
 			handleClick() {
 				if (this.closable && this.visible) {
-					this.$emit('click')
+					this.$emit('onclick')
 					this.$emit('update:visible', false)
 				}
 			}

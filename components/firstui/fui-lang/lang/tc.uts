@@ -7,6 +7,21 @@ export default {
 		title: '提示',
 		cancel: '取消',
 		confirm: '確定'
-	} as UTSJSONObject
+	} as UTSJSONObject,
+	swipeaction: {
+		delete: '刪除'
+	} as UTSJSONObject,
+	loading: {
+		text: '載入中'
+	} as UTSJSONObject,
+	pagination: {
+		prevText: '上一頁',
+		nextText: '下一頁'
+	} as UTSJSONObject,
+	loadmore: {
+		initText: '上拉加載',
+		text: '正在加載...',
+		noneText: '沒有更多了'
+	} as UTSJSONObject,
 
 } as UTSJSONObject

@@ -11,7 +11,7 @@
 				<fui-empty src="/static/images/component/empty/img_data_3x.png" title="暂无数据" descr="功能开发中，敬请期待！">
 					<fui-button text="返回首页" :size="28" width="336rpx" height="84rpx" radius="100rpx" type="primary"
 						margin="64rpx 0" :plain="true" color="#465CFF" borderColor="#465CFF"
-						@click="goIndex"></fui-button>
+						@onclick="goIndex"></fui-button>
 				</fui-empty>
 				<fui-empty src="/static/images/component/empty/img_news_3x.png" title="暂无新消息"
 					:marginTop="64"></fui-empty>

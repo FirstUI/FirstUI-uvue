@@ -53,11 +53,11 @@
 	 * @property {Number} tagSize {Number} 标签字体大小，单位rpx
 	 * @property {String} tagColor {String}	标签字体颜色
 	 * @property {Number} index {Number} 索引
-	 * @event {Function} click 点击Card时触发，返回传入的索引值，(event: number) => void
+	 * @event {Function} onclick 点击Card时触发，返回传入的索引值，(event: number) => void
 	 */
 	export default {
 		name: "fui-card",
-		emits: ['click'],
+		emits: ['onclick'],
 		props: {
 			margin: {
 				type: String,
@@ -157,7 +157,7 @@
 		},
 		methods: {
 			handleClick() {
-				this.$emit('click', this.index)
+				this.$emit('onclick', this.index)
 			}
 		}
 	}

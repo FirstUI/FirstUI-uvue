@@ -1,6 +1,6 @@
 <template>
 	<view class="fui-label__wrap" :class="{'fui-label__full':full}" :style="{padding:padding,margin:margin}"
-		@tap.stop="onClick">
+		@tap.stop="onclick">
 		<slot></slot>
 	</view>
 </template>
@@ -44,7 +44,7 @@
 			}
 		},
 		methods: {
-			onClick() {
+			onclick() {
 				if (this.childrens.length > 0) {
 					this.childrens.forEach((item : ComponentPublicInstance) => {
 						item.$callMethod('labelClick')

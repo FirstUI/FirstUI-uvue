@@ -1,0 +1,52 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Loading</text>
+				<text class="fui-page__desc">Loading 加载。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<text class="fui-section__title fui-mtop--0">基础使用（type=row）</text>
+				<fui-loading type="row" :isFixed="false"></fui-loading>
+				<text class="fui-section__title">基础使用（type=col）</text>
+				<view class="fui-flex__center">
+					<fui-loading :isFixed="false"></fui-loading>
+				</view>
+				<!-- 居中且显示遮罩，仅 isFixed为true时生效-->
+				<!-- <fui-loading :isMask="true" mask-bg-color="rgba(0,0,0,.3)"></fui-loading> -->
+				<text class="fui-section__title">更换图标（type=row）</text>
+				<fui-loading type="row" :isFixed="false" srcRow="/static/images/component/loading_gray.png"
+					text="正在加载...">
+				</fui-loading>
+				<text class="fui-section__title">更换图标（type=col）</text>
+				<view class="fui-flex__center">
+					<fui-loading :isFixed="false" srcCol="/static/images/component/loading_white.png" text="正在加载...">
+					</fui-loading>
+				</view>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+<style>
+	.fui-wrap {
+		padding-bottom: 120rpx;
+	}
+</style>

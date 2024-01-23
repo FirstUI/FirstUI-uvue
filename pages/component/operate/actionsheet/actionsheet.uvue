@@ -9,17 +9,17 @@
 			</view>
 			<view class="fui-page__bd fui-page__spacing">
 				<fui-button type="gray" btn-size="medium" text="带提示" :bold="true" margin="24rpx"
-					@click="showActionSheet(1)"></fui-button>
-				<fui-button type="gray" btn-size="medium" text="无提示操作" :bold="true" @click="showActionSheet(2)">
+					@onclick="showActionSheet(1)"></fui-button>
+				<fui-button type="gray" btn-size="medium" text="无提示操作" :bold="true" @onclick="showActionSheet(2)">
 				</fui-button>
 				<fui-button type="gray" btn-size="medium" text="暗黑模式" margin="24rpx" :bold="true"
-					@click="showActionSheet(3)">
+					@onclick="showActionSheet(3)">
 				</fui-button>
-				<fui-button type="gray" btn-size="medium" text="无取消按钮" :bold="true" @click="showActionSheet(4)">
+				<fui-button type="gray" btn-size="medium" text="无取消按钮" :bold="true" @onclick="showActionSheet(4)">
 				</fui-button>
 			</view>
 			<fui-actionsheet v-model:visible="show" :tips="tips" :itemList="itemList" :isCancel="isCancel"
-				:theme="theme" @click="itemClick"></fui-actionsheet>
+				:theme="theme" @onclick="itemClick"></fui-actionsheet>
 		</view>
 	<!-- #ifdef APP -->
 	</scroll-view>

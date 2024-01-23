@@ -277,6 +277,128 @@
 				"backgroundColorBottom": "#FFFFFF",
 				"backgroundColor": "#FFFFFE"
 			}
+		},
+		{
+			"path": "pages/component/operate/dropdownMenu/dropdownMenu",
+			"style": {
+				"navigationBarTitleText": "下拉菜单",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/operate/dropdownList/dropdownList",
+			"style": {
+				"navigationBarTitleText": "下拉菜单",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/operate/loading/loading",
+			"style": {
+				"navigationBarTitleText": "加载中",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/operate/swipeAction/swipeAction",
+			"style": {
+				"navigationBarTitleText": "滑动菜单",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/nav/pagination/pagination",
+			"style": {
+				"navigationBarTitleText": "分页器",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/nav/segmentedControl/segmentedControl",
+			"style": {
+				"navigationBarTitleText": "分段器",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/nav/tabs/tabs",
+			"style": {
+				"navigationBarTitleText": "标签页",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/nav/drawer/drawer",
+			"style": {
+				"navigationBarTitleText": "抽屉",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/nav/bottomPopup/bottomPopup",
+			"style": {
+				"navigationBarTitleText": "底部弹出层",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/nav/topPopup/topPopup",
+			"style": {
+				"navigationBarTitleText": "顶部弹出层",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/data/alert/alert",
+			"style": {
+				"navigationBarTitleText": "警告框",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/data/avatar/avatar",
+			"style": {
+				"navigationBarTitleText": "头像",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/data/collapse/collapse",
+			"style": {
+				"navigationBarTitleText": "折叠面板",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/data/divider/divider",
+			"style": {
+				"navigationBarTitleText": "分割线",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/data/loadmore/loadmore",
+			"style": {
+				"navigationBarTitleText": "加载更多",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/js/utils/utils",
+			"style": {
+				"navigationBarTitleText": "工具类",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/data/tag/tag",
+			"style": {
+				"navigationBarTitleText": "标签",
+				"enablePullDownRefresh": false,
+				"backgroundColorTop": "#FFFFFF",
+				"backgroundColorBottom": "#FFFFFF",
+				"backgroundColor": "#FFFFFF"
+			}
 		}
 	],
 	"globalStyle": {

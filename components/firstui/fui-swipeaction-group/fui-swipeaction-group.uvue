@@ -1,0 +1,51 @@
+<template>
+	<view>
+		<slot></slot>
+	</view>
+</template>
+
+<script>
+	import { ComponentPublicInstance } from 'vue'
+	/**
+	 * SwipeAction 滑动菜单
+	 * @description SwipeAction 滑动菜单，用于滑动操作的组件，结合fui-swipe-action 组件使用。
+	 * @tutorial https://unix.firstui.cn/
+	 */
+	export default {
+		name: "fui-swipeaction-group",
+		data() {
+			return {
+				children: [] as ComponentPublicInstance[],
+				openItem: null as null | ComponentPublicInstance
+			};
+		},
+		methods: {
+			/**
+			* 类型：reset() =>void
+			* @description 重置子组件样式，改变滑动菜单按钮数据时使用	
+			*/
+			reset() {
+				this.children.forEach((child : ComponentPublicInstance) => {
+					child.$callMethod('init')
+				})
+			},
+			/**
+			* 类型：close() =>void
+			* @description 关闭全部已经打开的滑动菜单
+			*/
+			close() {
+				this.children.forEach((child : ComponentPublicInstance) => {
+					child.$callMethod('close')
+				})
+			},
+			closeAuto(child : ComponentPublicInstance) {
+				if (this.openItem != null && this.openItem != child) {
+					(this.openItem as ComponentPublicInstance).$callMethod('close')
+				}
+				this.openItem = child
+			}
+		}
+	}
+</script>
+
+<style scoped></style>

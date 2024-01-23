@@ -1,7 +1,7 @@
 <template>
 	<text :style="{ color: color, fontSize: getSize,lineHeight:getSize, fontWeight: fontWeight}" class="fui-icon"
 		:class="{'fui-icon__fontsize':isBind,'fui-icon__active-color':primary && color=='','fui-icon__color':color=='' }"
-		@click="handleClick">{{ getIcon }}</text>
+		@tap="handleClick">{{ getIcon }}</text>
 </template>
 
 <script>
@@ -18,11 +18,11 @@
 	 * @property {Boolean} disabled {Boolean} 是否禁用点击，设置为true则点击事件及效果失效
 	 * @property {String} param	{String} 自定义参数，点击事件中回传
 	 * @property {Boolean} primary	{Boolean} 是否显示为主色调，color为空时有效。【内部保留属性】
-	 * @event {Function} click 点击图标时触发，(event: string) => void
+	 * @event {Function} onclick 点击图标时触发，(event: string) => void
 	 */
 	export default {
 		name: "fui-icon",
-		emits: ['click'],
+		emits: ['onclick'],
 		props: {
 			name: {
 				type: String,
@@ -91,7 +91,7 @@
 		methods: {
 			handleClick() {
 				if (this.disabled) return;
-				this.$emit('click', this.param);
+				this.$emit('onclick', this.param);
 			}
 		}
 	}

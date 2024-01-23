@@ -1,0 +1,221 @@
+<template>
+	<view :class="{'fui-loading__mask':isMask && isFixed}"
+		:style="{background:isFixed?maskBgColor:'transparent',zIndex:zIndex-2}">
+		<view class="fui-loading fui-loading__wrap" :class="{'fui-loading__fixed':isFixed}"
+			:style="{ background: backgroundColor,position:isFixed ?'fixed':'static',zIndex:zIndex }"
+			v-if="type == 'col'">
+			<image class="fui-loading__ani" :src="srcCol" :ref="refId" @transitionend="onEnd"></image>
+			<text class="fui-loading__text"
+				:style="{color:colColor,fontSize:`${size}rpx`,'line-height':`${size}rpx`}">{{ loadingText }}</text>
+		</view>
+		<view v-else class="fui-loading fui-loading__row" :class="{'fui-loading__fixed':isFixed}"
+			:style="{position:isFixed?'fixed':'static',zIndex:zIndex}">
+			<image class="fui-loading-row__ani" :src="srcRow" :ref="refId" @transitionend="onEnd"></image>
+			<text class="fui-loading__text"
+				:style="{color:rowColor,fontSize:`${size}rpx`,'line-height':`${size}rpx`}">{{ loadingText }}</text>
+		</view>
+	</view>
+</template>
+
+<script>
+	import { fuiLang, getFuiLocaleLang } from '../fui-lang/index.uts'
+	/**
+	 * Loading 加载
+	 * @description Loading 加载，一般在数据未加载完成之前显示。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} type {String}	 排列方式，可取值：col、row
+	 * @property {String} text {String}	提示文字
+	 * @property {String} colColor {String} 文本颜色，type=col时生效
+	 * @property {String} rowColor {String} 文本颜色，type=row时生效
+	 * @property {Number} size {Number} 字体大小，单位rpx	
+	 * @property {String} backgroundColor {String} loading背景色，type=col时生效
+	 * @property {String} srcCol {String} loading icon图片地址，type=col时生效
+	 * @property {String} srcRow {String} loading icon图片地址，type=row时生效
+	 * @property {Boolean} isFixed {Boolean} 是否固定在屏幕中间显示
+	 * @property {Boolean} isMask {Boolean} 是否需要遮罩
+	 * @property {String} maskBgColor {String} 遮罩的背景色，默认透明色，isFixed为true时生效
+	 * @property {Number} zIndex {Number} 层级z-index，仅isFixed为true时有效
+	 */
+	export default {
+		name: "fui-loading",
+		props: {
+			type: {
+				type: String,
+				default: 'col'
+			},
+			text: {
+				type: String,
+				default: ''
+			},
+			colColor: {
+				type: String,
+				default: '#FFFFFF'
+			},
+			rowColor: {
+				type: String,
+				default: '#7F7F7F'
+			},
+			size: {
+				type: Number,
+				default: 26
+			},
+			backgroundColor: {
+				type: String,
+				default: 'rgba(0, 0, 0, 0.6)'
+			},
+			srcCol: {
+				type: String,
+				default: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAMAAAAOusbgAAAARVBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////9SnXPCAAAAFnRSTlMA8ECgECCAYDDQ4MCwUL9wkN9vP49fRXb34AAAA1dJREFUaN7tmtmSozAMReXdxuyk+f9PnaW6o06CAdtSumqG8xqSi6QrGwfBxcXFD2OW5cP+pVsWDe9AL7YP6xO9mj1w0t3CmkK0H0yhd0qsBzBoazutZxDKACFSrefpJZmFUfad0vpVtonWOvkHZ62Kzas0QcLnJ0dFuxGOHNqny8QMVfjw6By5c+n4GHnwVOGq7tiDD3G74uq234Idzbmue7hVXZtmYfEncqRDicekKPSo+Z6o/EI7bB6Zfc+hXBl1R13V+0Jm6uL3inCiKGZX6g7ENwXKrrwfEB3uyubszYovXahBx3ve9LkvoG4lcc36pf7zagu16JCzeo4E8aLy+TJL1CXAfJWtP7zHKcsPp+NYh6NEY2posOeSbT4v64CMiLU7dvQIVGAsqzyuSKOBEHvCXwHvjZAGQ94PuAVaJIa8X2EDxMSDkGXh0lG9KCkMmCnkbdNq6oARt7t8Oa6A0dhhx1oREPpe9ukVxgEHBnOdyLQAHkI61wqtxcCQ9rXATDPgk9uef7kjFl+PiRJH4EKlijwmniyp15DEqtYBFz7VyQKXLR5ST9iJLibvZLuZiQh8qO1+kizPHq+hNXpT2AIjrlnX+GIii8J8eJPatyQwcwn/j8ISu5uZwj7+d4QBl8w3I3CT4EOnjjcCeJHJXUsDJ35LeHhDPw0yaesROIkmaesAjJgVtmjZizygd99b5CnunCQVsNGlFsbAnOs+tfkNTMdFzOjuqb0HJlR6J4h4uKHH7CSz47SX2tsIGr6Dm9mNyPGFrHZrqBuuKvuD1dhxGbs/6tOGuJcxoObMM5/QQIoWx8G0HA99IwZ89EZzAEI6PKMc+kt4ykRjix4ne6IrczhjGmzmoAn/dOlyXpgrumPoeLrr6JRd1hOkJVN2mW9mFZGywwbJU+51pa/QWJnKk6/o3xbX/Xxl0ZUPvxXp4nREqyuG31zZnFD5nJHp8ZsVc0I9NkTOFFsw9UN7t5x8W1E9oQSdyJ2p1fP04srKSUUlz0zLiqQlKwbwppvfVZ0DjvkR/bWO2urDbIp2t2n9knWk/+ojorfzsty9v8y2n/DTZgBKZLueInZAjR7CkWoYDLBgXCvSs/uoyoJ3Y3zWjOPg4T14KQf7m0FKqeHi4uJH+QUYYoTOYC/s2wAAAABJRU5ErkJggg=='
+			},
+			srcRow: {
+				type: String,
+				default: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAMAAAAPdrEwAAAAM1BMVEUAAACPj4+IiIiIiIiIiIiIiIiKioqHh4eHh4eHh4eHh4eIiIiIiIiJiYmIiIiJiYmIiIi8awvKAAAAEHRSTlMAEEDw4NAwwKAgYICQULBwL0wVnQAAAmpJREFUWMPtmOmO4yAQhLlvMO//tDuyjfAaCEcj7UqTT5o/iafSVLcLY/TldyHID8fPH94oir2TLD6QyugdxVoeazAnYPUaFtsws+yNVjR+htolcWz/luHyhL7F55XNQ0Narx+L8TY8bSGTXsiYUB5V8A+zHJ4rud+p3GI+PiwqCXv0Ec+T42awf3L8+iMtzwwp36UEPHR1SIYPKueS+xxJe1CZiYkooNmTvjLHUzHDR7TVgnI2UXR9k/OhQHslieKCcb87reRnB5fCzMeTVp5cUbeY8O6arEYknYs60CJXK21zOvot7DSK4lrR51eA7dQ1y1bFF9MT2Chb358DsLHeLJeKhpZdDgkDFp1jQtRGXiEYOtZU1PLdUt7OFT84gnJUHNE5XOCO2PLnCALDzl21HD2Yam4ZRU9kER8Qs/V7IQ7BIWVqp10TTCFN0gdgwvumJmkcwWDFgigsQtv4Sv8baZ2lt5Pn+n+Wfm+CMsUsHFIJQ7VH+l2hSXsaHFUbEb1l2GRt5zFb/FC1nSfskGam+lSP4cqmks10jyOc1fditiGMXD1G4DekTH5sf14gkTeD1QOdbrRLXodGAKb1hC7gh5nmvzvgI0NoHyswA1niP7WKQE4dmtYHDH4MwzxS3T2MmCWje5OL2aK26j9EC7qkrVIk97XtrM+RYzSoHSZmUCTlLoLNvTs+aFLug+XEu2Mt59boRl9+4vk7gbD79fXnii2dsS6Xc4lb3fx5lX1bfKfPD1HJInetS64lJQnxhkrryV2+INbxeCHXN1PtaGxClUYgvGJ1XY82IA7Fn7IyFO7DIDcYfflN/AFNdjdeDj7M+wAAAABJRU5ErkJggg=='
+			},
+			isFixed: {
+				type: Boolean,
+				default: true
+			},
+			isMask: {
+				type: Boolean,
+				default: false
+			},
+			maskBgColor: {
+				type: String,
+				default: 'transparent'
+			},
+			zIndex: {
+				type: Number,
+				default: 996
+			}
+		},
+		computed: {
+			locale() : string {
+				return fuiLang.locale
+			}
+		},
+		watch: {
+			text(val : string) {
+				if (val == '') {
+					this.getLoadingText(fuiLang.locale)
+				} else {
+					this.loadingText = val;
+				}
+
+			},
+			locale: {
+				handler(val : string) {
+					this.getLoadingText(val)
+				},
+				immediate: true
+			}
+		},
+		data() {
+			const refId = `fui_loading_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				refId: refId,
+				times: 0,
+				isSpin: false,
+				element: null as Element | null,
+				loadingText: ''
+			}
+		},
+		mounted() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					this.startSpin();
+				}, 150)
+			})
+		},
+		beforeUnmount() {
+			this.isSpin = false
+			this.element = null;
+		},
+		methods: {
+			getLoadingText(val : string) {
+				const lang = getFuiLocaleLang(val)
+				const loadingR = lang['loading'] as UTSJSONObject;
+				this.loadingText = loadingR.getString('text') as string;
+			},
+			startSpin() {
+				if (this.element != null && this.isSpin) return;
+				if (this.element == null) {
+					this.element = this.$refs[this.refId] as Element;
+				}
+				this.times = this.times + 1
+				this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
+				this.element!.style.setProperty('transition-duration', '800')
+				this.isSpin = true
+			},
+			onEnd() {
+				if (this.isSpin) {
+					this.times = this.times + 1
+					this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
+				}
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	@mixin loading_init {
+		transition-duration: 600;
+		transition-property: transform;
+		transition-timing-function: linear;
+		transform: rotate(0deg);
+	}
+
+	.fui-loading {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		overflow: visible;
+	}
+
+	.fui-loading__fixed {
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.fui-loading__wrap {
+		width: 208rpx;
+		height: 208rpx;
+		flex-direction: column;
+		border-radius: 12rpx;
+	}
+
+	.fui-loading__ani {
+		width: 64rpx;
+		height: 64rpx;
+		margin: 0 6px;
+		margin-bottom: 30rpx;
+		@include loading_init;
+	}
+
+	.fui-loading__row {
+		width: 100%;
+		height: 36rpx;
+	}
+
+	.fui-loading-row__ani {
+		width: 36rpx;
+		height: 36rpx;
+		border-radius: 36rpx;
+		margin-right: 20rpx;
+		@include loading_init;
+	}
+
+	.fui-loading__text {
+		text-align: center;
+	}
+
+
+	.fui-loading__mask {
+		position: fixed;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+	}
+</style>

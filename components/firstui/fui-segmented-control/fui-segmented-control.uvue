@@ -1,0 +1,197 @@
+<template>
+	<view class="fui-segmented__control" :class="{'fui-segmented__disabled':disabled}"
+		:style="{marginTop:`${marginTop}rpx`,marginBottom:`${marginBottom}rpx`}">
+		<view class="fui-segmented__item" v-for="(item,index) in vals" :key="index"
+			:style="{borderTopLeftRadius:index==0?`${radius}rpx`:'0',borderBottomLeftRadius:index==0?`${radius}rpx`:'0',borderTopRightRadius:index==vals.length - 1?`${radius}rpx`:'0',borderBottomRightRadius:index==vals.length - 1?`${radius}rpx`:'0',borderColor:type=='button'?color:'transparent',background:currentIndex==index && type=='button'?color:'transparent',height:`${height}rpx`}"
+			:class="{'fui-segmented__first':index==0 && type=='button','fui-seg__item-bg':currentIndex==index && color=='' && type=='button','fui-seg__item-border':color=='' && type=='button','fui-segmented__item-border':type=='button'}"
+			@tap="handleClick(index)">
+			<text
+				:style="{fontSize:`${size}rpx`,color:currentIndex==index?activeColor:color,fontWeight:bold && currentIndex==index ?'bold':'normal'}"
+				:class="{'fui-segmented__disabled':item.disabled==true,'fui-seg__text-color':color=='' && currentIdx!=index}">{{item.name}}</text>
+			<view class="fui-segmented__item-line" v-if="currentIndex==index && type=='text'"
+				:style="{background:activeColor}"></view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import type { PropType } from 'vue'
+	import { FuiSegmentedControlValueParam } from '../fui-types/index.uts';
+	/**
+	 * SegmentedControl 分段器
+	 * @description SegmentedControl 分段器 组件，分段器由至少 2 个分段控件组成，用作不同视图的显示。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Array} values {Array&lt;FuiSegmentedControlValueParam&gt;} 分段器列表数据
+	 * @property {Number} current {Number} 分段器初始选中项索引
+	 * @property {String} type {String}	分段器显示类型，可选值：button、text	
+	 * @property {String} color	{String} 分段器颜色（边框颜色、未选中字体颜色、选中背景色）
+	 * @property {String} activeColor {String} 分段器选中项字体颜色
+	 * @property {Boolean} bold {Boolean} 分段器选中项字体是否加粗
+	 * @property {Number} height {Number} 分段器高度，单位rpx
+	 * @property {Number} size {Number} 分段器字体大小，单位rpx
+	 * @property {Number} radius {Number} 分段器圆角值，单位rpx
+	 * @property {Boolean} disabled {Boolean} 是否禁用所有项，单项禁用在values中传入属性控制
+	 * @property {Number} marginTop {Number} 分段器margin-top值，单位rpx
+	 * @property {Number} marginBottom {Number} 分段器margin-bottom值，单位rpx
+	 * @event {Function} onclick 分段器切换时触发，(event:FuiSegmentedControlValueParam) => void
+	 */
+	export default {
+		name: "fui-segmented-control",
+		emits: ['onclick'],
+		props: {
+			values: {
+				type: Array as PropType<FuiSegmentedControlValueParam[]>,
+				default: () : FuiSegmentedControlValueParam[] => [] as FuiSegmentedControlValueParam[]
+			},
+			current: {
+				type: Number,
+				default: 0
+			},
+			type: {
+				type: String,
+				default: 'button'
+			},
+			color: {
+				type: String,
+				default: ''
+			},
+			activeColor: {
+				type: String,
+				default: '#fff'
+			},
+			bold: {
+				type: Boolean,
+				default: false
+			},
+			height: {
+				type: Number,
+				default: 64
+			},
+			size: {
+				type: Number,
+				default: 28
+			},
+			radius: {
+				type: Number,
+				default: 8
+			},
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			marginTop: {
+				type: Number,
+				default: 0
+			},
+			marginBottom: {
+				type: Number,
+				default: 0
+			}
+		},
+		data() {
+			return {
+				currentIndex: 0,
+				currentIdx: 0,
+				vals: [] as FuiSegmentedControlValueParam[]
+			};
+		},
+		watch: {
+			current(val) {
+				if (val != this.currentIndex) {
+					this.currentIndex = val
+				}
+			},
+			values(vals) {
+				this.initData(vals)
+			},
+			currentIndex(val : number) {
+				setTimeout(() => {
+					this.currentIdx = val
+				}, 0)
+			}
+		},
+		created() {
+			this.currentIndex = this.current
+			const values = JSON.parse<FuiSegmentedControlValueParam[]>(JSON.stringify(this.values))
+			if (values != null) this.initData(values);
+		},
+		methods: {
+			initData(vals : FuiSegmentedControlValueParam[]) {
+				this.vals = [] as FuiSegmentedControlValueParam[];
+				this.$nextTick(() => {
+					this.vals = vals;
+				})
+			},
+			handleClick(index : number) {
+				let item = this.vals[index];
+				if (this.currentIndex != index && !this.disabled && item.disabled != true) {
+					this.currentIndex = index
+					item.index = index
+					this.$emit('onclick', item)
+				}
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-primary: #465CFF !default;
+	$fui-segmentedcontrol-border-width: 1px !default;
+
+	.fui-segmented__control {
+		width: 100%;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: row;
+		overflow: hidden;
+	}
+
+	.fui-segmented__item {
+		flex: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-style: solid;
+		border-top-width: 0;
+		border-bottom-width: 0;
+		border-right-width: 0;
+		border-left-width: 0;
+		position: relative;
+		box-sizing: border-box;
+	}
+
+	.fui-segmented__item-border {
+		border-top-width: $fui-segmentedcontrol-border-width;
+		border-bottom-width: $fui-segmentedcontrol-border-width;
+		border-right-width: $fui-segmentedcontrol-border-width;
+	}
+
+	.fui-segmented__item-line {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: 2px;
+	}
+
+	.fui-segmented__disabled {
+		opacity: 0.5;
+	}
+
+	.fui-segmented__first {
+		border-left-style: solid;
+		border-left-width: $fui-segmentedcontrol-border-width;
+	}
+
+	.fui-seg__item-bg {
+		background: $fui-color-primary !important;
+	}
+
+	.fui-seg__item-border {
+		border-color: $fui-color-primary !important;
+	}
+
+	.fui-seg__text-color {
+		color: $fui-color-primary !important;
+	}
+</style>

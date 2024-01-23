@@ -54,14 +54,13 @@ $fui-placeholder-color:#CCCCCC;
 /* 阴影颜色 */
 $fui-color-shadow: rgba(2, 4, 38, 0.05);
 
-/*禁用态的透明度 */
+/* 禁用态的透明度 */
 $fui-opacity-disabled: 0.5;
 
-/* 图标尺寸 */
-$fui-img-size-sm: 48rpx;
-$fui-img-size-base: 56rpx;
-$fui-img-size-middle: 64rpx;
-$fui-img-size-lg: 96rpx;
+/* 头像尺寸 */
+$fui-img-size-sm: 64rpx;
+$fui-img-size-middle: 96rpx;
+$fui-img-size-lg: 128rpx;
 
 /* 图片尺寸 */
 $fui-img-sm: 60rpx;
@@ -72,7 +71,6 @@ $fui-img-lg: 240rpx;
 $fui-border-radius-sm: 16rpx;
 $fui-border-radius-base: 24rpx;
 $fui-border-radius-lg: 48rpx;
-$fui-border-radius-circle: 50%;
 
 /* 水平间距 */
 $fui-spacing-row-sm: 16rpx;

@@ -1,0 +1,163 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<view class="fui-align__center">
+					<fui-text font-weight="700" :size="36" text="SwipeAction"></fui-text>
+				</view>
+				<text class="fui-page__desc">SwipeAction 滑动菜单，用于滑动操作的组件。</text>
+			</view>
+			<view class="fui-page__bd">
+				<text class="fui-section__title fui-mtop--0">基础使用</text>
+				<fui-swipeaction-group>
+					<fui-swipe-action @onclick="onTap" @change="change">
+						<fui-list-cell padding="36rpx 32rpx" :highlight="false">
+							<text class="fui-text">默认菜单按钮</text>
+						</fui-list-cell>
+					</fui-swipe-action>
+					<fui-swipe-action :buttons="buttons" @onclick="onTap" @change="change">
+						<fui-list-cell padding="36rpx 32rpx" :highlight="false">
+							<text class="fui-text">自定义菜单按钮</text>
+						</fui-list-cell>
+					</fui-swipe-action>
+					<fui-swipe-action :buttons="buttons">
+						<fui-list-cell padding="36rpx 32rpx" :highlight="false">
+							<text class="fui-text">插槽菜单</text>
+						</fui-list-cell>
+						<template v-slot:buttons>
+							<view class="fui-menu__box">
+								<view class="fui-menu__btn">
+									<fui-icon name="delete" :size="44"></fui-icon>
+								</view>
+							</view>
+						</template>
+					</fui-swipe-action>
+				</fui-swipeaction-group>
+				<text class="fui-section__title">禁止滑动</text>
+				<fui-swipeaction-group>
+					<fui-swipe-action :disabled="true">
+						<fui-list-cell padding="36rpx 32rpx" :highlight="false">
+							<text class="fui-text">不可滑动</text>
+						</fui-list-cell>
+					</fui-swipe-action>
+				</fui-swipeaction-group>
+				<text class="fui-section__title">默认打开</text>
+				<fui-swipeaction-group>
+					<fui-swipe-action :visible="visible">
+						<fui-list-cell padding="36rpx 32rpx" :highlight="false">
+							<text class="fui-text">默认打开状态</text>
+						</fui-list-cell>
+					</fui-swipe-action>
+				</fui-swipeaction-group>
+				<text class="fui-section__title">菜单状态不关联，缩放效果</text>
+				<fui-swipeaction-group>
+					<fui-swipe-action :autoClose="false" :isScale="true">
+						<fui-list-cell padding="36rpx 32rpx" :highlight="false">左滑菜单</fui-list-cell>
+					</fui-swipe-action>
+					<fui-swipe-action :autoClose="false" :isScale="true" :buttons="buttons">
+						<fui-list-cell padding="36rpx 32rpx" :highlight="false">
+							<text class="fui-text">自定义菜单按钮</text>
+						</fui-list-cell>
+					</fui-swipe-action>
+				</fui-swipeaction-group>
+				<text class="fui-section__title">点击不关闭，结合提示操作</text>
+				<!-- 额外传参写法如：@change="stateChange($event as boolean,1)" -->
+				<fui-swipeaction-group>
+					<fui-swipe-action :clickClose="false" :visible="isShow" @change="stateChange" @onclick="buttonTap">
+						<fui-list-cell padding="36rpx 32rpx" :highlight="false" @onclick="onclick">
+							<text class="fui-text">点击菜单弹出提示信息</text>
+						</fui-list-cell>
+					</fui-swipe-action>
+				</fui-swipeaction-group>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	import { FuiSwipeActionButtonParam } from '@/components/firstui/fui-types/index.uts'
+	export default {
+		data() {
+			return {
+				visible: false,
+				buttons: [{
+					text: '标为未读',
+					background: '#465CFF'
+				}, {
+					text: '删除',
+					background: '#FF2B2B'
+				}] as FuiSwipeActionButtonParam[],
+				isShow: false
+			}
+		},
+		onLoad() {
+			setTimeout(() => {
+				this.visible = true
+			}, 500)
+		},
+		methods: {
+			onTap(e : FuiSwipeActionButtonParam) {
+				console.log(JSON.stringify(e))
+				this.fui.toast(e.text)
+			},
+			change(e : boolean) {
+				console.log(e)
+			},
+			//点击不关闭，结合提示操作
+			stateChange(isOpen : boolean) {
+				//同步打开状态【结合提示时必须同步】
+				this.isShow = isOpen
+			},
+			onclick() {
+				//列表点击事件，此处也可关闭菜单
+				console.log('详情～')
+				this.fui.toast('点击了～')
+			},
+			buttonTap(e : FuiSwipeActionButtonParam) {
+				//按钮点击事件
+				console.log(e)
+				this.fui.modal('提示', '确定要删除吗', (confirm) => {
+					if (confirm) {
+						this.fui.toast('删除～')
+					} else {
+						this.fui.toast('取消删除，关闭菜单～')
+						//关闭菜单
+						this.isShow = false
+					}
+				}, true)
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-wrap {
+		padding-bottom: 64rpx;
+	}
+
+	.fui-section__title {
+		margin-left: 32rpx;
+	}
+
+	.fui-menu__box {
+		width: 160rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.fui-menu__btn {
+		width: 88rpx;
+		height: 88rpx;
+		background: #fff;
+		border-radius: 48rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+</style>

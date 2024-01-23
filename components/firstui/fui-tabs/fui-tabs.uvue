@@ -1,0 +1,373 @@
+	<template>
+		<scroll-view class="fui-tabs__scrollbox" :class="{'fui-tabs__fixed':isFixed}" :scroll-with-animation="true"
+			:scroll-x="scroll" :show-scrollbar="false" :scroll-into-view="scrollInto"
+			:style="{background:background,zIndex:isFixed?zIndex:1,top: isFixed  ? `${top}px`: 'auto'}">
+			<view class="fui-scroll__view" :class="{'fui-tabs__full':!scroll}">
+				<view v-for="(tab, index) in vals" :key="index" class="fui-tabs__item" :class="{'fui-tabs__full':!scroll}"
+					:id="ids[index]" @tap="switchTab(index)">
+					<view class="fui-tabs__text-wrap"
+						:class="{'fui-tabs__wrap-disabled':tab.disabled,'fui-tabs__item-column':direction=='column' && (tab.icon!=null || tab.icon!='')}"
+						:style="{height:`${height}rpx`}">
+						<view class="fui-tabs__line-wrap" :class="{'fui-tabs__line-center':center}"
+							:style="{bottom:`${bottom}rpx`,left:`-${padding}rpx`,right:`-${padding}rpx`}" v-if="isSlider">
+							<view class="fui-tabs__ac-line"
+								:class="{'fui-tabs__line-short':short,'fui-tabs__full':!short,'fui-tabs__slider-color':sliderBackground==''}"
+								:style="{height:`${sliderHeight}rpx`,background:sliderBackground,borderRadius:sliderRadius==-1?`${sliderHeight}rpx`:`${sliderRadius}rpx`,transform: `scale(${tabIndex==index?scale:0})`}">
+							</view>
+						</view>
+						<image class="fui-tabs__icon" :class="{'fui-tabs__icon-column':direction=='column'}"
+							:src="tabIndex==index && tab.selectedIcon!='' && tab.selectedIcon!=null?tab.selectedIcon:tab.icon"
+							v-if="tab.icon!=null && tab.icon!=''">
+						</image>
+						<view class="fui-tabs__text" :style="{transform:`scale(${tabIndex==index?scale:1})`}">
+							<text :class="{'fui-tabs__selected-color':selectedColor=='' && tabIdx==index}"
+								:style="{fontSize:`${size}rpx`,color:tabIndex==index?selectedColor:color,fontWeight:tabIndex==index?selectedFontWeight:fontWeight}">
+								{{tab.name}}
+							</text>
+							<text
+								:class="{'fui-tabs__badge-color':badgeBackground=='','fui-tabs__badge-dot':isDot,'fui-tabs__badge':!isDot}"
+								:style="{color:badgeColor,background:badgeBackground}"
+								v-if="tab.badge!=null && tab.badge!=0">{{isDot?'':tab.badge}}</text>
+						</view>
+					</view>
+				</view>
+			</view>
+		</scroll-view>
+	</template>
+
+	<script>
+	import type { PropType } from 'vue';
+	import { FuiTabsItemParam } from '../fui-types/index.uts';
+	/**
+	 * Tabs 标签页
+	 * @description Tabs 标签页，分隔内容上有关联但属于不同类别的数据集合。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Array} tabs {Array&lt;FuiTabsItemParam&gt;} 标签页数据
+	 * @property {Number} current {Number} 当前选项卡索引
+	 * @property {Boolean} scroll {Boolean} 标签页超出一屏是否可以滚动
+	 * @property {Number} height {Number} 标签页高度，单位rpx
+	 * @property {String} background {String} 标签页背景色
+	 * @property {Number} size {Number} 标签页字体大小，单位rpx	
+	 * @property {String} color {String} 标签页字体颜色
+	 * @property {String} fontWeight {String} 标签页选中前字重，可选值：normal、bold
+	 * @property {String} selectedColor {String} 标签页选中后字体颜色
+	 * @property {String} selectedFontWeight {String} 标签页选中后字重，可选值：normal、bold
+	 * @property {Number} scale	{Number} 标签页选中后字体缩放倍数
+	 * @property {String} badgeColor {String} 角标字体颜色
+	 * @property {String} badgeBackground {String} 角标背景颜色
+	 * @property {Boolean} isDot {Boolean} 角标是否显示为圆点
+	 * @property {Boolean} isSlider {Boolean} 是否显示底部滑块
+	 * @property {Number} sliderHeight {Number} 滑块高度，单位rpx
+	 * @property {String} sliderBackground {String} 滑块背景颜色
+	 * @property {Number} sliderRadius {Number} 滑块圆角值，单位rpx。值为-1时则使用滑块高度值
+	 * @property {Number} padding {Number} 滑块左右padding值，单位rpx
+	 * @property {Number} bottom {Number} 滑块左右bottom值，单位rpx
+	 * @property {Boolean} short {Boolean} 滑块是否固定为较短的长度45rpx
+	 * @property {Boolean} center {Boolean} 滑块是否居中显示，默认居左显示
+	 * @property {Boolean} isFixed {Boolean} 标签页是否固定在顶部
+	 * @property {Number} top {Number} isFixed为true时，标签页top值，单位px
+	 * @property {Boolean} direction {Boolean} item项内容排列方式，可选值：row、column。当设置为column时需调整height值
+	 * @property {Number} zIndex {Number} 标签页z-index值，isFixed为true时生效
+	 * @event {Function} change 标签页切换时触发，(event: FuiTabsItemParam) => void
+	 */
+	export default {
+		name: 'fui-tabs',
+		emits: ['change'],
+		props: {
+			tabs: {
+				type: Array as PropType<FuiTabsItemParam[]>,
+				default: () : FuiTabsItemParam[] => [] as FuiTabsItemParam[]
+			},
+			current: {
+				type: Number,
+				default: 0
+			},
+			scroll: {
+				type: Boolean,
+				default: false
+			},
+			height: {
+				type: Number,
+				default: 96
+			},
+			background: {
+				type: String,
+				default: '#fff'
+			},
+			size: {
+				type: Number,
+				default: 28
+			},
+			color: {
+				type: String,
+				default: '#7F7F7F'
+			},
+			fontWeight: {
+				type: String,
+				default: 'normal'
+			},
+			selectedColor: {
+				type: String,
+				default: ''
+			},
+			selectedFontWeight: {
+				type: String,
+				default: 'bold'
+			},
+			scale: {
+				type: Number,
+				default: 1.2
+			},
+			badgeColor: {
+				type: String,
+				default: '#fff'
+			},
+			badgeBackground: {
+				type: String,
+				default: ''
+			},
+			isDot: {
+				type: Boolean,
+				default: false
+			},
+			isSlider: {
+				type: Boolean,
+				default: true
+			},
+			sliderHeight: {
+				type: Number,
+				default: 5
+			},
+			sliderBackground: {
+				type: String,
+				default: ''
+			},
+			sliderRadius: {
+				type: Number,
+				default: -1
+			},
+			padding: {
+				type: Number,
+				default: 0
+			},
+			bottom: {
+				type: Number,
+				default: 0
+			},
+			short: {
+				type: Boolean,
+				default: true
+			},
+			center: {
+				type: Boolean,
+				default: false
+			},
+			isFixed: {
+				type: Boolean,
+				default: false
+			},
+			top: {
+				type: Number,
+				default: 0
+			},
+			direction: {
+				type: String,
+				default: 'row'
+			},
+			zIndex: {
+				type: Number,
+				default: 900
+			}
+		},
+		watch: {
+			tabs(vals : FuiTabsItemParam[]) {
+				this.initData(vals)
+			},
+			current(newVal : number) {
+				this.switchTab(newVal);
+			},
+			tabIndex(val : number) {
+				setTimeout(() => {
+					this.tabIdx = val
+				}, 0)
+			}
+		},
+		created() {
+			const tabs = JSON.parse<FuiTabsItemParam[]>(JSON.stringify(this.tabs))
+			if (tabs != null) this.initData(tabs);
+		},
+		data() {
+			return {
+				vals: [] as FuiTabsItemParam[],
+				ids: [] as string[],
+				scrollInto: '',
+				tabIndex: 0,
+				tabIdx: 0
+			};
+		},
+		methods: {
+			initData(vals : FuiTabsItemParam[]) {
+				this.vals = [] as FuiTabsItemParam[];
+				const ids = [] as string[];
+				const len = vals.length;
+				for (let i = 0; i < len; i++) {
+					const id = `fui_tabs_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`;
+					ids.push(id);
+				}
+				this.$nextTick(() => {
+					this.ids = ids;
+					this.vals = vals;
+					setTimeout(() => {
+						this.switchTab(this.current)
+					}, 50)
+				})
+			},
+			switchTab(index : number) {
+				const item = this.vals[index]
+				if (this.tabIndex != index && item.disabled != true) {
+					this.tabIndex = index;
+					let scrollIndex = index - 1 < 0 ? 0 : index - 1;
+					this.scrollInto = this.ids[scrollIndex];
+					item.index = index;
+					this.$emit('change', item)
+				}
+			}
+		}
+	};
+	</script>
+
+	<style scoped lang="scss">
+		$fui-color-primary: #465CFF !default;
+		$fui-color-danger: #FF2B2B !default;
+
+		.fui-tabs__scrollbox {
+			width: 100%;
+			flex-direction: row;
+			overflow: hidden;
+		}
+
+		.fui-tabs__fixed {
+			position: fixed;
+			left: 0;
+			right: 0;
+		}
+
+		.fui-scroll__view {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+		}
+
+
+		.fui-tabs__item {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			flex-shrink: 0;
+			padding-left: 32rpx;
+			padding-right: 32rpx;
+			position: relative;
+		}
+
+		.fui-tabs__full {
+			flex: 1;
+		}
+
+		.fui-tabs__text-wrap {
+			position: relative;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			z-index: 3;
+			overflow: visible;
+		}
+
+		.fui-tabs__wrap-disabled {
+			opacity: 0.5;
+		}
+
+		.fui-tabs__icon {
+			width: 40rpx;
+			height: 40rpx;
+			margin-right: 12rpx;
+		}
+
+		.fui-tabs__item-column {
+			flex-direction: column !important;
+		}
+
+		.fui-tabs__icon-column {
+			margin-right: 0 !important;
+			margin-bottom: 8rpx;
+		}
+
+		.fui-tabs__text {
+			transition: transform 0.2s linear;
+			z-index: 3;
+			position: relative;
+			overflow: visible;
+		}
+
+		.fui-tabs__badge {
+			height: 36rpx;
+			padding: 0 12rpx;
+			color: #FFFFFF;
+			font-size: 24rpx;
+			line-height: 36rpx;
+			border-radius: 100px;
+			position: absolute;
+			min-width: 36rpx !important;
+			box-sizing: border-box;
+			right: -32rpx;
+			top: -18rpx;
+			z-index: 10;
+			transform: scale(0.9);
+			text-align: center;
+		}
+
+		.fui-tabs__badge-dot {
+			height: 8px !important;
+			width: 8px !important;
+			border-radius: 100px;
+			position: absolute;
+			right: -6px;
+			top: -3px;
+			z-index: 10;
+		}
+
+		.fui-tabs__line-wrap {
+			position: absolute;
+			border-radius: 2px;
+			z-index: 2;
+			flex: 1;
+			display: flex;
+			flex-direction: row;
+		}
+
+		.fui-tabs__line-center {
+			justify-content: center;
+			left: 0;
+		}
+
+		.fui-tabs__ac-line {
+			transition: transform 0.2s linear;
+		}
+
+		.fui-tabs__line-short {
+			width: 45rpx !important;
+		}
+
+		.fui-tabs__selected-color {
+			color: $fui-color-primary !important;
+		}
+
+		.fui-tabs__slider-color {
+			background: $fui-color-primary !important;
+		}
+
+		.fui-tabs__badge-color {
+			background: $fui-color-danger !important;
+		}
+	</style>

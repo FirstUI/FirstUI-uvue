@@ -1,0 +1,292 @@
+<template>
+	<view class="fui-tag__wrap"
+		:class="[originLeft?'fui-tag__origin-left':'',originRight?'fui-tag__origin-right':'',background==''?`fui-tag__${type}-${theme}`:'',(background!='' && borderColor=='') || !isBorder?'fui-tag__no-border':'']"
+		:style="{background:background,borderColor:borderColor,transform: `scale(${scaleRatio})`,borderRadius:`${radius}rpx`,padding:padding,marginTop:`${marginTop}rpx`,marginRight:`${marginRight}rpx`,marginBottom:`${marginBottom}rpx`,marginLeft:`${marginLeft}rpx`}"
+		@tap="handleClick" :hover-stay-time="120" :hover-class="highlight?'fui-tag__opacity-active':''">
+		<text v-if="text!=''" class="fui-tag__text" :class="[background==''?`fui-tag_${type}-${theme}`:'']"
+			:style="{fontSize:`${size}rpx`,lineHeight:`${size}rpx`,color:color}">{{text}}</text>
+		<slot></slot>
+	</view>
+</template>
+
+<script>
+	/**
+	 * Tag 标签
+	 * @description Tag 标签，用于标记或分类，外层容器需要设置flex-direction: row，否则长度将铺满而非自适应。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} text {String} 标签显示文本
+	 * @property {String} type {String}	标签类型，可选值：primary，success，warning，danger，purple
+	 * @property {String} theme {String} 标签主题，可选值：dark、light、plain。background为空时生效
+	 * @property {String} background {String} 标签背景色。如果设置背景则type、theme失效
+	 * @property {Boolean} isBorder {Boolean} 是否需要边框
+	 * @property {String} borderColor {String} 标签边框颜色
+	 * @property {String} color {String} 标签字体颜色
+	 * @property {Number} size {Number} 标签字体大小，单位rpx
+	 * @property {String} borderColor {String} 标签边框颜色
+	 * @property {String} color {String} 标签字体颜色
+	 * @property {Number} size {Number} 标签字体大小，单位rpx
+	 * @property {Number} scaleRatio {Number} 标签缩放比例
+	 * @property {Boolean} originLeft {Boolean} 缩放后，是否设置元素的基点位置为：0 center
+	 * @property {Boolean} originRight {Boolean} 缩放后，是否设置元素的基点位置为：100% center
+	 * @property {Boolean} highlight {Boolean} 是否有点击效果
+	 * @property {Number} radius {Number} 标签圆角值，单位rpx
+	 * @property {String} padding {String} padding值，格式同css
+	 * @property {Number} marginTop {Number} margin-top值
+	 * @property {Number} marginBottom {Number} margin-bottom值
+	 * @property {Number} marginLeft {Number} margin-left值
+	 * @property {Number} marginRight {Number} margin-right值
+	 * @property {Number} index {Number} 列表中的索引值，点击事件回传
+	 * @event {Function} onclick 点击标签时触发，(event=>number) => void
+	 */
+	export default {
+		name: "fui-tag",
+		emits: ['onclick'],
+		props: {
+			text: {
+				type: String,
+				default: ''
+			},
+			type: {
+				type: String,
+				default: 'primary'
+			},
+			theme: {
+				type: String,
+				default: 'dark'
+			},
+			background: {
+				type: String,
+				default: ''
+			},
+			isBorder: {
+				type: Boolean,
+				default: true
+			},
+			borderColor: {
+				type: String,
+				default: ''
+			},
+			color: {
+				type: String,
+				default: ''
+			},
+			size: {
+				type: Number,
+				default: 24
+			},
+			scaleRatio: {
+				type: Number,
+				default: 1
+			},
+			originLeft: {
+				type: Boolean,
+				default: false
+			},
+			originRight: {
+				type: Boolean,
+				default: false
+			},
+			highlight: {
+				type: Boolean,
+				default: false
+			},
+			radius: {
+				type: Number,
+				default: 8
+			},
+			padding: {
+				type: String,
+				default: '16rpx 32rpx'
+			},
+			marginTop: {
+				type: Number,
+				default: 0
+			},
+			marginBottom: {
+				type: Number,
+				default: 0
+			},
+			marginLeft: {
+				type: Number,
+				default: 0
+			},
+			marginRight: {
+				type: Number,
+				default: 0
+			},
+			index: {
+				type: Number,
+				default: 0
+			}
+		},
+		data() {
+			return {}
+		},
+		methods: {
+			handleClick() {
+				this.$emit('onclick', this.index)
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-primary: #465CFF !default;
+	$fui-color-success: #09BE4F !default;
+	$fui-color-warning: #FFB703 !default;
+	$fui-color-danger: #FF2B2B !default;
+	$fui-color-purple: #6831FF !default;
+	$fui-bg-color-grey: #F1F4FA !default;
+	$fui-bg-color-green: rgba(9, 190, 79, .05) !default;
+	$fui-bg-color-yellow: rgba(255, 183, 3, .1) !default;
+	$fui-bg-color-red: rgba(255, 43, 43, .05) !default;
+	$fui-bg-color-purple: rgba(104, 49, 255, .05) !default;
+	$fui-tag-border-width: 0.5px !default;
+
+	.fui-tag__wrap {
+		display: flex;
+		flex-shrink: 0;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		border-width: $fui-tag-border-width;
+		border-style: solid;
+		border-color: transparent;
+		overflow: hidden;
+		box-sizing: border-box;
+	}
+
+	.fui-tag__no-border {
+		border-width: 0;
+	}
+
+	.fui-tag__text {
+		lines: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.fui-tag__primary-dark {
+		background: $fui-color-primary !important;
+		border-color: $fui-color-primary !important;
+	}
+
+	.fui-tag_primary-dark,
+	.fui-tag_success-dark,
+	.fui-tag_warning-dark,
+	.fui-tag_danger-dark,
+	.fui-tag_purple-dark {
+		color: #FFFFFF !important;
+	}
+
+	.fui-tag__success-dark {
+		background: $fui-color-success !important;
+		border-color: $fui-color-success !important;
+	}
+
+
+	.fui-tag__warning-dark {
+		background: $fui-color-warning !important;
+		border-color: $fui-color-warning !important;
+	}
+
+	.fui-tag__danger-dark {
+		background: $fui-color-danger !important;
+		border-color: $fui-color-danger !important;
+	}
+
+	.fui-tag__purple-dark {
+		background: $fui-color-purple !important;
+		border-color: $fui-color-purple !important;
+	}
+
+	.fui-tag__primary-light {
+		background: $fui-bg-color-grey !important;
+		border-color: $fui-bg-color-grey !important;
+	}
+
+	.fui-tag_primary-light,
+	.fui-tag_primary-plain {
+		color: $fui-color-primary !important;
+	}
+
+	.fui-tag__success-light {
+		background: $fui-bg-color-green !important;
+		border-color: $fui-bg-color-green !important;
+	}
+
+	.fui-tag_success-light,
+	.fui-tag_success-plain {
+		color: $fui-color-success !important;
+	}
+
+	.fui-tag__warning-light {
+		background: $fui-bg-color-yellow !important;
+		border-color: $fui-bg-color-yellow !important;
+
+	}
+
+	.fui-tag_warning-light,
+	.fui-tag_warning-plain {
+		color: $fui-color-warning !important;
+
+	}
+
+	.fui-tag__danger-light {
+		background: $fui-bg-color-red !important;
+		border-color: $fui-bg-color-red !important;
+	}
+
+	.fui-tag_danger-light,
+	.fui-tag_danger-plain {
+		color: $fui-color-danger !important;
+	}
+
+	.fui-tag__purple-light {
+		background: $fui-bg-color-purple !important;
+		border-color: $fui-bg-color-purple !important;
+	}
+
+	.fui-tag_purple-light,
+	.fui-tag_purple-plain {
+		color: $fui-color-purple !important;
+	}
+
+	.fui-tag__primary-plain {
+		background: rgba(0, 0, 0, 0) !important;
+		border-color: $fui-color-primary !important;
+	}
+
+	.fui-tag__success-plain {
+		background-color: rgba(0, 0, 0, 0) !important;
+		border-color: $fui-color-success !important;
+	}
+
+	.fui-tag__warning-plain {
+		background: rgba(0, 0, 0, 0) !important;
+		border-color: $fui-color-warning !important;
+	}
+
+	.fui-tag__danger-plain {
+		background: rgba(0, 0, 0, 0) !important;
+		border-color: $fui-color-danger !important;
+	}
+
+	.fui-tag__purple-plain {
+		background: rgba(0, 0, 0, 0) !important;
+		border-color: $fui-color-purple !important;
+	}
+
+	.fui-tag__origin-left {
+		transform-origin: 0 center;
+	}
+
+	.fui-tag__origin-right {
+		transform-origin: 100% center;
+	}
+
+	.fui-tag__opacity-active {
+		opacity: 0.5;
+	}
+</style>

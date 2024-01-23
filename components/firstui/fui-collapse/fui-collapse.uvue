@@ -1,0 +1,58 @@
+<template>
+	<view class="fui-collapse__wrap" :style="{background:background}">
+		<slot></slot>
+	</view>
+</template>
+<script>
+	import { ComponentPublicInstance } from 'vue'
+	import { FuiCollapseChangeParam } from '../fui-types/index.uts';
+	/**
+	 * Collapse 折叠面板
+	 * @description Collapse 折叠面板，可以折叠/展开的内容区域，当前为 fui-collapse 组件。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Boolean} accordion {Boolean} 是否开启手风琴效果
+	 * @property {String} background {String} 背景颜色
+	 * @event {Function} change 点击切换时触发，(event:FuiCollapseChangeParam) => void
+	 */
+	export default {
+		name: 'fui-collapse',
+		emits: ['change'],
+		props: {
+			accordion: {
+				type: Boolean,
+				default: false
+			},
+			background: {
+				type: String,
+				default: '#fff'
+			}
+		},
+		data() {
+			return {
+				children: [] as ComponentPublicInstance[]
+			}
+		},
+		methods: {
+			collapseChange(obj : ComponentPublicInstance, isOpen : boolean, idx : number) {
+				if (this.accordion && isOpen) {
+					this.children.forEach((item : ComponentPublicInstance) => {
+						if (item != obj) {
+							item.$data['isOpen'] = false;
+						}
+					})
+				}
+				this.$emit('change', {
+					index: idx,
+					isOpen: isOpen
+				} as FuiCollapseChangeParam)
+			}
+		}
+	}
+</script>
+<style scoped>
+	.fui-collapse__wrap {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+</style>

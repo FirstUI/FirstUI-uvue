@@ -7,5 +7,20 @@ export default {
 		title: 'Message',
 		cancel: 'Cancel',
 		confirm: 'OK'
-	} as UTSJSONObject
+	} as UTSJSONObject,
+	swipeaction: {
+		delete: 'Delete'
+	} as UTSJSONObject,
+	loading: {
+		text: 'Loading'
+	} as UTSJSONObject,
+	pagination: {
+		prevText: 'Prev page',
+		nextText: 'Next page'
+	} as UTSJSONObject,
+	loadmore: {
+		initText: 'Pull-up loading',
+		text: 'Loading',
+		noneText: 'No more'
+	} as UTSJSONObject,
 } as UTSJSONObject

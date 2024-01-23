@@ -18,7 +18,7 @@
 				<fui-input :borderTop="true" padding="20rpx 32rpx" placeholder="请输入密码" :password="password"
 					@input="input">
 					<fui-icon :name="password?'invisible':'visible'" color="#B2B2B2" :size="50"
-						@click="change"></fui-icon>
+						@onclick="change"></fui-icon>
 				</fui-input>
 				<text class="fui-section__title">带清除按钮、双向绑定</text>
 				<fui-input label="标题" :borderTop="true" placeholder="请输入文本" :clearable="true"

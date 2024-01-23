@@ -1,0 +1,79 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Tabs</text>
+				<text class="fui-page__desc">Tabs 标签页，分隔内容上有关联但属于不同类别的数据集合。</text>
+			</view>
+			<view class="fui-page__bd">
+				<text class="fui-section__title fui-mtop--0">基础使用</text>
+				<fui-tabs :tabs="tabs" @change="change"></fui-tabs>
+				<text class="fui-section__title">滑块居中显示</text>
+				<fui-tabs :tabs="tabs" :center="true" @change="change"></fui-tabs>
+				<text class="fui-section__title">改变颜色</text>
+				<fui-tabs :tabs="tabs" selectedColor="#FFB703" sliderBackground="#FFB703"></fui-tabs>
+				<text class="fui-section__title">滑块与内容同宽</text>
+				<fui-tabs :tabs="tabs" :short="false"></fui-tabs>
+				<text class="fui-section__title">超出一屏，禁用（标签八）</text>
+				<fui-tabs :tabs="tabs2" :isDot="true" :scroll="true"></fui-tabs>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	import { FuiTabsItemParam } from '@/components/firstui/fui-types/index.uts'
+	export default {
+		data() {
+			return {
+				tabs: [{
+					name: '热门推荐'
+				}, {
+					name: '新时代'
+				}, {
+					name: '懂球帝'
+				}] as FuiTabsItemParam[],
+				tabs2: [{
+					name: '标签一'
+				}, {
+					name: '标签二'
+				}, {
+					name: '标签三',
+					badge: 1
+				}, {
+					name: '标签四'
+				}, {
+					name: '标签五'
+				}, {
+					name: '标签六'
+				}, {
+					name: '标签七'
+				}, {
+					name: '标签八',
+					disabled: true
+				}, {
+					name: '标签九'
+				}] as FuiTabsItemParam[]
+			}
+		},
+		methods: {
+			change(e : FuiTabsItemParam) {
+				console.log(JSON.stringify(e))
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-wrap {
+		padding-bottom: 64rpx;
+	}
+
+	.fui-section__title {
+		margin-left: 32rpx;
+	}
+</style>

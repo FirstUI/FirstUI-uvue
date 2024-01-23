@@ -1,0 +1,82 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Pagination</text>
+				<text class="fui-page__desc">Pagination 分页器，当数据量过多时，使用分页分解数据。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<text class="fui-section__title fui-mtop--0">基础使用</text>
+				<fui-pagination :total="100" @change="change"></fui-pagination>
+				<text class="fui-section__title">样式调整</text>
+				<fui-pagination :total="100" color="#FFB703" background="transparent"
+					currentColor="#FFB703"></fui-pagination>
+				<text class="fui-section__title">自定义按钮内容</text>
+				<fui-pagination :total="100" background="transparent">
+					<template v-slot:prev>
+						<fui-icon name="arrowleft"></fui-icon>
+					</template>
+					<template v-slot:next>
+						<fui-icon name="arrowright"></fui-icon>
+					</template>
+				</fui-pagination>
+				<text class="fui-section__title">页码展开</text>
+				<fui-pagination :total="1000" :pageType="2"></fui-pagination>
+				<text class="fui-section__title">页码展开/调整样式</text>
+				<view class="fui-pageno__wrap">
+					<fui-pagination :total="1000" :pageType="2" :width="62" background="#FFB703"
+						pageBgColor="rgba(255, 183, 3, .1)" activeBgColor="#FFB703">
+						<template v-slot:prev>
+							<fui-icon :size="40" name="arrowleft" color="#fff"></fui-icon>
+						</template>
+						<template v-slot:next>
+							<fui-icon :size="40" name="arrowright" color="#fff"></fui-icon>
+						</template>
+					</fui-pagination>
+				</view>
+				<text class="fui-section__title">页码展开/按钮宽度设为60</text>
+				<fui-pagination :total="1000" :pageType="2" :width="60" background="#09BE4F"
+					pageBgColor="rgba(9, 190, 79, .05)" activeBgColor="#09BE4F">
+					<template v-slot:prev>
+						<fui-icon :size="40" name="arrowleft" color="#fff"></fui-icon>
+					</template>
+					<template v-slot:next>
+						<fui-icon :size="40" name="arrowright" color="#fff"></fui-icon>
+					</template>
+				</fui-pagination>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	import { FuiPaginationChangeParam } from '@/components/firstui/fui-types/index.uts'
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+			change(e : FuiPaginationChangeParam) {
+				console.log(JSON.stringify(e))
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-wrap {
+		padding-bottom: 96rpx;
+	}
+
+	.fui-pageno__wrap {
+		width: 100%;
+		padding: 0 64rpx;
+		box-sizing: border-box;
+	}
+</style>

@@ -34,7 +34,7 @@
 				<fui-section title="金额格式化" :isLine="true" padding="0" :margin-top="96" :marginBottom="32"></fui-section>
 				<fui-text text="20000" text-type="amount" :format="true">￥</fui-text>
 				<fui-section title="点击效果" :isLine="true" padding="0" :margin-top="96" :marginBottom="32"></fui-section>
-				<fui-text text="https://firstui.cn" :highlight="true" @click="handleClick"></fui-text>
+				<fui-text text="https://firstui.cn" :highlight="true" @onclick="handleClick"></fui-text>
 			</view>
 		</view>
 

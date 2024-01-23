@@ -7,5 +7,20 @@ export default {
 		title: 'Сообщение',
 		cancel: 'Отмена',
 		confirm: 'OK'
-	} as UTSJSONObject
+	} as UTSJSONObject,
+	swipeaction: {
+		delete: 'Удалить'
+	} as UTSJSONObject,
+	loading: {
+		text: 'Загрузка'
+	} as UTSJSONObject,
+	pagination: {
+		prevText: 'Prev page',// to be translated
+		nextText: 'Next page'// to be translated
+	} as UTSJSONObject,
+	loadmore: {
+		initText: 'Pull-up loading', // to be translated
+		text: 'Загрузка',
+		noneText: 'больше не надо'
+	} as UTSJSONObject,
 } as UTSJSONObject

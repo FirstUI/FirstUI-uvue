@@ -6,7 +6,7 @@
 		<view ref="fui_button_loading" @transitionend="onEnd" class="fui-button__spin" :style="getStyl" v-if="loading">
 		</view>
 		<text class="fui-button__text"
-			:class="{'fui-btn__gray-color':background=='' && disabledBackground=='' && !plain && type=='gray' && color=='#fff','fui-text__bold':bold,'fui-button__size':size==0 && btnSize==''}"
+			:class="{'fui-btn__gray-color':background=='' && disabledBackground=='' && !plain && type=='gray' && color=='#fff','fui-text__bold':bold,'fui-button__size':size==0 && btnSize=='','fui-button__height-text':height=='' && btnSize==''}"
 			v-if="text"
 			:style="{fontSize: getSize,color:getColor,height: getHeight,lineHeight:getHeight}">{{text}}</text>
 		<slot></slot>
@@ -41,11 +41,11 @@
 	 * @property {Boolean}loading {Boolean} 是否显示加载图标
 	 * @property {String} iconColor	{String} loading圆环背景色
 	 * @property {String} activeColor loading圆环高亮部分颜色
-	 * @event {Function} click 按钮点击事件，(event: MouseEvent) => void
+	 * @event {Function} onclick 按钮点击事件，(event: MouseEvent) => void
 	 */
 	export default {
 		name: 'fui-button',
-		emits: ['click'],
+		emits: ['onclick'],
 		props: {
 			type: {
 				type: String,
@@ -231,7 +231,7 @@
 			this.$nextTick(() => {
 				setTimeout(() => {
 					if (this.loading) this.startSpin();
-				}, 150)
+				}, 200)
 			})
 		},
 		beforeUnmount() {
@@ -246,7 +246,7 @@
 			},
 			handleTap(e : MouseEvent) {
 				if (this.disabled) return;
-				this.$emit('click', e);
+				this.$emit('onclick', e);
 			},
 			handleEnd() {
 				this.switchHover(false)
@@ -396,9 +396,13 @@
 		height: $fui-button-height !important;
 	}
 
+	.fui-button__height-text {
+		height: $fui-button-height !important;
+		line-height: $fui-button-height !important;
+	}
+
 	.fui-button__size {
 		font-size: $fui-button-size !important;
-		line-height: $fui-button-height !important;
 	}
 
 	.fui-button__radius {

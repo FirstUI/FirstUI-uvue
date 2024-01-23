@@ -1,0 +1,389 @@
+/*!
+ * 工具类：常用数据处理工具
+ * Utils - v1.0.0 (2024/01/20, 10:00 AM)
+ * https://github.com/FirstUI/FirstUI-uvue | Released under Apache License 2.0
+ *
+ * 官网地址：https://firstui.cn/
+ * 文档地址：https://unix.firstui.cn/
+ */
+
+/**
+ * @description 等待多少毫秒再执行 ，同步阻塞
+ * @param {Number} millisecond 毫秒
+ **/
+export function sleep(millisecond : number) {
+	let now = new Date();
+	let exitTime = now.getTime() + millisecond;
+	while (true) {
+		now = new Date();
+		if (now.getTime() > exitTime) return;
+	}
+}
+/**
+ * @description 去左右空格
+ * @param {String} value 需要处理的字符串
+ **/
+export function trim(value : string) : string {
+	return value.replace(/(^\s*)|(\s*$)/g, "");
+}
+
+/**
+ * @description 去所有空格
+ * @param {String} value 需要处理的字符串
+ **/
+export function trimAll(value : string) : string {
+	return value.replace(/\s+/g, "")
+}
+
+/**
+ * @description 替换所有相同字符串
+ * @param {String} text 需要处理的字符串
+ * @param {String} repstr 被替换的字符
+ * @param {String} newstr 替换后的字符
+ **/
+export function replaceAll(text : string, repstr : string, newstr : string) : string {
+	return text.replace(new RegExp(repstr, "gm"), newstr);
+}
+
+/**
+ * @description 格式化手机号码
+ * @param {String} num 手机号码
+ **/
+export function numberFormatter(num : string) : string {
+	return num.length == 11 ? num.replace(/^(\d{3})\d{4}(\d{4})$/, '$1****$2') : num;
+}
+
+/**
+ * @description 金额格式化，保留两位小数
+ * @param {String | Number} money 金额值
+ **/
+export function moneyFormatter(money : number) : string {
+	return money.toFixed(2).toString().split('').reverse().join('').replace(/(\d{3})/g, '$1,')
+		.replace(
+			/\,$/, '').split('').reverse().join('');
+}
+
+function _formatDate(formatStr : string, fdate : any, type = 1, isMs = false) : string {
+	if (fdate == '') return '';
+	let fTime : Date;
+	let fStr = 'ymdhis';
+	if (type == 4) {
+		fTime = fdate as Date;
+	} else {
+		fdate = fdate.toString()
+		if (fdate.indexOf('.') != -1) {
+			fdate = fdate.substring(0, fdate.indexOf('.'));
+		}
+		fdate = fdate.replace('T', ' ').replace(/\-/g, '/');
+		if (formatStr == '')
+			formatStr = "y-m-d h:i:s";
+		if (fdate != '') {
+			if (type == 2) {
+				fdate = isMs ? fdate : (parseInt(fdate) * 1000).toString()
+			}
+			fTime = new Date(fdate);
+		} else {
+			fTime = new Date();
+		}
+	}
+	const month = fTime.getMonth() + 1;
+	const day = fTime.getDate();
+	const hours = fTime.getHours();
+	const minu = fTime.getMinutes();
+	const second = fTime.getSeconds();
+	const formatArr = [
+		fTime.getFullYear().toString(),
+		(month < 10 ? `0${month}` : month).toString(),
+		(day < 10 ? `0${day}` : day).toString(),
+		(hours < 10 ? `0${hours}` : hours).toString(),
+		(minu < 10 ? `0${minu}` : minu).toString(),
+		(second < 10 ? `0${second}` : second).toString()
+	]
+	for (let i = 0; i < formatArr.length; i++) {
+		formatStr = formatStr.replace(fStr.charAt(i), formatArr[i]);
+	}
+	return formatStr;
+}
+
+function _formatTimeStr(timeStr : string, formatStr : string) : string {
+	if (timeStr == '') return '';
+	if (timeStr.length == 14) {
+		let fStr = 'ymdhis'
+		if (formatStr == '') {
+			formatStr = 'y-m-d h:i:s'
+		}
+		const formatArr = [
+			timeStr.substring(0, 4),
+			timeStr.substring(4, 6),
+			timeStr.substring(6, 8),
+			timeStr.substring(8, 10),
+			timeStr.substring(10, 12),
+			timeStr.substring(12, 14)
+		]
+		for (let i = 0; i < formatArr.length; i++) {
+			formatStr = formatStr.replace(fStr.charAt(i), formatArr[i])
+		}
+		return formatStr
+	}
+	return timeStr
+}
+
+
+/**
+ * @description 日期时间格式化
+ * @param {any} date 需要格式化的日期
+ * @param {String} format 格式化字符串(y-m-d h:i:s)
+ * @param {Number} type  date的格式类型：1-日期字符串(2017/12/04 12:12:12) 2-时间戳(1603676514690) 3-日期字符串，无连接符(20171204121212) 
+ * 4-new Date()时间格式(Thu Oct 01 2020 00:00:00 GMT+0800 (中国标准时间))
+ * @param  {Boolean} isMs  时间戳精度是否为毫秒，默认为true（当精度为秒时传false），type=2时有效
+ **/
+export function dateFormatter(date : any, format : string, type : number = 1, isMs : boolean = true) : string {
+	let formatDate : string;
+	if (type == 3) {
+		formatDate = _formatTimeStr(date as string, format)
+	} else {
+		formatDate = _formatDate(format, date, type, isMs)
+	}
+	return formatDate;
+}
+
+function _toHex(n : number) : string {
+	if (isNaN(n)) return "00";
+	n = Math.max(0, Math.min(n, 255));
+	return "0123456789ABCDEF".charAt((n - n % 16) / 16) +
+		"0123456789ABCDEF".charAt(n % 16);
+}
+
+/**
+ * @description RGB颜色转十六进制颜色
+ * @param {Number} r
+ * @param {Number} g
+ * @param {Number} b
+ **/
+export function rgbToHex(r : number, g : number, b : number) : string {
+	return "#" + _toHex(r) + _toHex(g) + _toHex(b)
+}
+
+/**
+ * @description 十六进制颜色转RGB颜色
+ * @param {String} hex 颜色值 #333 或 #333333
+ **/
+export function hexToRGB(hex : string) : Map<string, number> {
+	if (hex.length == 4) {
+		let text = hex.substring(1, 4);
+		hex = '#' + text + text;
+	}
+	let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	const mp : Map<string, number> = new Map()
+	if (result != null) {
+		mp.set('r', parseInt(result[1] as string, 16))
+		mp.set('g', parseInt(result[2] as string, 16))
+		mp.set('b', parseInt(result[3] as string, 16))
+	}
+	return mp;
+}
+
+/**
+ * @description 唯一标识，随机数
+ * @param {Number} n 随机数位数
+ **/
+export function unique(n : number = 6) : string {
+	let rnd = '';
+	for (let i = 0; i < n; i++)
+		rnd += Math.floor(Math.random() * 10);
+	return `fui_${new Date().getTime()}_${rnd}`;
+}
+
+
+/**
+ * @description 获取Url参数，返回 Map<string, string>
+ * @param {String} url url地址
+ * ?a=1&b=2 => {'a': "1", 'b': "2"}
+ */
+export function getUrlParam(url : string) : Map<string, string> {
+	let arrObj = url.split("?");
+	const params : Map<string, string> = new Map();
+	if (arrObj.length > 1) {
+		arrObj = arrObj[1].split("&");
+		arrObj.forEach((item : string) => {
+			const arr = item.split("=");
+			params.set(arr[0], arr[1]);
+		})
+	}
+	return params;
+}
+
+function _getMonthOrDay(val : number) : string {
+	return val < 10 ? `0${val}` : val.toString()
+}
+
+/**
+ * @description 获取日期时间段 
+ * @param {Number} type 1-今天 2-昨天 3-本周 4-本月 5-本年
+ **/
+export function getDateTimeSlot(type : number) : Map<string, string> {
+	let now = new Date()
+	let start = `${now.getFullYear()}-${_getMonthOrDay(now.getMonth() + 1)}-${_getMonthOrDay(now.getDate())}`
+	let end = `${now.getFullYear()}-${_getMonthOrDay(now.getMonth() + 1)}-${_getMonthOrDay(now.getDate())}`
+
+	console.log(start, end)
+	switch (type) {
+		case 1:
+			start = `${start} 00:00:00`
+			end = `${end} 23:59:59`
+			break
+		case 2:
+			now.setTime(now.getTime() - 3600 * 1000 * 24 * 1)
+			start = `${now.getFullYear()}-${_getMonthOrDay(now.getMonth() + 1)}-${_getMonthOrDay(now.getDate())} 00:00:00`
+			end = `${now.getFullYear()}-${_getMonthOrDay(now.getMonth() + 1)}-${_getMonthOrDay(now.getDate())} 23:59:59`
+			break
+		case 3:
+			// 获取星期几,getDay()返回值是 0（周日） 到 6（周六） 之间的一个整数。0||7为7，即weekday的值为1-7
+			let weekday = now.getDay() == 0 ? 7 : now.getDay()
+			// 往前算（weekday-1）天，年份、月份会自动变化
+			now.setDate(now.getDate() - weekday + 1)
+			start = `${now.getFullYear()}-${_getMonthOrDay(now.getMonth() + 1)}-${_getMonthOrDay(now.getDate())} 00:00:00`
+			end = `${end} 23:59:59`
+			break
+		case 4:
+			start = `${now.getFullYear()}-${_getMonthOrDay(now.getMonth() + 1)}-01 00:00:00`
+			end = `${end} 23:59:59`
+			break
+		case 5:
+			start = `${now.getFullYear()}-01-01 00:00:00`
+			end = `${end} 23:59:59`
+			break
+	}
+
+	const mp : Map<string, string> = new Map();
+	mp.set('start', start)
+	mp.set('end', end)
+	return mp;
+}
+
+
+/**
+ * @description 日期时间格式化为多久之前 如:1分钟前
+ * @param {any} date 需要格式化的日期
+ * @param {Number} type  date的格式类型：1-日期字符串(2017/12/04 12:12:12) 2-时间戳(1603676514690) 3-日期字符串，无连接符(20171204121212) 
+ * 4-new Date()时间格式(Thu Oct 01 2020 00:00:00 GMT+0800 (中国标准时间))
+ * @param {String} 文字显示语言，仅支持简体中文（cn）、英文（en）、繁体中文（tc），默认cn
+ * @param {Boolean} isMs  时间戳精度是否为毫秒，默认为true（当精度为秒时传false），type=2时有效
+ * @param {String} suffix 后缀，如：30小时+ 后缀。[刚刚、昨天、前天 等为固定文本，后缀无效]
+ * @param {Number} endUnit 转化截止单位，1-秒 2-分钟 3-小时 4-天 5-月 6-年，如传3（小时），则天，月，年不做转化直接返回空
+ * @param {Number} seconds 多少秒之前显示为刚刚，不可超过60
+ * @param {Boolean} fixedDay 是否需要天的固定文本，如昨天、前天
+ **/
+export function formatTimeAgo(date : any, type : number = 1, lang : string = 'cn', isMs : boolean = true, suffix : string = '前', endUnit : number = 6, seconds : number = 10, fixedDay : boolean = true) : string {
+	const formatDate = dateFormatter(date, 'y/m/d h:i:s', type, isMs)
+	const beforeStamp = new Date(formatDate).getTime()
+	const nowStamp = new Date().getTime();
+	let res = ''
+	const diff = nowStamp - beforeStamp
+	if (diff > 0) {
+		const _minute = 1000 * 60;
+		const _hour = _minute * 60;
+		const _day = _hour * 24;
+		//不精确
+		const _month = _day * 30
+		const _year = _month * 12
+
+		const year = Math.floor(diff / _year)
+		const month = Math.floor(diff / _month)
+		const day = Math.floor(diff / _day)
+		const hour = Math.floor(diff / _hour)
+		const minute = Math.floor(diff / _minute)
+		const second = Math.floor(diff / 1000)
+		let isEmpty : boolean;
+		switch (endUnit) {
+			case 1:
+				isEmpty = (minute != 0 || hour != 0 || day != 0 || month != 0 || year != 0) ? true : false
+				break;
+			case 2:
+				isEmpty = (hour != 0 || day != 0 || month != 0 || year != 0) ? true : false
+				break;
+			case 3:
+				isEmpty = (day != 0 || month != 0 || year != 0) ? true : false
+				break;
+			case 4:
+				isEmpty = (month != 0 || year != 0) ? true : false
+				break;
+			case 5:
+				isEmpty = year != 0 ? true : false
+				break;
+			default:
+				isEmpty = false;
+				break;
+		}
+		let suffixLang = suffix;
+		let yearLang = '年';
+		let monthLang = '个月';
+		let justLang = '刚刚';
+		let dayLang = '天';
+		let hourLang = '小时';
+		let minuteLang = '分钟';
+		let secondLang = '秒';
+		let yesterdayLang = '昨天';
+		let beforeytdLang = '前天';
+		if (lang == 'en') {
+			suffixLang = suffixLang == '前' ? 'ago' : suffixLang;
+			yearLang = ' years ';
+			monthLang = ' months ';
+			justLang = 'Just';
+			dayLang = ' days ';
+			hourLang = ' hours ';
+			minuteLang = ' minutes ';
+			secondLang = ' seconds ';
+			yesterdayLang = 'Yesterday'
+			beforeytdLang = 'The day before yesterday'
+		} else if (lang == 'tc') {
+			monthLang = '個月';
+			justLang = '剛剛';
+			hourLang = '小時';
+			minuteLang = '分鐘';
+		}
+
+		if (!isEmpty) {
+			if (year != 0) {
+				res = `${year}${yearLang}${suffixLang}`
+			} else if (month != 0) {
+				res = `${month}${monthLang}${suffixLang}`
+			} else if (day != 0) {
+				if (day == 1 && fixedDay) {
+					//1天前
+					res = yesterdayLang;
+				} else if (day == 2 && fixedDay) {
+					//2天前
+					res = beforeytdLang;
+				} else {
+					res = `${day}${dayLang}${suffixLang}`
+				}
+			} else if (hour != 0) {
+				res = `${hour}${hourLang}${suffixLang}`
+			} else if (minute != 0) {
+				res = `${minute}${minuteLang}${suffixLang}`
+			} else {
+				const _seconds = seconds < 60 ? seconds : 59;
+				res = second < _seconds ? justLang : `${second}${secondLang}${suffixLang}`
+			}
+		}
+	}
+	return res
+}
+
+/**
+ * @description rpx 转px 
+ * @param {Number} rpx 值
+ **/
+export function rpx2px(rpx : number) : number {
+	let px : number;
+	// #ifdef APP-ANDROID
+	px = UTSAndroid.rpx2px(rpx)
+	// #endif
+
+	// #ifndef APP-ANDROID
+	const sys : GetSystemInfoResult = uni.getSystemInfoSync()
+	px = sys.windowWidth / 750 * rpx
+	// #endif
+	return px;
+}

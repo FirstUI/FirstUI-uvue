@@ -1,0 +1,207 @@
+import { ComponentPublicInstance, defineMixin } from 'vue'
+import { FuiSwipeActionButtonParam } from '../fui-types/index.uts'
+export const unixjs = defineMixin({
+	data() {
+		const elId = `fui_swipea_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+		const refLeft = `fui_swipearef_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+		const refRight = `fui_swipearef_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+		return {
+			left: 0,
+			isShow: false,
+			refLeft: refLeft,
+			refRight: refRight,
+			elId: elId,
+			MIN_DISTANCE: 10,
+			element: null as null | Element,
+			rElement: null as null | Element,
+			rightWidth: 0,
+			open: false,
+			direction: '',
+			deltaX: 0,
+			deltaY: 0,
+			offsetX: 0,
+			offsetY: 0,
+			startX: 0,
+			startY: 0,
+			x: 0,
+			clientX: 0,
+			timer: null as null | number
+		}
+	},
+	watch: {
+		visible(newVal) {
+			this.openState(newVal)
+		},
+		left() {
+			if (this.element == null) {
+				this.element = this.$refs[this.refLeft] as Element;
+			}
+			if (this.rElement == null) {
+				this.rElement = this.$refs[this.refRight] as Element;
+			}
+			this.element!.style.setProperty('transform', `translateX(${this.left}px)`);
+			if (this.isScale) {
+				this.rElement!.style.setProperty('transform', `scaleX(${(Math.abs(this.left / this.rightWidth))})`);
+			} else {
+				this.rElement!.style.setProperty('transform', `translateX(${this.left + this.rightWidth}px)`);
+			}
+		},
+		isShow(newVal) {
+			this.openState(newVal)
+		},
+		buttons() {
+			this.init()
+		}
+	},
+	mounted() {
+		this.$nextTick(() => {
+			const parent = this.getParent('fui-swipeaction-group')
+			if (parent) {
+				const group = this.group as ComponentPublicInstance
+				(group.$data['children'] as ComponentPublicInstance[]).push(this);
+			}
+			this.init()
+		})
+	},
+	methods: {
+		init() {
+			if (this.timer != null) clearTimeout(this.timer as number);
+			this.timer = setTimeout(() => {
+				this.getSelectorQuery()
+			}, 100)
+			this.left = 0
+			this.x = 0
+		},
+		closeSwipe() {
+			if (this.group != null && this.autoClose) {
+				const group = this.group as ComponentPublicInstance;
+				group.$callMethod('closeAuto', this)
+			}
+		},
+		appTouchEnd(index : number, item : FuiSwipeActionButtonParam) {
+			const params = item;
+			params.index = index;
+			params.param = this.param;
+			if (this.clickClose) this.close();
+			this.$emit('onclick', params);
+		},
+		aniSwitch(isAdd : boolean) {
+			if (this.element == null) {
+				this.element = this.$refs[this.refLeft] as Element;
+			}
+			if (this.rElement == null) {
+				this.rElement = this.$refs[this.refRight] as Element;
+			}
+			this.element!.style.setProperty('transition-duration', isAdd ? '300' : '0');
+			this.element!.style.setProperty('transition-property', isAdd ? 'transform' : '');
+			this.element!.style.setProperty('transition-timing-function', isAdd ? 'cubic-bezier(0.165, 0.84, 0.44, 1)' : '');
+			this.rElement!.style.setProperty('transition-duration', isAdd ? '300' : '0');
+			this.rElement!.style.setProperty('transition-property', isAdd ? 'transform' : '');
+			this.rElement!.style.setProperty('transition-timing-function', isAdd ? 'cubic-bezier(0.165, 0.84, 0.44, 1)' : '');
+		},
+		touchstart(e : TouchEvent) {
+			if (!this.disabled) {
+				this.aniSwitch(false);
+				this.x = this.left;
+				this.stopTouchStart(e);
+				if (this.autoClose) this.closeSwipe();
+			}
+		},
+		touchmove(e : TouchEvent) : boolean {
+			if (this.disabled) return false;
+			this.stopTouchMove(e);
+			if (this.direction != 'horizontal') {
+				return false;
+			} else {
+				e.preventDefault()
+			}
+			this.move(this.x + this.deltaX)
+			return false
+		},
+		touchend() {
+			if (!this.disabled) this.moveDirection(this.left);
+		},
+		move(value : number) {
+			const rightWidth = this.rightWidth
+			this.left = Math.min(Math.max(value, -rightWidth), 0);
+		},
+		moveDirection(left : number) {
+			const threshold = this.threshold;
+			const open = this.open;
+			const rightWidth = this.rightWidth
+			if (this.deltaX == 0 && this.clickClose) {
+				this.openState(false)
+			} else {
+				if ((!open && rightWidth > 0 && -left > threshold) || (open && rightWidth > 0 && rightWidth + left <
+					threshold)) {
+					this.openState(true)
+				} else {
+					this.openState(false)
+				}
+			}
+		},
+		openState(type : boolean) {
+			const rightWidth = this.rightWidth
+			let left : number;
+			if (type) {
+				left = -rightWidth
+			} else {
+				left = 0
+			}
+			if (this.open != type) {
+				this.$emit('change', type)
+			}
+			this.open = type
+			this.aniSwitch(true)
+			this.$nextTick(() => {
+				this.move(left)
+			})
+		},
+		close() {
+			this.openState(false)
+		},
+		getDirection(x : number, y : number) : string {
+			if (x > y && x > this.MIN_DISTANCE) {
+				return 'horizontal';
+			}
+			if (y > x && y > this.MIN_DISTANCE) {
+				return 'vertical';
+			}
+			return '';
+		},
+		resetTouchStatus() {
+			this.direction = '';
+			this.deltaX = 0;
+			this.deltaY = 0;
+			this.offsetX = 0;
+			this.offsetY = 0;
+		},
+		stopTouchStart(event : TouchEvent) {
+			this.resetTouchStatus();
+			const touch = event.touches[0];
+			this.startX = touch.clientX;
+			this.startY = touch.clientY;
+		},
+		stopTouchMove(event : TouchEvent) {
+			const touch = event.touches[0];;
+			this.deltaX = touch.clientX - this.startX;
+			this.deltaY = touch.clientY - this.startY;
+			this.offsetX = Math.abs(this.deltaX);
+			this.offsetY = Math.abs(this.deltaY);
+			if (this.direction == '') {
+				this.direction = this.getDirection(this.offsetX, this.offsetY);
+			}
+		},
+		getSelectorQuery() {
+			uni.createSelectorQuery()
+				.in(this)
+				.select(`#${this.elId}`)
+				.boundingClientRect()
+				.exec(ret => {
+					const node = ret[0] as NodeInfo;
+					this.rightWidth = (node.width == null ? 0 : node.width) as number;
+					this.isShow = this.visible
+				})
+		}
+	}
+})

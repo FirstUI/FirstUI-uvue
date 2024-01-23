@@ -1,0 +1,169 @@
+<template>
+	<view class="fui-drawer__popup-wrap"
+		:style="{ zIndex: zIndex,background:maskBackground,alignItems:direction=='left'?'flex-start':'flex-end'}"
+		@tap.stop="handleClose" :ref="refMkId">
+		<view :ref="refId" class="fui-drawer__popup" :class="['fui-drawer_'+direction]"
+			:style="{background: background,borderTopLeftRadius:`${direction=='right'? radius:0}rpx`,borderBottomLeftRadius:`${direction=='right'? radius:0}rpx`,borderTopRightRadius:`${direction=='left'? radius:0}rpx`,borderBottomRightRadius:`${direction=='left'? radius:0}rpx`}">
+			<slot></slot>
+		</view>
+	</view>
+</template>
+
+<script>
+	/**
+	 * Drawer 抽屉
+	 * @description Drawer 抽屉，抽屉式导航，用于展示侧滑菜单，侧滑导航。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Boolean} visible {Boolean} 是否显示抽屉
+	 * @property {String} direction {String} 抽屉打开方向，可选值：left，right
+	 * @property {String} background {String} 抽屉背景颜色
+	 * @property {Number} zIndex {Number} 抽屉z-index值
+	 * @property {Boolean} maskClosable	{Boolean} 点击遮罩 是否可关闭
+	 * @property {String} maskBackground {String} 遮罩背景色
+	 * @property {Number} radius {Number} 外层容器圆角值，左侧打开时为右侧圆角，右侧打开时为左侧圆角
+	 * @event {Function} close 点击遮罩层（maskClosable=true）时触发，() => void
+	 * @event {Function} update:visible 点击遮罩层（maskClosable=true）时触发，用于双向绑定	，(event: boolean) => void
+	 */
+	export default {
+		name: 'fui-drawer',
+		emits: ['close', 'update:visible'],
+		props: {
+			visible: {
+				type: Boolean,
+				default: false
+			},
+			direction: {
+				type: String,
+				default: 'right'
+			},
+			background: {
+				type: String,
+				default: '#fff'
+			},
+			zIndex: {
+				type: Number,
+				default: 997
+			},
+			maskClosable: {
+				type: Boolean,
+				default: true
+			},
+			maskBackground: {
+				type: String,
+				default: 'rgba(0,0,0,.6)'
+			},
+			radius: {
+				type: Number,
+				default: 0
+			}
+		},
+		data() {
+			const refId = `fui_dw_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			const refMkId = `fui_mk_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				refId: refId,
+				refMkId: refMkId,
+				isShow: false,
+				element: null as null | Element,
+				mkElement: null as null | Element
+			}
+		},
+		watch: {
+			visible: {
+				handler(newVal : boolean) {
+					if (newVal) {
+						this.open();
+					} else {
+						if (this.isShow) this.close();
+					}
+				},
+				immediate: true
+			}
+		},
+		mounted() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					if (!this.visible) this.close();
+				}, 50);
+			})
+		},
+		methods: {
+			handleClose() {
+				if (!this.maskClosable) return;
+				this.$emit('close');
+				this.$emit('update:visible', false)
+			},
+			open() {
+				this.isShow = true;
+				this.$nextTick(() => {
+					setTimeout(() => {
+						this._animation(true);
+					}, 50);
+				})
+			},
+			close() {
+				this.isShow = false;
+				this._animation(false);
+			},
+			_animation(visible : boolean) {
+				if (this.element == null) {
+					this.element = this.$refs[this.refId] as Element;
+				}
+				if (this.mkElement == null) {
+					this.mkElement = this.$refs[this.refMkId] as Element;
+				}
+				const translateX = this.direction == 'left' ? '-100%' : '100%'
+				this.element!.style.setProperty('transform', `translateX(${visible ? '0' : translateX})`);
+				this.element!.style.setProperty('opacity', visible ? '1' : '0')
+				this.mkElement!.style.setProperty('opacity', visible ? '1' : '0')
+				if (visible) {
+					this.mkElement!.style.setProperty('visibility', 'visible');
+					this.element!.style.setProperty('visibility', 'visible');
+				} else {
+					setTimeout(() => {
+						this.mkElement!.style.setProperty('visibility', 'hidden');
+						this.element!.style.setProperty('visibility', 'hidden');
+					}, 300)
+				}
+
+			}
+		}
+	};
+</script>
+
+<style scoped>
+	.fui-drawer__popup-wrap {
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		display: flex;
+		flex-direction: column;
+		transition-property: opacity, visibility;
+		transition-duration: 0.3s;
+		transition-timing-function: ease-in-out;
+		visibility: hidden;
+		opacity: 0;
+		overflow: hidden;
+	}
+
+	.fui-drawer__popup {
+		height: 100%;
+		transition-property: transform, opacity, visibility;
+		transition-duration: 0.3s;
+		transition-timing-function: ease-in-out;
+		min-width: 40rpx;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	.fui-drawer_left {
+		transform: translateX(-100%);
+	}
+
+	.fui-drawer_right {
+		transform: translateX(100%);
+	}
+</style>

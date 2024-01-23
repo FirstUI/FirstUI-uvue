@@ -1,0 +1,388 @@
+<template>
+	<view class="fui-pagination__wrap">
+		<view class="fui-pagination__btn" :hover-stay-time="100"
+			:hover-class="currentIndex != 1 && highlight?'fui-pagination__btn-ac':''"
+			:class="{'fui-pagination__disabled':currentIndex == 1}"
+			:style="{width:`${width}rpx`,height:`${height}rpx`,borderColor:borderColor,background:background,borderRadius:`${radius}rpx`}"
+			@tap="clickPrev">
+			<slot name="prev">
+				<text :style="{color:color,fontSize:`${size}rpx`}">{{prevTextLang}}</text>
+			</slot>
+		</view>
+		<view class="fui-pagination__num" v-if="isPage && pageType==1">
+			<text :class="{'fui-pagination__active-color':currentColor==''}"
+				:style="{color:currentColor,fontSize:`${pageFontSize}rpx`}">{{currentIndex}}</text>
+			<text :style="{color:pageColor,fontSize:`${pageFontSize}rpx`}">/{{maxPage}}</text>
+		</view>
+		<view class="fui-page__number" v-if="isPage && pageType==2">
+			<view class="fui-page__num-item" :hover-stay-time="100" hover-class="fui-page__num-active"
+				:class="{'fui-pagination__bg':activeBgColor=='' && getEqual(item,currentIndex,true)}"
+				v-for="(item,index) in pageNumber" :key="index"
+				:style="{background:getEqual(item,currentIndex,true)?activeBgColor:pageBgColor,borderRadius:`${radius}rpx`}"
+				@tap.stop="handleClick(item,index)">
+				<text class="fui-page__num-text"
+					:style="{color:getEqual(item,currentIndex,true)?activeColor:pageColor}">{{item}}</text>
+			</view>
+		</view>
+
+		<view class="fui-pagination__btn" :hover-stay-time="100"
+			:hover-class="currentIndex != maxPage && highlight?'fui-pagination__btn-ac':''"
+			:class="{'fui-pagination__disabled':currentIndex == maxPage}"
+			:style="{width:`${width}rpx`,height:`${height}rpx`,borderColor:borderColor,background:background,borderRadius:`${radius}rpx`}"
+			@tap="clickNext">
+			<slot name="next">
+				<text :style="{color:color,fontSize:`${size}rpx`}">{{nextTextLang}}</text>
+			</slot>
+		</view>
+	</view>
+</template>
+
+<script>
+	import { FuiPaginationChangeParam } from '../fui-types/index.uts';
+	import { fuiLang, getFuiLocaleLang } from '../fui-lang/index.uts'
+	/**
+	 * Pagination 分页器
+	 * @description Pagination 分页器，当数据量过多时，使用分页分解数据。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} prevText {String} 上一页按钮显示文本
+	 * @property {String} nextText {String} 下一页按钮显示文本
+	 * @property {Number} width	{Number} 按钮宽度，单位rpx
+	 * @property {Number} height {Number} 按钮高度，单位rpx
+	 * @property {String} borderColor {String} 按钮边框颜色
+	 * @property {String} background {String} 按钮背景颜色
+	 * @property {String} color {String} 按钮字体颜色
+	 * @property {Number} size {Number} 按钮字体大小，单位rpx
+	 * @property {Number} radius {Number} 按钮圆角值，单位rpx
+	 * @property {Boolean} highlight {Boolean} 按钮是否有点击效果
+	 * @property {Number} current {Number} 当前页码
+	 * @property {String} currentColor {String} 当前页码字体颜色
+	 * @property {String} pageColor {String} 页码字体颜色
+	 * @property {Number} pageFontSize {Number} 页码字体大小，单位rpx
+	 * @property {Boolean} isPage {Boolean}	是否需要展示页码
+	 * @property {Number} pageType {Number} 页码展示类型 1-简约型 2-展开型
+	 * @property {String} pageBgColor {String} 页码背景色，仅pageType=2时生效
+	 * @property {String} activeBgColor {String} 当前页码背景色，仅pageType=2时生效
+	 * @property {String} activeColor {String} 当前页码字体颜色，仅pageType=2时生效
+	 * @property {Number} total	{Number} 数据总条数
+	 * @property {Number} pageSize {Number} 每页的数据条数
+	 * @event {Function} change 页码切换时触发，(event:FuiPaginationChangeParam) => void
+	 */
+	export default {
+		name: "fui-pagination",
+		emits: ['change'],
+		props: {
+			prevText: {
+				type: String,
+				default: ''
+			},
+			nextText: {
+				type: String,
+				default: ''
+			},
+			width: {
+				type: Number,
+				default: 128
+			},
+			height: {
+				type: Number,
+				default: 60
+			},
+			borderColor: {
+				type: String,
+				default: 'transparent'
+			},
+			background: {
+				type: String,
+				default: '#FFFFFF'
+			},
+			color: {
+				type: String,
+				default: '#333333'
+			},
+			size: {
+				type: Number,
+				default: 24
+			},
+			radius: {
+				type: Number,
+				default: 12
+			},
+			highlight: {
+				type: Boolean,
+				default: true
+			},
+			current: {
+				type: Number,
+				default: 1
+			},
+			currentColor: {
+				type: String,
+				default: ''
+			},
+			pageColor: {
+				type: String,
+				default: '#333333'
+			},
+			pageFontSize: {
+				type: Number,
+				default: 36
+			},
+			isPage: {
+				type: Boolean,
+				default: true
+			},
+			pageType: {
+				type: Number,
+				default: 1
+			},
+			pageBgColor: {
+				type: String,
+				default: 'rgba(0,0,0,0)'
+			},
+			activeBgColor: {
+				type: String,
+				default: ''
+			},
+			activeColor: {
+				type: String,
+				default: '#FFFFFF'
+			},
+			total: {
+				type: Number,
+				default: 0
+			},
+			pageSize: {
+				type: Number,
+				default: 10
+			}
+		},
+		computed: {
+			maxPage() : number {
+				let maxPage = 1
+				const total = this.total;
+				const pageSize = this.pageSize
+				if (total != 0 && pageSize != 0) {
+					maxPage = Math.ceil(total / pageSize)
+				}
+				return maxPage
+			},
+			locale() : string {
+				return fuiLang.locale
+			},
+			prevNext() : string {
+				return `${this.prevText}_${this.nextText}`
+			}
+		},
+		watch: {
+			current(val : number) {
+				this.currentIndex = val
+			},
+			total() {
+				if (this.pageType == 2) {
+					this.getPageNumber()
+				}
+			},
+			pageSize() {
+				if (this.pageType == 2) {
+					this.getPageNumber()
+				}
+			},
+			locale: {
+				handler(val : string) {
+					this.getPrevNextText(val)
+				},
+				immediate: true
+			},
+			prevNext() {
+				this.getPrevNextText(fuiLang.locale)
+			}
+		},
+		created() {
+			this.currentIndex = this.current
+			if (this.pageType == 2) {
+				this.getPageNumber()
+			}
+		},
+		data() {
+			return {
+				currentIndex: 1,
+				currentIdx: 1,
+				pageNumber: [] as string[],
+				pagerCount: 0,
+				prevTextLang: '',
+				nextTextLang: ''
+			};
+		},
+		methods: {
+			getPrevNextText(val : string) {
+				const lang = getFuiLocaleLang(val)
+				const paginationR = lang['pagination'] as UTSJSONObject;
+				const prev = paginationR.getString('prevText') as string;
+				const next = paginationR.getString('nextText') as string;
+				this.prevTextLang = this.prevText == '' ? prev : this.prevText;
+				this.nextTextLang = this.nextText == '' ? next : this.nextText;
+			},
+			getEqual(item : string, current : number, equal : boolean) : boolean {
+				return item == current.toString() ? equal : !equal;
+			},
+			toArray(start : number, end : number) : string[] {
+				const pages = [] as string[]
+				for (let i = start; i < end + 1; i++) {
+					pages.push(i.toString())
+				}
+				return pages;
+			},
+			getPageNumber() {
+				const num = this.currentIndex
+				const total = this.total
+				const pageSize = this.pageSize
+				// TODO 最大展示页数，移动端宽度有限，暂时固定
+				let pagerCount = this.pagerCount
+				if (pagerCount == 0) {
+					pagerCount = 6
+					const width = this.width
+					if (!isNaN(width) && width <= 60) {
+						pagerCount = 8;
+					}
+					this.pagerCount = pagerCount;
+				}
+				let showPagerArr = this.toArray(1, pagerCount)
+				let pagerNum = Math.ceil(total / pageSize)
+				if (pagerNum <= 1) {
+					showPagerArr = ['1']
+				} else if (pagerNum <= pagerCount) {
+					showPagerArr = this.toArray(1, pagerNum)
+				} else {
+					showPagerArr[pagerCount - 1] = pagerNum.toString();
+					if (num < pagerCount - 1) {
+						showPagerArr[pagerCount - 2] = '...'
+					} else if (num >= pagerNum - (pagerCount - 3)) {
+						showPagerArr[1] = '...';
+						const len = showPagerArr.length;
+						for (let j = 0; j < len; j++) {
+							if (j > 1) {
+								showPagerArr[j] = (pagerNum - (pagerCount - 3) + (j - 2)).toString()
+							}
+						}
+					} else {
+						showPagerArr[1] = '...';
+						for (let i = 0; i < pagerCount - 3; i++) {
+							showPagerArr[i + 2] = (num + i).toString()
+						}
+						showPagerArr[pagerCount - 2] = '...'
+					}
+				}
+
+				this.pageNumber = showPagerArr
+			},
+			clickPrev() {
+				if (this.currentIndex == 1) return;
+				this.currentIndex -= 1
+				this.change('prev')
+			},
+			clickNext() {
+				if (this.currentIndex == this.maxPage) return;
+				this.currentIndex += 1
+				this.change('next')
+			},
+			handleClick(item : string, index : number) {
+				let pageNo = parseInt(item)
+				const idx = this.pagerCount == 6 ? 4 : 6;
+				if (isNaN(pageNo)) {
+					if (index == 1) {
+						pageNo = parseInt(this.pageNumber[index + 1]) - (this.pagerCount - 4)
+					} else if (index == idx) {
+						pageNo = parseInt(this.pageNumber[index - 1]) + 1
+					}
+				} else {
+					if (this.currentIndex == pageNo) return;
+				}
+				this.currentIndex = pageNo;
+				this.change('pageNumber')
+			},
+			change(e : string) {
+				this.getPageNumber()
+				this.$emit('change', {
+					type: e,
+					current: this.currentIndex
+				} as FuiPaginationChangeParam)
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-primary: #465CFF !default;
+
+	@mixin paginaation_flex {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.fui-pagination__wrap {
+		width: 100%;
+		position: relative;
+		overflow: hidden;
+		@include paginaation_flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.fui-pagination__btn {
+		position: relative;
+		@include paginaation_flex;
+		justify-content: center;
+		align-items: center;
+		flex-shrink: 0;
+		border-width: 0.5px;
+		border-style: solid;
+		box-sizing: border-box;
+	}
+
+	.fui-pagination__btn-ac {
+		opacity: 0.5;
+	}
+
+	.fui-pagination__num {
+		flex: 1;
+		@include paginaation_flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.fui-pagination__active-color {
+		color: $fui-color-primary !important;
+	}
+
+	.fui-pagination__bg {
+		background: $fui-color-primary !important;
+	}
+
+	.fui-pagination__disabled {
+		opacity: 0.3;
+	}
+
+	.fui-page__number {
+		@include paginaation_flex;
+		align-items: center;
+		justify-content: space-between;
+		box-sizing: border-box;
+	}
+
+	.fui-page__num-item {
+		min-width: 60rpx;
+		height: 60rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0 4rpx;
+	}
+
+	.fui-page__num-active {
+		opacity: .5;
+	}
+
+	.fui-page__num-text {
+		font-size: 24rpx;
+	}
+</style>

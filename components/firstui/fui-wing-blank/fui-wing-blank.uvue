@@ -17,11 +17,11 @@
 	 * @property {Number} radius {Number} 圆角大小，单位rpx
 	 * @property {Number} marginTop {Number} margin-top值，单位rpx
 	 * @property {Number} marginBottom {Number} margin-bottom值，单位rpx
-	 * @event {Function} click 点击元素时触发，() => void
+	 * @event {Function} onclick 点击元素时触发，() => void
 	 */
 	export default {
 		name: "fui-wing-blank",
-		emits: ['click'],
+		emits: ['onclick'],
 		props: {
 			size: {
 				type: String,
@@ -61,7 +61,7 @@
 		},
 		methods: {
 			handleClick() {
-				this.$emit('click')
+				this.$emit('onclick')
 			}
 		}
 	}

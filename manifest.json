@@ -2,8 +2,8 @@
     "name" : "FirstUI-uvue",
     "appid" : "__UNI__F2F2930",
     "description" : "FirstUI（unix）组件库，一款适配 uni-app x 的轻量、简洁、高效、全面的移动端组件库。",
-    "versionName" : "1.0.0",
-    "versionCode" : "100",
+    "versionName" : "1.1.0",
+    "versionCode" : 110,
     "uni-app-x" : {},
     /* 快应用特有相关 */
     "quickapp" : {},

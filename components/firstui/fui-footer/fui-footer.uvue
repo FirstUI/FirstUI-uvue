@@ -29,11 +29,11 @@
 	 * @property {String} borderColor {String} 导航链接之间分隔线颜色
 	 * @property {Boolean} isFixed {Boolean} 是否固定在底部
 	 * @property {Boolean} safeArea {Boolean} 是否适配底部安全区
-	 * @event {Function} click 点击链接时触发，(event: FuiFooterNavigateParam) => void
+	 * @event {Function} onclick 点击链接时触发，(event: FuiFooterNavigateParam) => void
 	 */
 	export default {
 		name: "fui-footer",
-		emits: ['click'],
+		emits: ['onclick'],
 		props: {
 			//链接设置
 			navigate: {
@@ -124,7 +124,7 @@
 			},
 			// #endif
 			onTap(item : FuiFooterNavigateParam) {
-				this.$emit('click', item)
+				this.$emit('onclick', item)
 				if ((item.url != null || item.openType == 'navigateBack') && !this.cancelNav) {
 					//navigate、redirect、switchTab、reLaunch、navigateBack
 					//delta

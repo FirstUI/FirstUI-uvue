@@ -39,11 +39,11 @@
 	 * @property {Boolean} disable {Boolean} 是否禁用点击
 	 * @property {Boolean} unShrink {Boolean} flex布局下是否取消收缩，不被挤压
 	 * @property {String} param	{String} 自定义参数，点击事件中回传
-	 * @event {Function} click 点击文本时触发，(event: FuiTextClickParam) => void
+	 * @event {Function} onclick 点击文本时触发，(event: FuiTextClickParam) => void
 	 */
 	export default {
 		name: "fui-text",
-		emits: ['click'],
+		emits: ['onclick'],
 		props: {
 			type: {
 				type: String,
@@ -184,7 +184,7 @@
 			},
 			handleTap() {
 				if (this.disable) return;
-				this.$emit('click', {
+				this.$emit('onclick', {
 					text: this.text,
 					param: this.param
 				} as FuiTextClickParam)

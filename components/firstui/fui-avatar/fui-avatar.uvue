@@ -1,0 +1,227 @@
+<template>
+	<view class="fui-avatar__wrap"
+		:class="[width!=0?'':`fui-avatar__size-${size}`,radius==-1?`fui-avatar__${shape}`:'']" :style="wrapStyles"
+		@tap="handleClick">
+		<image class="fui-avatar__img" :style="styles"
+			:class="[radius==-1?`fui-avatar__${shape}`:'',width!=0?'':`fui-avatar__size-${size}`]" :src="showImg"
+			:mode="mode" v-if="src!=''" @error="handleError"></image>
+		<text class="fui-avatar__text" :class="[width!=0?'':`fui-avatar__text-${size}`]" v-if="src=='' && text!=''"
+			:style="textStyles">{{text}}</text>
+		<slot></slot>
+	</view>
+</template>
+
+<script>
+	/**
+	 * Avatar 头像
+	 * @description Avatar 头像，用图标、图片或者字符的形式展示用户或事物信息。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} src {String} 头像图片资源地址
+	 * @property {String} errorSrc {String} 图片加载失败时默认图片资源地址，仅src传值时有效	
+	 * @property {String} mode {String} 头像图片裁剪、缩放的模式
+	 * @property {Boolean} fadeShow {Boolean} 图片显示动画效果
+	 * @property {String} background {String} 头像背景色
+	 * @property {String} size {String} 头像大小，可选值：small、middle、large，不设置width时生效
+	 * @property {Number} width	{Number} 头像宽度，单位rpx，设置大于0的数值生效，自定义宽度后size失效
+	 * @property {Number} height {Number} 默认等宽，设置图大于0的数值且设置了图片宽度生效
+	 * @property {String} shape {String} 指定头像的形状，可选值为 circle、square
+	 * @property {Number} radius {Number} 头像圆角值，单位rpx，当设置大于等于0的数值时，shape失效
+	 * @property {String} text {String} 头像文本内容，未设置src时生效
+	 * @property {String} color {String} 头像文本颜色
+	 * @property {Number} fontSize {Number} 头像文本字体大小，设置大于0的数值生效
+	 * @property {String} fontWeight {String} 头像文本字重，可选值：'normal'、‘bold’、‘400’、‘700’
+	 * @property {Number} marginRight {Number} 头像margin-right值，单位rpx
+	 * @property {Number} marginBottom {Number} 头像margin-bottom值，单位rpx
+	 * @property {Number} index {Number} 在列表中的索引值	
+	 * @event {Function} onclick 点击头像时触发，(event:number) => void
+	 * @event {Function} error 图片加载失败时触发，当src传值时有效，(event:number) => void
+	 */
+	export default {
+		name: "fui-avatar",
+		emits: ['onclick', 'error'],
+		props: {
+			src: {
+				type: String,
+				default: ''
+			},
+			errorSrc: {
+				type: String,
+				default: ''
+			},
+			mode: {
+				type: String,
+				default: 'scaleToFill'
+			},
+			fadeShow: {
+				type: Boolean,
+				default: false
+			},
+			background: {
+				type: String,
+				default: '#D1D1D1'
+			},
+			size: {
+				type: String,
+				default: 'middle'
+			},
+			width: {
+				type: Number,
+				default: 0
+			},
+			height: {
+				type: Number,
+				default: 0
+			},
+			shape: {
+				type: String,
+				default: 'circle'
+			},
+			radius: {
+				type: Number,
+				default: -1
+			},
+			text: {
+				type: String,
+				default: ''
+			},
+			color: {
+				type: String,
+				default: '#fff'
+			},
+			fontSize: {
+				type: Number,
+				default: 0
+			},
+			fontWeight: {
+				type: String,
+				default: 'bold'
+			},
+			marginRight: {
+				type: Number,
+				default: 0
+			},
+			marginBottom: {
+				type: Number,
+				default: 0
+			},
+			index: {
+				type: Number,
+				default: 0
+			}
+		},
+		computed: {
+			styles() : string {
+				let styles = '';
+				if (this.width != 0) {
+					styles = `width:${this.width}rpx;height:${this.height == 0 ? this.width : this.height}rpx;`
+				}
+				if (this.radius != -1) {
+					styles += `border-radius:${this.radius}rpx;`
+				}
+				return styles;
+			},
+			wrapStyles() : string {
+				return `background:${this.background};margin-right:${this.marginRight}rpx;margin-bottom:${this.marginBottom}rpx;${this.styles};`
+			},
+			textStyles() : string {
+				let styles = `color:${this.color};font-weight:${this.fontWeight};`;
+				if (this.fontSize != 0) {
+					styles += `font-size:${this.fontSize}rpx;`
+				}
+				return styles;
+			}
+		},
+		watch: {
+			src: {
+				handler(val : string) {
+					if (val != '') { this.showImg = val; }
+				},
+				immediate: true
+			}
+		},
+		data() {
+			return {
+				showImg: ''
+			}
+		},
+		methods: {
+			handleError() {
+				if (this.src != '') {
+					if (this.errorSrc != '') {
+						this.showImg = this.errorSrc
+					}
+					this.$emit('error', this.index)
+				}
+			},
+			handleClick() {
+				this.$emit('onclick', this.index)
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-img-size-sm: 64rpx !default;
+	$fui-img-size-middle: 96rpx !default;
+	$fui-img-size-lg: 128rpx !default;
+
+	.fui-avatar__wrap {
+		position: relative;
+		overflow: hidden;
+		flex-shrink: 0;
+		z-index: 3;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.fui-avatar__img {
+		flex: 1;
+		flex-shrink: 0;
+	}
+
+	.fui-avatar__text {
+		flex: 1;
+		box-sizing: border-box;
+		lines: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		text-align: center;
+	}
+
+	.fui-avatar__size-small {
+		width: $fui-img-size-sm !important;
+		height: $fui-img-size-sm !important;
+	}
+
+	.fui-avatar__text-small {
+		font-size: 32rpx !important;
+	}
+
+	.fui-avatar__size-middle {
+		width: $fui-img-size-middle !important;
+		height: $fui-img-size-middle !important;
+	}
+
+	.fui-avatar__text-middle {
+		font-size: 44rpx !important;
+	}
+
+	.fui-avatar__size-large {
+		width: $fui-img-size-lg !important;
+		height: $fui-img-size-lg !important;
+	}
+
+	.fui-avatar__text-large {
+		font-size: 56rpx !important;
+	}
+
+	.fui-avatar__circle {
+		border-radius: 500px !important;
+	}
+
+	.fui-avatar__square {
+		border-radius: 8rpx !important;
+	}
+</style>

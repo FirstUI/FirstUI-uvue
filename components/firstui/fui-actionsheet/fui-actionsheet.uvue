@@ -45,13 +45,13 @@
 	 * @property {Boolean} maskClosable {Boolean} 点击遮罩是否可关闭上拉菜单
 	 * @property {Number} zIndex {Number} 上拉菜单层级z-index值
 	 * @property {Boolean} safeArea {Boolean} 是否适配底部安全区
-	 * @event {Function} click 点击上拉菜单按钮时触发，(event: FuiActionSheetItemParam) => void
+	 * @event {Function} onclick 点击上拉菜单按钮时触发，(event: FuiActionSheetItemParam) => void
 	 * @event {Function} cancel 点击遮罩层（maskClosable=true）或者取消按钮时触发，() => void
 	 * @event {Function} update:visible 点击遮罩层（maskClosable=true）或者取消按钮时触发，用于双向绑定	，(event: boolean) => void
 	 */
 	export default {
 		name: "fui-actionsheet",
-		emits: ['click', 'cancel', 'update:visible'],
+		emits: ['onclick', 'cancel', 'update:visible'],
 		props: {
 			visible: {
 				type: Boolean,
@@ -190,7 +190,7 @@
 				if (!this.visible) return;
 				const item = this.vals[index];
 				item.index = index;
-				this.$emit('click', item);
+				this.$emit('onclick', item);
 			},
 			handleClickCancel() {
 				this.$emit('cancel');

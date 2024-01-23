@@ -130,4 +130,24 @@ $fui-actionsheet-bcolor-dark: #333333;
 
 /* fui-dialog 对话框组件 */
 /* 按钮默认字体颜色 */
-$fui-dialog-bn-color: #333333 !default;
+$fui-dialog-bn-color: #333333 ;
+
+/* fui-segmented-control 分段器组件 */
+/* 线条宽度，type=button有效 */
+$fui-segmentedcontrol-border-width:1px;
+
+/* fui-tag 标签组件 */
+/* 边框宽度 */
+$fui-tag-border-width: 0.5px;
+
+/* fui-collapse 折叠面板组件 */
+/* 边框宽度 */
+$fui-collapse-border-width: 0.5px;
+
+/* fui-divider 分割线组件 */
+/* 线条宽度 */
+$fui-divider-line-width: 0.5px;
+/* 线条颜色 */
+$fui-divider-line-color: #CCCCCC;
+/* 显示文本字体颜色 */
+$fui-divider-text-color: #B2B2B2;

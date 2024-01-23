@@ -13,10 +13,10 @@
 	 * @property {String} size {String}	默认间距大小，可选值small、default、large 默认优先使用全局配置
 	 * @property {Number} height {Number} 自定义间距大小，单位rpx，设置后则size失效
 	 * @property {String} background {String} 间距背景颜色
-	 * @event {Function} click 点击间距元素时触发，() => void
+	 * @event {Function} onclick 点击间距元素时触发，() => void
 	 */
 	export default {
-		emits: ['click'],
+		emits: ['onclick'],
 		name: "fui-white-space",
 		props: {
 			size: {
@@ -42,7 +42,7 @@
 		},
 		methods: {
 			handleClick() {
-				this.$emit('click')
+				this.$emit('onclick')
 			}
 		}
 	}

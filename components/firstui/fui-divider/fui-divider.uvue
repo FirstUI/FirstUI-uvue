@@ -1,0 +1,117 @@
+<template>
+	<view class="fui-divider__wrap" :style="{ height: `${height}rpx`}">
+		<view class="fui-divider__line" :class="{'fui-divider__line-color':dividerColor==''}"
+			:style="{ width: width, background: dividerColor,top:`${height/2}rpx`}">
+		</view>
+		<view class="fui-divider__text-box" :class="{'fui-divider__content-bg':backgroundColor==''}"
+			:style="{background: backgroundColor}">
+			<slot></slot>
+			<text class="fui-divider__text" :class="{'fui-divider__text-color':color==''}"
+				:style="{fontWeight: fontWeight,color: color, fontSize: `${size}rpx`,lineHeight: `${size}rpx`}"
+				v-if="text!=''">{{text}}</text>
+		</view>
+	</view>
+</template>
+
+<script>
+	/**
+	 * Divider 分割线
+	 * @description Divider 分割线，可自定义线条宽度、颜色等。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} text {String}	提示内容
+	 * @property {Number} height {Number} divider占据高度，单位rpx
+	 * @property {String} width	{String} divider宽度，参数值需要带单位
+	 * @property {String} dividerColor {String}	divider颜色
+	 * @property {String} color {String} 提示文字颜色
+	 * @property {Number} size {Number} 提示文字大小，单位rpx
+	 * @property {String} fontWeight {String} 提示文字字重，可选值：‘normal’、'bold'
+	 * @property {String} backgroundColor {String} 背景颜色，和当前页面背景色保持一致
+	 */
+	export default {
+		name: 'fui-divider',
+		props: {
+			text: {
+				type: String,
+				default: ''
+			},
+			height: {
+				type: Number,
+				default: 100
+			},
+			width: {
+				type: String,
+				default: '400rpx'
+			},
+			dividerColor: {
+				type: String,
+				default: ''
+			},
+			color: {
+				type: String,
+				default: ''
+			},
+			size: {
+				type: Number,
+				default: 24
+			},
+			fontWeight: {
+				type: String,
+				default: 'normal'
+			},
+			backgroundColor: {
+				type: String,
+				default: ''
+			}
+		}
+	};
+</script>
+
+<style scoped lang="scss">
+	$fui-divider-line-width: 0.5px !default;
+	$fui-divider-line-color: #CCCCCC !default;
+	$fui-divider-text-color: #B2B2B2 !default;
+	$fui-bg-color-grey: #F1F4FA !default;
+
+	.fui-divider__wrap {
+		width: 100%;
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		overflow: hidden;
+		box-sizing: border-box;
+	}
+
+	.fui-divider__line {
+		position: absolute;
+		height: $fui-divider-line-width;
+	}
+
+	.fui-divider__line-color {
+		background: $fui-divider-line-color !important;
+	}
+
+
+	.fui-divider__text-box {
+		position: relative;
+		padding: 0 6rpx;
+		z-index: 1;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.fui-divider__content-bg {
+		background: $fui-bg-color-grey !important;
+	}
+
+	.fui-divider__text {
+		padding: 0 12rpx;
+	}
+
+	.fui-divider__text-color {
+		color: $fui-divider-text-color !important;
+	}
+</style>

@@ -1,0 +1,194 @@
+<template>
+	<view class="fui-bottom__popup-wrap" :style="{ zIndex: zIndex,background:maskBackground}" @tap.stop="handleClose"
+		:ref="refMkId">
+		<view :ref="refId" class="fui-bottom__popup" :class="{'fui-bp__safe-weex':iphoneX && safeArea}"
+			:style="{borderTopLeftRadius:`${radius}rpx`,borderTopRightRadius:`${radius}rpx`,background: background}">
+			<slot></slot>
+		</view>
+	</view>
+</template>
+
+<script>
+	/**
+	 * BottomPopup 底部弹出层
+	 * @description BottomPopup 底部弹出层，从底部弹出的浮层，引导用户进行相关操作。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Boolean} visible {Boolean} 是否显示底部弹出层
+	 * @property {String} background {String} 底部弹出层背景颜色
+	 * @property {Number} radius {Number} 底部弹出层左上/右上圆角值，单位rpx
+	 * @property {Number} zIndex {Number} 底部弹出层z-index值
+	 * @property {Boolean} maskClosable {Boolean} 点击遮罩 是否可关闭
+	 * @property {String} maskBackground {String} 遮罩背景色
+	 * @property {Boolean} safeArea {Boolean} 是否适配底部安全区
+	 * @event {Function} close 点击遮罩层（maskClosable=true）时触发，() => void
+	 * @event {Function} update:visible 点击遮罩层（maskClosable=true）时触发，用于双向绑定	，(event: boolean) => void
+	 */
+	export default {
+		name: 'fui-bottom-popup',
+		emits: ['close', 'update:visible'],
+		props: {
+			visible: {
+				type: Boolean,
+				default: false
+			},
+			background: {
+				type: String,
+				default: '#fff'
+			},
+			radius: {
+				type: Number,
+				default: 24
+			},
+			zIndex: {
+				type: Number,
+				default: 996
+			},
+			maskClosable: {
+				type: Boolean,
+				default: true
+			},
+			maskBackground: {
+				type: String,
+				default: 'rgba(0,0,0,.6)'
+			},
+			safeArea: {
+				type: Boolean,
+				default: true
+			}
+		},
+		data() {
+			const refId = `fui_bp_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			const refMkId = `fui_bpmk_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				refId: refId,
+				refMkId: refMkId,
+				iphoneX: false,
+				isShow: false,
+				element: null as Element | null,
+				mkElement: null as Element | null
+			}
+		},
+		watch: {
+			visible: {
+				handler(newVal : boolean) {
+					if (newVal) {
+						this.open();
+					} else {
+						if (this.isShow) this.close();
+					}
+				},
+				immediate: true
+			}
+		},
+		created() {
+			// #ifdef APP-IOS || MP || H5
+			this.iphoneX = this.isPhoneX();
+			// #endif
+		},
+		mounted() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					if (!this.visible) this.close();
+				}, 50);
+			})
+		},
+		methods: {
+			handleClose() {
+				if (!this.maskClosable) return;
+				this.$emit('close');
+				this.$emit('update:visible', false)
+			},
+			// #ifdef APP-IOS || MP || H5
+			isPhoneX() : boolean {
+				if (!this.safeArea) return false;
+				//34px
+				const res : GetSystemInfoResult = uni.getSystemInfoSync();
+				let iphonex = false;
+				let models = ['iphonex', 'iphonexr', 'iphonexsmax']
+				for (let i = 11; i < 20; i++) {
+					models.push(`iphone${i}`)
+					models.push(`iphone${i}mini`)
+					models.push(`iphone${i}pro`)
+					models.push(`iphone${i}promax`)
+				}
+				const model = res.model.replace(/\s/g, "").toLowerCase()
+				const newModel = model.split('<')[0]
+				if (models.includes(model) || models.includes(newModel) || res.safeAreaInsets.bottom > 0) {
+					iphonex = true;
+				}
+				return iphonex;
+			},
+			// #endif
+			open() {
+				this.isShow = true;
+				this.$nextTick(() => {
+					setTimeout(() => {
+						this._animation(true);
+					}, 50);
+				})
+			},
+			close() {
+				this.isShow = false;
+				this._animation(false);
+			},
+			_animation(visible : boolean) {
+				if (this.element == null) {
+					this.element = this.$refs[this.refId] as Element;
+				}
+				if (this.mkElement == null) {
+					this.mkElement = this.$refs[this.refMkId] as Element;
+				}
+				this.element!.style.setProperty('transform', `translateY(${visible ? '0' : '100%'})`);
+				this.element!.style.setProperty('opacity', visible ? '1' : '0')
+				this.mkElement!.style.setProperty('opacity', visible ? '1' : '0')
+				if (visible) {
+					this.mkElement!.style.setProperty('visibility', 'visible');
+					this.element!.style.setProperty('visibility', 'visible');
+				} else {
+					setTimeout(() => {
+						this.mkElement!.style.setProperty('visibility', 'hidden');
+						this.element!.style.setProperty('visibility', 'hidden');
+					}, 300)
+				}
+			}
+		}
+	};
+</script>
+
+<style scoped>
+	.fui-bottom__popup-wrap {
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		display: flex;
+		flex-direction: row;
+		align-items: flex-end;
+		justify-content: center;
+		transition-property: opacity, visibility;
+		transition-timing-function: ease-in-out;
+		transition-duration: 0.3s;
+		visibility: hidden;
+		border-bottom-width: 0;
+		overflow: hidden;
+		opacity: 0;
+	}
+
+	.fui-bottom__popup {
+		width: 100%;
+		transition-property: transform, opacity, visibility;
+		transition-timing-function: ease-in-out;
+		transition-duration: 0.3s;
+		min-height: 20rpx;
+		overflow: hidden;
+		transform: translateY(100%);
+		display: flex;
+		flex-direction: row;
+		position: relative;
+	}
+
+	.fui-bp__safe-weex {
+		padding-bottom: 34px;
+	}
+</style>

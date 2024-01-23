@@ -39,11 +39,11 @@
 	 * @property {Number} bottomRight {Number} 下边框right值，单位rpx
 	 * @property {String} radius {String} border-radius圆角值 , 如‘16rpx’
 	 * @property {Number} index {Number} 索引值
-	 * @event {Function} click 点击组件时触发，返回索引值，(event: number) => void
+	 * @event {Function} onclick 点击组件时触发，返回索引值，(event: number) => void
 	 */
 	export default {
 		name: "fui-list-cell",
-		emits: ['click'],
+		emits: ['onclick'],
 		props: {
 			padding: {
 				type: String,
@@ -112,7 +112,7 @@
 		},
 		methods: {
 			handleClick() {
-				this.$emit('click', this.index);
+				this.$emit('onclick', this.index);
 			}
 		}
 	}

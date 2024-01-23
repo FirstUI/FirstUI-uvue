@@ -26,7 +26,7 @@
 					<scroll-view class="fui-scroll__box" :scroll-y="true" :style="{height:`${height}px`}">
 						<view class="fui-list__view">
 							<fui-list-cell padding="0 32rpx" :bottomBorder="false" radius="16rpx" :marginTop="24"
-								v-for="(item,idx) in tab.data" :key="idx" @click="href(tab.id,item.page,index)">
+								v-for="(item,idx) in tab.data" :key="idx" @onclick="href(tab.id,item.page,index)">
 								<view class="fui-list__item fui-align__center">
 									<image class="fui-item__icon"
 										:src="`/static/images/index/light/icon_${item.icon}_3x.png`"></image>

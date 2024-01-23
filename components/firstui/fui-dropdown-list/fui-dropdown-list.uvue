@@ -1,0 +1,383 @@
+<template>
+	<view class="fui-dropdown__menu-wrap" :class="{'fui-ddl__mask-bg':maskBackground==''}" :ref="refId"
+		:style="{background:maskBackground,zIndex:zIndex}" @tap="close(1)">
+		<view class="fui-dropdown__list" :style="{borderRadius:`${radius}rpx`,background:background}">
+			<scroll-view :show-scrollbar="false" class="fui-ddl__scroll" :scroll-y="true" :style="getStyles">
+				<template v-for="(model,index) in itemList" :key="index">
+					<view class="fui-dropdown__menu-item" :hover-stay-time="150" hover-class="fui-dropdown__item-active"
+						:style="{background:background,padding:padding,borderBottomColor:splitLine?lineColor:'transparent'}"
+						:class="{'fui-ddl__reverse':isReverse,'fui-ddl__item-line':splitLine && itemList.length-1!=index}"
+						@tap.stop="itemClick(index)">
+						<view class="fui-ddl__checkbox"
+							:class="{'fui-is__checkmark':isCheckMark,'fui-ddl__checkbox-color':checkboxColor=='' && model.checked==true && !isCheckMark}"
+							:style="{background:model.checked==true && !isCheckMark ?checkboxColor:'transparent',borderColor:model.checked==true && !isCheckMark ?checkboxColor:borderColor}"
+							v-if="isCheckbox">
+							<view class="fui-ddl__checkmark"
+								:style="{borderBottomColor:checkmarkColor,borderRightColor:checkmarkColor}"
+								v-if="model.checked==true"></view>
+						</view>
+						<view class="fui-ddl__flex">
+							<view class="fui-ddl__icon-box"
+								:class="{'fui-ddl__icon-ml':!isReverse && isCheckbox,'fui-ddl__icon-mr':isReverse}"
+								:style="{width:`${iconWidth}rpx`,height:`${iconWidth}rpx`,background:iconBackground}"
+								v-if="model.src!='' && model.src!=null">
+								<image :src="model.src" :style="{width:`${iconWidth}rpx`,height:`${iconWidth}rpx`}">
+								</image>
+							</view>
+							<text class="fui-ddl__item-text"
+								:class="{ 'fui-ddl__text-pl':!isReverse && (isCheckbox || (model.src!='' && model.src!=null)),'fui-ddl__text-pr':isReverse && (isCheckbox || (model.src!='' && model.src!=null))}"
+								:style="{fontSize:`${size}rpx`,color:selectedColor!='' && model.checked==true?selectedColor:color}">{{model.text}}</text>
+						</view>
+					</view>
+				</template>
+			</scroll-view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import { PropType } from 'vue'
+	import { FuiDropdownMenuOptionParam } from '../fui-types/index.uts'
+	/**
+	 * DropdownList 下拉菜单，居中弹出
+	 * @description DropdownList 下拉菜单，用于弹出一个菜单给用户选择操作，居中弹出。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Array} menus {Array&lt;FuiDropdownMenuOptionParam&gt;} 下拉菜单数据
+	 * @property {Number} width {Number} 下拉菜单宽度，单位rpx。大于0时生效
+	 * @property {Number} height {Number} 下拉菜单高度，单位rpx。大于0时生效
+	 * @property {String} background {String} 下拉菜单背景颜色
+	 * @property {Number} radius {Number} 下拉菜单圆角值，部分平台若无效果则忽略该属性
+	 * @property {String} padding {String} 下拉菜单item项padding值
+	 * @property {Boolean} isCheckbox {Boolean} 是否显示选择框
+	 * @property {String} checkboxColor {String} 选择框选中后颜色
+	 * @property {String} borderColor {String} 选择框未选中时边框颜色
+	 * @property {Boolean} isCheckMark {Boolean} 选择框是否只显示对号，无边框背景
+	 * @property {String} checkmarkColor {String} 选择框对号颜色
+	 * @property {Boolean} isReverse {Boolean} 选择框与内容是否颠倒排列
+	 * @property {Boolean} splitLine {Boolean} 下拉菜单每项间是否需要分割线
+	 * @property {String} lineColor {String} 分割线颜色
+	 * @property {Number} iconWidth {Number} 下拉菜单icon宽度，单位rpx。高度与宽度等长
+	 * @property {Number} size {Number} 下拉菜单字体大小，单位rpx
+	 * @property {String} color {String} 下拉菜单字体颜色	
+	 * @property {String} selectedColor {String} 下拉菜单字体选中后颜色
+	 * @property {Boolean} maskClosable {Boolean} 点击遮罩是否可关闭下拉菜单
+	 * @property {String} maskBackground {String} 遮罩层背景色
+	 * @property {Number} zIndex {Number} 层级z-index值
+	 * @event {Function} onclick 点击下拉菜单item项时触发，(event: FuiDropdownMenuOptionParam) => void
+	 * @event {Function} close 点击遮罩层时触发（maskClosable为true时有效），() => void
+	 * @method {Method} show 显示下拉菜单
+	 */
+	export default {
+		name: "fui-dropdown-list",
+		emits: ['onclick', 'close'],
+		props: {
+			menus: {
+				type: Array as PropType<FuiDropdownMenuOptionParam[]>,
+				default: () : FuiDropdownMenuOptionParam[] => [] as FuiDropdownMenuOptionParam[]
+			},
+			width: {
+				type: Number,
+				default: 0
+			},
+			height: {
+				type: Number,
+				default: 0
+			},
+			background: {
+				type: String,
+				default: '#FFFFFF'
+			},
+			radius: {
+				type: Number,
+				default: 0
+			},
+			padding: {
+				type: String,
+				default: '32rpx'
+			},
+			isCheckbox: {
+				type: Boolean,
+				default: true
+			},
+			checkboxColor: {
+				type: String,
+				default: ''
+			},
+			borderColor: {
+				type: String,
+				default: '#CCCCCC'
+			},
+			isCheckMark: {
+				type: Boolean,
+				default: false
+			},
+			checkmarkColor: {
+				type: String,
+				default: '#FFFFFF'
+			},
+			isReverse: {
+				type: Boolean,
+				default: false
+			},
+			splitLine: {
+				type: Boolean,
+				default: false
+			},
+			lineColor: {
+				type: String,
+				default: '#EEEEEE'
+			},
+			iconWidth: {
+				type: Number,
+				default: 48
+			},
+			iconBackground: {
+				type: String,
+				default: 'transparent'
+			},
+			size: {
+				type: Number,
+				default: 32
+			},
+			color: {
+				type: String,
+				default: '#181818'
+			},
+			selectedColor: {
+				type: String,
+				default: ''
+			},
+			maskClosable: {
+				type: Boolean,
+				default: true
+			},
+			maskBackground: {
+				type: String,
+				default: ''
+			},
+			zIndex: {
+				type: Number,
+				default: 990
+			}
+		},
+		watch: {
+			menus(newVal : FuiDropdownMenuOptionParam[]) {
+				this.initData(newVal)
+			}
+		},
+		data() {
+			const refId = `fui_ddm_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				refId: refId,
+				itemList: [] as FuiDropdownMenuOptionParam[],
+				element: null as null | Element
+			};
+		},
+		computed: {
+			getStyles() : string {
+				let styles = '';
+				if (this.height > 0) {
+					styles += `height:${this.height}rpx;`
+				}
+				if (this.width > 0) {
+					styles += `width:${this.width}rpx;`
+				}
+				return styles
+			}
+		},
+		created() {
+			const data = JSON.parse<FuiDropdownMenuOptionParam[]>(JSON.stringify(this.menus))
+			if (data != null) this.initData(data);
+		},
+		methods: {
+			initData(vals : FuiDropdownMenuOptionParam[]) {
+				vals.map(item => {
+					item.checked = item.checked == null ? false : item.checked;
+					item.disabled = item.disabled == null ? false : item.disabled;
+				})
+				this.itemList = vals;
+			},
+			itemClick(index : number) {
+				const items = JSON.parse<FuiDropdownMenuOptionParam[]>(JSON.stringify(this.itemList));
+				if (items != null) {
+					items.forEach((item, idx) => {
+						if (index == idx) {
+							item.checked = true
+						} else {
+							item.checked = false
+						}
+					})
+					this.itemList = items;
+					const item = items[index]
+					item.index = index;
+					this.$emit('onclick', item)
+					this.close(2)
+				}
+			},
+			getEl() {
+				if (this.element == null) {
+					this.element = this.$refs[this.refId] as Element;
+				}
+			},
+			close(type : number) {
+				if (type == 1 && !this.maskClosable) return;
+				this.getEl()
+				this.element!.style.setProperty('opacity', '0');
+				setTimeout(() => {
+					this.element!.style.setProperty('visibility', 'hidden')
+				}, 300)
+				if (type == 1) {
+					this.$emit('close')
+				}
+			},
+			/**
+			* 类型：show() =>void
+			* @description 显示下拉菜单，无需传参数
+			*/
+			show() {
+				this.getEl()
+				this.element!.style.setProperty('opacity', '1')
+				this.element!.style.setProperty('visibility', 'visible');
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-primary: #465CFF !default;
+	$fui-bg-color-hover: rgba(0, 0, 0, 0.2) !default;
+	$fui-dropdown-menuitem-bg: #FFFFFF !default;
+	$fui-color-shadow: rgba(2, 4, 38, 0.05) !default;
+	$fui-bg-color-mask: rgba(0, 0, 0, 0.6) !default;
+
+	.fui-dropdown__menu-wrap {
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		padding: 64rpx;
+		box-sizing: border-box;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition-property: opacity, visibility;
+		transition-timing-function: ease-in-out;
+		transition-duration: 0.3s;
+		visibility: hidden;
+		opacity: 0;
+	}
+
+	.fui-ddl__mask-bg {
+		background: $fui-bg-color-mask !important;
+	}
+
+	.fui-ddl__scroll {
+		flex: 1;
+	}
+
+	.fui-dropdown__list {
+		box-shadow: 0 0 10rpx $fui-color-shadow;
+		display: flex;
+		flex-direction: row;
+		box-sizing: border-box;
+	}
+
+	.fui-dropdown__menu-item {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		background: $fui-dropdown-menuitem-bg;
+		position: relative;
+		box-sizing: border-box;
+	}
+
+	.fui-dropdown__item-active {
+		background: $fui-bg-color-hover !important;
+	}
+
+	.fui-ddl__flex {
+		flex: 1;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		box-sizing: border-box;
+	}
+
+	.fui-ddl__item-line {
+		position: relative;
+		border-bottom-width: 0.5px;
+		border-bottom-style: solid;
+	}
+
+	.fui-ddl__reverse {
+		justify-content: space-between;
+		flex-direction: row-reverse;
+	}
+
+	.fui-ddl__checkbox {
+		width: 40rpx;
+		height: 40rpx;
+		border-width: 1px;
+		border-style: solid;
+		border-radius: 40rpx;
+		box-sizing: border-box;
+		flex-shrink: 0;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		position: relative;
+	}
+
+	.fui-ddl__checkbox-color {
+		background: $fui-color-primary !important;
+		border-color: $fui-color-primary !important;
+		transition: border-color 0.2s;
+	}
+
+	.fui-is__checkmark {
+		border-width: 0 !important;
+		background: transparent !important;
+	}
+
+	.fui-ddl__checkmark {
+		width: 20rpx;
+		height: 40rpx;
+		border-bottom-style: solid;
+		border-bottom-width: 3px;
+		border-right-style: solid;
+		border-right-width: 3px;
+		box-sizing: border-box;
+		transform: rotate(45deg) scale(0.5);
+		transform-origin: 54% 48%;
+	}
+
+	.fui-ddl__item-text {
+		font-weight: normal;
+		flex: 1;
+	}
+
+	.fui-ddl__text-pl {
+		padding-left: 24rpx;
+	}
+
+	.fui-ddl__text-pr {
+		padding-right: 24rpx;
+	}
+
+	.fui-ddl__icon-box {
+		overflow: hidden;
+		flex-shrink: 0;
+	}
+
+	.fui-ddl__icon-ml {
+		margin-left: 24rpx;
+	}
+
+	.fui-ddl__icon-mr {
+		margin-right: 24rpx;
+	}
+</style>

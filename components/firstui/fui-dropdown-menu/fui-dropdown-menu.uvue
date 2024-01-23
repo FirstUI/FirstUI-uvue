@@ -1,0 +1,477 @@
+<template>
+	<view class="fui-dropdown__menu" :id="boxId">
+		<slot></slot>
+		<view :ref="refMkId" class="fui-ddm__mask" :style="{background:maskBackground,zIndex:zIndex-2}" @tap="close(1)">
+		</view>
+		<view :ref="refId" class="fui-dropdown__menu-list" :class="[direction=='up'?'fui-ddm__up':'fui-ddm__down']"
+			:style="getStyles">
+			<scroll-view :show-scrollbar="false" class="fui-ddm__scroll" :scroll-y="true"
+				:style="{ maxHeight:`${maxHeight}rpx`,minWidth:`${minWidth}rpx`}">
+				<template v-for="(model,index) in itemList" :key="index">
+					<view class="fui-dropdown__menu-item" :hover-stay-time="150" hover-class="fui-dropdown__item-active"
+						:style="{background:background,padding:padding,borderBottomColor:splitLine?lineColor:'transparent'}"
+						:class="{'fui-ddm__reverse':isReverse,'fui-ddm__item-line':splitLine && itemList.length-1!=index}"
+						@tap.stop="itemClick(index)">
+						<view class="fui-ddm__checkbox"
+							:class="{'fui-is__checkmark':isCheckMark,'fui-ddm__checkbox-color':checkboxColor=='' && model.checked==true && !isCheckMark}"
+							:style="{background:model.checked==true && !isCheckMark ?checkboxColor:'transparent',borderColor:model.checked==true && !isCheckMark ?checkboxColor:borderColor}"
+							v-if="isCheckbox">
+							<view class="fui-ddm__checkmark"
+								:style="{borderBottomColor:checkmarkColor,borderRightColor:checkmarkColor}"
+								v-if="model.checked==true"></view>
+						</view>
+						<view class="fui-ddm__flex">
+							<view class="fui-ddm__icon-box"
+								:class="{'fui-ddm__icon-ml':!isReverse && isCheckbox,'fui-ddm__icon-mr':isReverse}"
+								:style="{width:`${iconWidth}rpx`,height:`${iconWidth}rpx`,background:iconBackground}"
+								v-if="model.src!='' && model.src!=null">
+								<image :src="model.src" :style="{width:`${iconWidth}rpx`,height:`${iconWidth}rpx`}">
+								</image>
+							</view>
+							<text class="fui-ddm__item-text"
+								:class="{ 'fui-ddm__text-pl':!isReverse && (isCheckbox || (model.src!='' && model.src!=null)),'fui-ddm__text-pr':isReverse && (isCheckbox || (model.src!='' && model.src!=null))}"
+								:style="{fontSize:`${size}rpx`,color:selectedColor!='' && model.checked==true?selectedColor:color}">{{model.text}}</text>
+						</view>
+					</view>
+				</template>
+			</scroll-view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import { PropType } from 'vue'
+	import { FuiDropdownMenuOptionParam } from '../fui-types/index.uts'
+	/**
+	 * DropdownMenu 下拉菜单
+	 * @description DropdownMenu 下拉菜单，用于弹出一个下拉菜单给用户选择操作。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Array} menus {Array&lt;FuiDropdownMenuOptionParam&gt;} 下拉菜单数据
+	 * @property {Number} maxHeight {Number} 下拉菜单最大高度，单位rpx
+	 * @property {Number} minWidth {Number} 下拉菜单最小宽度，单位rpx
+	 * @property {Number} left {Number} 下拉菜单left值，单位rpx
+	 * @property {Number} right	{Number} 下拉菜单right值，单位rpx。right大于等于0时生效，且left失效
+	 * @property {String} background {String} 下拉菜单背景颜色
+	 * @property {Number} radius {Number} 下拉菜单圆角值，部分平台若无效果则忽略该属性
+	 * @property {String} padding {String} 下拉菜单item项padding值
+	 * @property {Boolean} isCheckbox {Boolean} 是否显示选择框
+	 * @property {String} checkboxColor {String} 选择框选中后颜色
+	 * @property {String} borderColor {String} 选择框未选中时边框颜色
+	 * @property {Boolean} isCheckMark {Boolean} 选择框是否只显示对号，无边框背景
+	 * @property {String} checkmarkColor {String} 选择框对号颜色
+	 * @property {Boolean} isReverse {Boolean} 选择框与内容是否颠倒排列
+	 * @property {Boolean} splitLine {Boolean} 下拉菜单每项间是否需要分割线
+	 * @property {String} lineColor {String} 分割线颜色
+	 * @property {Number} iconWidth {Number} 下拉菜单icon宽度，单位rpx。高度与宽度等长
+	 * @property {Number} size {Number} 下拉菜单字体大小，单位rpx
+	 * @property {String} color {String} 下拉菜单字体颜色	
+	 * @property {String} selectedColor {String} 下拉菜单字体选中后颜色
+	 * @property {String} maskBackground {String} 遮罩层背景色
+	 * @property {String} direction {String} 下拉菜单展开方向，可选值：down、up
+	 * @property {Number} zIndex {Number} 层级z-index值
+	 * @event {Function} onclick 点击下拉菜单item项时触发，(event: FuiDropdownMenuOptionParam) => void
+	 * @event {Function} close 点击遮罩层时触发，() => void
+	 * @method {Method} show 显示下拉菜单
+	 */
+	export default {
+		name: "fui-dropdown-menu",
+		emits: ['onclick', 'close'],
+		props: {
+			menus: {
+				type: Array as PropType<FuiDropdownMenuOptionParam[]>,
+				default: () : FuiDropdownMenuOptionParam[] => [] as FuiDropdownMenuOptionParam[]
+			},
+			maxHeight: {
+				type: Number,
+				default: 400
+			},
+			minWidth: {
+				type: Number,
+				default: 0
+			},
+			left: {
+				type: Number,
+				default: 0
+			},
+			right: {
+				type: Number,
+				default: -1
+			},
+			background: {
+				type: String,
+				default: '#FFFFFF'
+			},
+			radius: {
+				type: Number,
+				default: 0
+			},
+			padding: {
+				type: String,
+				default: '32rpx'
+			},
+			isCheckbox: {
+				type: Boolean,
+				default: true
+			},
+			checkboxColor: {
+				type: String,
+				default: ''
+			},
+			borderColor: {
+				type: String,
+				default: '#CCCCCC'
+			},
+			isCheckMark: {
+				type: Boolean,
+				default: false
+			},
+			checkmarkColor: {
+				type: String,
+				default: '#FFFFFF'
+			},
+			isReverse: {
+				type: Boolean,
+				default: false
+			},
+			splitLine: {
+				type: Boolean,
+				default: false
+			},
+			lineColor: {
+				type: String,
+				default: '#EEEEEE'
+			},
+			iconWidth: {
+				type: Number,
+				default: 48
+			},
+			iconBackground: {
+				type: String,
+				default: 'transparent'
+			},
+			size: {
+				type: Number,
+				default: 32
+			},
+			color: {
+				type: String,
+				default: '#181818'
+			},
+			selectedColor: {
+				type: String,
+				default: ''
+			},
+			maskBackground: {
+				type: String,
+				default: 'transparent'
+			},
+			direction: {
+				type: String,
+				default: 'down'
+			},
+			zIndex: {
+				type: Number,
+				default: 990
+			}
+		},
+		watch: {
+			menus(newVal : FuiDropdownMenuOptionParam[]) {
+				this.initData(newVal)
+			}
+		},
+		data() {
+			const boxId = `fui_ddmc_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			const refId = `fui_ddm_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			const refMkId = `fui_ddmmk_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				boxId: boxId,
+				refId: refId,
+				refMkId: refMkId,
+				itemList: [] as FuiDropdownMenuOptionParam[],
+				element: null as null | Element,
+				maskElement: null as null | Element,
+				wrap_left: 0,
+				wrap_top: 0
+			};
+		},
+		computed: {
+			getStyles() : string {
+				let styles = `top:${this.wrap_top}px; border-radius:${this.radius}rpx;background:${this.background};z-index:${this.zIndex};`
+				if (this.right >= 0) {
+					styles += `right:${this.right}rpx;`
+				} else {
+					const left = this.rpx2px(this.left)
+					styles += `left:${left + this.wrap_left}px;`
+				}
+				return styles
+			}
+		},
+		created() {
+			const data = JSON.parse<FuiDropdownMenuOptionParam[]>(JSON.stringify(this.menus))
+			if (data != null) this.initData(data);
+		},
+		mounted() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					this.getPosition((res : boolean) => {
+						if (res) { }
+					})
+				}, 50)
+			})
+		},
+		methods: {
+			rpx2px(rpx : number) : number {
+				let px : number;
+				// #ifdef APP-ANDROID
+				px = UTSAndroid.rpx2px(rpx)
+				// #endif
+
+				// #ifndef APP-ANDROID
+				const sys : GetSystemInfoResult = uni.getSystemInfoSync()
+				px = sys.windowWidth / 750 * rpx
+				// #endif
+				return px;
+			},
+			getPosition(callback : (res : boolean) => void) {
+				uni.createSelectorQuery()
+					.in(this)
+					.select(`#${this.boxId}`)
+					.boundingClientRect()
+					.exec(ret => {
+						const node = ret[0] as NodeInfo;
+						const height = node.height as number
+						const top = node.top as number
+						this.wrap_left = node.left as number;
+						this.wrap_top = this.direction == 'down' ? height + top : top
+						callback(true)
+					})
+			},
+			initData(vals : FuiDropdownMenuOptionParam[]) {
+				vals.map(item => {
+					item.checked = item.checked == null ? false : item.checked;
+					item.disabled = item.disabled == null ? false : item.disabled;
+				})
+				this.itemList = vals;
+			},
+			itemClick(index : number) {
+				const items = JSON.parse<FuiDropdownMenuOptionParam[]>(JSON.stringify(this.itemList));
+				if (items != null) {
+					items.forEach((item, idx) => {
+						if (index == idx) {
+							item.checked = true
+						} else {
+							item.checked = false
+						}
+					})
+					this.itemList = items;
+					const item = items[index]
+					item.index = index;
+					this.$emit('onclick', item)
+					this.close(2)
+				}
+			},
+			getEl() {
+				if (this.element == null) {
+					this.element = this.$refs[this.refId] as Element;
+				}
+				if (this.maskElement == null) {
+					this.maskElement = this.$refs[this.refMkId] as Element;
+				}
+			},
+			close(type : number) {
+				this.getEl()
+				this.maskElement!.style.setProperty('opacity', '0');
+				this.element!.style.setProperty('opacity', '0');
+				if (this.direction == 'up') {
+					this.element!.style.setProperty('transform', 'translateY(-100%) scaleY(0)');
+				} else {
+					this.element!.style.setProperty('transform', 'scaleY(0)');
+				}
+				setTimeout(() => {
+					this.element!.style.setProperty('visibility', 'hidden')
+					this.maskElement!.style.setProperty('visibility', 'hidden')
+				}, 300)
+				if (type == 1) {
+					this.$emit('close')
+				}
+			},
+			/**
+			* 类型：show() =>void
+			* @description 显示下拉菜单，无需传参数
+			*/
+			show() {
+				this.getEl()
+				this.getPosition((res : boolean) => {
+					if (res) {
+						this.$nextTick(() => {
+							this.maskElement!.style.setProperty('opacity', '1')
+							this.maskElement!.style.setProperty('visibility', 'visible');
+							this.element!.style.setProperty('opacity', '1')
+							this.element!.style.setProperty('visibility', 'visible');
+							if (this.direction == 'up') {
+								this.element!.style.setProperty('transform', 'translateY(-100%) scaleY(1)');
+							} else {
+								this.element!.style.setProperty('transform', 'scaleY(1)');
+							}
+						})
+					}
+				})
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	$fui-color-primary: #465CFF !default;
+	$fui-bg-color-hover: rgba(0, 0, 0, 0.2) !default;
+	$fui-dropdown-menuitem-bg: #FFFFFF !default;
+	$fui-color-shadow: rgba(2, 4, 38, 0.05) !default;
+
+	@mixin init_hidden {
+		opacity: 0;
+		visibility: hidden;
+	}
+
+
+	.fui-dropdown__menu {
+		flex: 1;
+	}
+
+	.fui-ddm__scroll {
+		flex: 1;
+	}
+
+	.fui-dropdown__menu-list {
+		position: fixed;
+		transition-timing-function: ease-in-out;
+		transition-duration: 0.3s;
+		transition-property: visibility, opacity, transform;
+		box-shadow: 0 0 10rpx $fui-color-shadow;
+		display: flex;
+		flex-direction: row;
+		box-sizing: border-box;
+	}
+
+	.fui-ddm__down {
+		transform-origin: 0 0;
+		transform: scaleY(0);
+		@include init_hidden;
+	}
+
+
+	.fui-ddm__up {
+		transform-origin: 0 100%;
+		transform: translateY(-100%) scaleY(0);
+		@include init_hidden;
+	}
+
+	.fui-ddm__mask {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		transition-duration: 0.3s;
+		transition-property: visibility, opacity;
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	.fui-dropdown__menu-item {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		background: $fui-dropdown-menuitem-bg;
+		position: relative;
+		box-sizing: border-box;
+	}
+
+	.fui-dropdown__item-active {
+		background: $fui-bg-color-hover !important;
+	}
+
+	.fui-ddm__flex {
+		flex: 1;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		box-sizing: border-box;
+	}
+
+	.fui-ddm__item-line {
+		position: relative;
+		border-bottom-width: 0.5px;
+		border-bottom-style: solid;
+	}
+
+	.fui-ddm__reverse {
+		justify-content: space-between;
+		flex-direction: row-reverse;
+	}
+
+	.fui-ddm__checkbox {
+		width: 40rpx;
+		height: 40rpx;
+		border-width: 1px;
+		border-style: solid;
+		border-radius: 40rpx;
+		box-sizing: border-box;
+		flex-shrink: 0;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		position: relative;
+	}
+
+	.fui-ddm__checkbox-color {
+		background: $fui-color-primary !important;
+		border-color: $fui-color-primary !important;
+		transition: border-color 0.2s;
+	}
+
+	.fui-is__checkmark {
+		border-width: 0 !important;
+		background: transparent !important;
+	}
+
+	.fui-ddm__checkmark {
+		width: 20rpx;
+		height: 40rpx;
+		border-bottom-style: solid;
+		border-bottom-width: 3px;
+		border-right-style: solid;
+		border-right-width: 3px;
+		box-sizing: border-box;
+		transform: rotate(45deg) scale(0.5);
+		transform-origin: 54% 48%;
+	}
+
+	.fui-ddm__item-text {
+		font-weight: normal;
+		flex: 1;
+	}
+
+	.fui-ddm__text-pl {
+		padding-left: 24rpx;
+	}
+
+	.fui-ddm__text-pr {
+		padding-right: 24rpx;
+	}
+
+	.fui-ddm__icon-box {
+		overflow: hidden;
+		flex-shrink: 0;
+	}
+
+	.fui-ddm__icon-ml {
+		margin-left: 24rpx;
+	}
+
+	.fui-ddm__icon-mr {
+		margin-right: 24rpx;
+	}
+</style>

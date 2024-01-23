@@ -1,0 +1,83 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Alert</text>
+				<text class="fui-page__desc">Alert 警告框。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<text class="fui-section__title fui-mtop--0">基础使用</text>
+				<fui-alert title="An info alert"></fui-alert>
+				<fui-alert type="success" title="An success alert" :marginTop="24"></fui-alert>
+				<fui-alert type="warning" title="An warn alert" :marginTop="24"></fui-alert>
+				<fui-alert type="danger" title="An error alert" :marginTop="24"></fui-alert>
+				<fui-alert title="An info alert" desc="Content of alert. Content of alert." :marginTop="24">
+				</fui-alert>
+				<fui-alert type="danger" title="An error alert" desc="Content of alert. Content of alert."
+					:marginTop="24">
+				</fui-alert>
+				<fui-alert type="warning" isLeft title="An warn alert" desc="Content of alert. Content of alert."
+					:marginTop="24">
+				</fui-alert>
+				<fui-alert type="success" isLeft title="An warn alert" desc="Content of alert. Content of alert."
+					:marginTop="24">
+				</fui-alert>
+				<text class="fui-section__title" v-if="visible || shown">可关闭</text>
+				<fui-alert :closable="true" title="An info alert" v-if="visible" @close="close"></fui-alert>
+				<fui-alert type="success" :closable="true" title="An info alert"
+					desc="Content of alert. Content of alert.Content of alert." v-if="shown" @close="close2"
+					:marginTop="24"></fui-alert>
+				<text class="fui-section__title">左侧自定义图标</text>
+				<fui-alert :spacing="true" title="An info alert">
+					<fui-icon name="info" :size="48" color="#fff"></fui-icon>
+				</fui-alert>
+				<fui-alert type="success" :spacing="true" title="An info alert" :marginTop="24">
+					<fui-icon name="checkbox" :size="48" color="#fff"></fui-icon>
+				</fui-alert>
+				<fui-alert type="warning" :spacing="true" title="An info alert" :marginTop="24">
+					<fui-icon name="warning" :size="48" color="#fff"></fui-icon>
+				</fui-alert>
+				<fui-alert type="danger" :spacing="true" title="An info alert" :marginTop="24">
+					<fui-icon name="clear" :size="48" color="#fff"></fui-icon>
+				</fui-alert>
+				<text class="fui-section__title">自定义颜色</text>
+				<fui-alert :spacing="true" background="#fff" color="#181818" title="An info alert">
+					<fui-icon name="clear-fill" :size="48" color="#FF2B2B"></fui-icon>
+				</fui-alert>
+				<fui-alert :spacing="true" iconColor="#09BE4F" background="#fff" color="#181818" title="An info alert" :marginTop="24">
+					<fui-icon name="checkbox-fill" :size="48" color="#09BE4F"></fui-icon>
+				</fui-alert>
+				<fui-alert :spacing="true" background="#fff" color="#181818" title="An info alert" :marginTop="24">
+					<fui-icon name="warning-fill" :size="48" color="#FFB703"></fui-icon>
+				</fui-alert>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				visible: true,
+				shown: true
+			}
+		},
+		methods: {
+			close() {
+				this.visible = false;
+			},
+			close2() {
+				this.shown = false;
+			}
+		}
+	}
+</script>
+
+<style>
+
+</style>

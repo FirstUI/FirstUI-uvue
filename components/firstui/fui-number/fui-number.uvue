@@ -22,10 +22,10 @@
 	 * @property {String} decoration {String} 文本的修饰，可选值：none、 underline、line-through 等
 	 * @property {Boolean} lineHeight {Boolean}	是否将行高设置与字体大小一致	
 	 * @property {String} param	{String} 自定义参数，点击事件中回传
-	 * @event {Function} click 点击数字时触发，(event: FuiNumberClickParam) => void
+	 * @event {Function} onclick 点击数字时触发，(event: FuiNumberClickParam) => void
 	 */
 	export default {
-		emits: ['click'],
+		emits: ['onclick'],
 		name: "fui-number",
 		props: {
 			//数字值
@@ -126,7 +126,7 @@
 			},
 			handleClick() {
 				if (this.disabled) return;
-				this.$emit('click', {
+				this.$emit('onclick', {
 					text: this.getNumber,
 					param: this.param
 				} as FuiNumberClickParam);
