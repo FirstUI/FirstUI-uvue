@@ -107,6 +107,102 @@ GitHub地址：[https://github.com/FirstUI/FirstUI-uvue](https://github.com/Firs
 
 ### 更新日志
 
+#### V1.2.0 (2024-01-29)
+
+- 重要优化：本次更新开发工具需升级至Hbuilderx 4.0+，更新后必须升级开发工具（alpha版本）。
+
+- Utils 工具类 组件优化，新增获取随机颜色、金额转大写等方法。
+
+- 新增 BackgroundImage 背景图 组件。
+
+- 新增 启动页简介页面。
+
+- Section 标题栏 组件优化，适配web/H5端。
+
+- Text 文本 组件优化，适配web/H5端。
+
+- Number 数字 组件优化，适配web/H5端。
+
+- Icon 图标 组件优化，适配web/H5端。
+
+- Button 按钮 组件优化，适配web/H5端。
+
+- Footer 页脚 组件优化，适配web/H5端。
+
+- Animation 动画 组件优化，适配web/H5端。
+
+- StatusBar 状态栏 组件优化，适配web/H5端。
+
+- Layout 栅格布局 组件优化，适配web/H5端。
+
+- Grid 宫格 组件 组件优化，适配web/H5端。
+
+- List 列表 组件 组件优化，适配web/H5端。
+
+- Card 卡片 组件优化，适配web/H5端。
+
+- WhiteSpace 上下间距 组件优化，适配web/H5端。
+
+- WingBlank 左右间距 组件优化，适配web/H5端。
+
+- Input 输入框 组件优化，适配web/H5端。
+
+- InputNumber 数字输入框 组件优化，适配web/H5端。
+
+- Label 标签 组件优化，适配web/H5端。
+
+- Radio 单选框 组件优化，适配web/H5端。
+
+- Checkbox 复选框 组件优化，适配web/H5端。
+
+- Switch 开关 组件优化，适配web/H5端。
+
+- Textarea 多行输入框 组件优化，适配web/H5端。
+
+- ActionSheet 上拉菜单 组件优化，适配web/H5端。
+
+- Toast 轻提示 组件优化，适配web/H5端。
+
+- Backdrop 遮罩层 组件优化，适配web/H5端。
+
+- Dialog 对话框 组件优化，适配web/H5端。
+
+- Badge 徽章 组件优化，适配web/H5端。
+
+- DropdownMenu 下拉菜单 组件优化，适配web/H5端。
+
+- DropdownList 下拉菜单 组件优化，适配web/H5端。
+
+- Loading 加载 组件优化，适配web/H5端。
+
+- SwipeAction 滑动菜单 组件优化，适配web/H5端。
+
+- Pagination 分页器 组件优化，适配web/H5端。
+
+- SegmentedControl 分段器 组件优化，适配web/H5端。
+
+- Tabs 标签页 组件优化，适配web/H5端。
+
+- Drawer 抽屉 组件优化，适配web/H5端。
+
+- BottomPopup 底部弹出层 组件优化，适配web/H5端。
+
+- TopPopup 顶部弹出层 组件优化，适配web/H5端。
+
+- Alert 警告框 组件优化，适配web/H5端。
+
+- Avatar 头像 组件优化，适配web/H5端。
+
+- Tag 标签 组件优化，适配web/H5端。
+
+- Collapse 折叠面板 组件优化，适配web/H5端。
+
+- Divider 分割线 组件优化，适配web/H5端。
+
+- LoadMore 加载更多 组件优化，适配web/H5端。
+
+- 优化已知问题。
+
 #### V1.1.0（2024-01-23）
 
 - 新增 DropdownMenu 下拉菜单 组件。

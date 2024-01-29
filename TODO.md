@@ -1,20 +1,24 @@
 
-# 三期组件
-
+# 三期组件：
+- 半个屏幕带滑动
+- 自定义上拉加载，下拉刷新
+- 优惠券
+- todo：Button组件 需要支持 form-type="submit" 和 form-type="reset"
+- Form 表单校验。
+- FormItem 表单项。
+- Validator 表单验证。
+- Slider 滑块选择器。
+- Rate 评分。
+- Select 选择器
+- MovableView 可移动的视图容器
 - Panel 面板
 - Preview 表单预览
-- MovableView 可移动的视图容器
 - HorizontalScroll 横向滚动的视图容器
 - BannerArc 横幅底部圆弧
 - Calendar 日历
 - Cascader 级联选择器
 - Picker 选择器
 - DatePicker 日期时间选择器
-- Slider 滑块选择器
-- Form 表单校验
-- FormItem 表单项
-- Select 选择器
-- Rate 评分
 - Upload 图片上传
 - SearchBar 搜索栏
 - Modal 模态框
@@ -53,6 +57,5 @@
 - Barcode 条形码
 - Autograph 手写签名
 - Request 网络请求
-
 - ......
 

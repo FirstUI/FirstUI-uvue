@@ -1,0 +1,99 @@
+<template>
+	
+	<!-- #ifdef APP -->
+	<scroll-view class="fui-scroll--view">
+	<!-- #endif -->
+		<fui-status-bar @init="init"></fui-status-bar>
+		<!-- #ifndef WEB -->
+		<image :style="{top:top}" class="fui-back--icon" src="/static/images/demo/icon_back_3x.png" @tap="onBack">
+		</image>
+		<!-- #endif -->
+		<view class="fui-wrap" :style="{marginTop:top}">
+			<view class="fui-content">
+				<text class="fui-text">welcome to this page!</text>
+			</view>
+			<view style="width:100%;height: 600px;"></view>
+			<view class="fui-content">
+				<text class="fui-text">背景图～</text>
+			</view>
+			<!-- <fui-background-image :absolute="true" background="linear-gradient(to top right, rgb(238, 163, 175), rgb(149, 214, 240));"></fui-background-image> -->
+		</view>
+
+		<!-- 背景色 -->
+		<!-- <fui-background-image background="linear-gradient(to top right, rgb(238, 163, 175), rgb(149, 214, 240));">
+				<text class="fui-text">页面内容</text>
+			</fui-background-image> -->
+		<!-- 背景图 -->
+		<fui-background-image src="/static/images/demo/bg.jpeg"></fui-background-image>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				top: ''
+			}
+		},
+		methods: {
+			init(e : string) {
+				this.top = e
+			},
+			onBack() {
+				uni.navigateBack()
+			}
+		}
+	}
+</script>
+
+<style>
+	/* #ifdef WEB */
+	page {
+		background-color: transparent;
+	}
+
+	/* #endif */
+	/* #ifdef APP */
+	.fui-scroll--view {
+		position: fixed;
+		z-index: 1;
+		width: 100%;
+		height: 100%;
+		left: 0;
+	}
+	/* #endif */
+
+	.fui-back--icon {
+		width: 60rpx;
+		height: 60rpx;
+		position: fixed;
+		z-index: 2;
+		left: 32rpx;
+		margin-top: 8rpx;
+	}
+
+	.fui-wrap {
+		padding-top: 60rpx;
+		background: transparent;
+	}
+
+	.fui-content {
+		width: 700rpx;
+		height: 500rpx;
+		background: rgba(255, 255, 255, .4);
+		box-shadow: 0px 3rpx 40rpx rgba(0, 0, 0, 0.36);
+		border-radius: 33rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 200rpx auto;
+	}
+
+	.fui-text {
+		color: #fff;
+		font-size: 50rpx;
+	}
+</style>

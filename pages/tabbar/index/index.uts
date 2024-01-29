@@ -88,6 +88,11 @@ export const tabs = [{
 		name: 'WingBlank 左右间距',
 		vip: false,
 		page: 'wingBlank'
+	}, {
+		icon: 'lazyload',
+		name: 'BackgroundImage 背景图',
+		vip: false,
+		page: 'backgroundImage'
 	}] as TabsItem[]
 }, {
 	id: 'form',

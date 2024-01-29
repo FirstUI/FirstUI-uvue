@@ -2,8 +2,8 @@
     "name" : "FirstUI-uvue",
     "appid" : "__UNI__F2F2930",
     "description" : "FirstUI（unix）组件库，一款适配 uni-app x 的轻量、简洁、高效、全面的移动端组件库。",
-    "versionName" : "1.1.0",
-    "versionCode" : 110,
+    "versionName" : "1.2.0",
+    "versionCode" : 120,
     "uni-app-x" : {},
     /* 快应用特有相关 */
     "quickapp" : {},
@@ -32,10 +32,10 @@
         "distribute" : {
             "icons" : {
                 "android" : {
-                    "hdpi" : "",
-                    "xhdpi" : "",
-                    "xxhdpi" : "",
-                    "xxxhdpi" : ""
+                    "hdpi" : "unpackage/res/icons/72x72.png",
+                    "xhdpi" : "unpackage/res/icons/96x96.png",
+                    "xxhdpi" : "unpackage/res/icons/144x144.png",
+                    "xxxhdpi" : "unpackage/res/icons/192x192.png"
                 }
             }
         }

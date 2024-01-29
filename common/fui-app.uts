@@ -91,7 +91,7 @@ const fui : IFui = {
 		// #ifdef APP-ANDROID
 		px = UTSAndroid.rpx2px(rpx)
 		// #endif
-
+		
 		// #ifndef APP-ANDROID
 		const sys : GetSystemInfoResult = uni.getSystemInfoSync()
 		px = sys.windowWidth / 750 * rpx

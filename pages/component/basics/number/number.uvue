@@ -39,7 +39,7 @@
 		},
 		methods: {
 			onTap(e : FuiNumberClickParam) {
-				console.log(e)
+				console.log(JSON.stringify(e))
 				this.fui.toast(e.text)
 			}
 		}

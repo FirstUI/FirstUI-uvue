@@ -1,0 +1,147 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1;">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<text class="fui-title" :class="{'fui-title--show':visible}">FirstUI UNIX</text>
+			<view class="fui-content" :class="{'fui-content--show':visible}">
+				<view class="fui-logo">
+					<fui-avatar src="/static/images/common/logo.png" size="large"></fui-avatar>
+				</view>
+				<view class="fui-bd" :class="{'fui-bd--show':visible}">
+					<text class="fui-sub__title" :class="{'fui-title--show':visible}">FirstUI（unix）组件库，一款适配 uni-app x
+						的轻量、简洁、高效、全面的移动端组件库。</text>
+					<view class="fui-confirm__btn">
+						<fui-button text="立即体验" radius="80rpx" @onclick="goIndex"></fui-button>
+					</view>
+				</view>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				visible: false
+			}
+		},
+		onReady() {
+			//暂时不做关闭逻辑操作，每次打开先显示此页面
+			setTimeout(() => {
+				this.visible = true
+			}, 500)
+		},
+		methods: {
+			goIndex() {
+				uni.reLaunch({
+					url:'/pages/tabbar/index/index'
+				})
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-wrap {
+		width: 100%;
+		background: #465CFF;
+		/* #ifdef WEB */
+		height: 100vh;
+		/* #endif */
+		/* #ifdef APP */
+		height: 100%;
+		/* #endif */
+		overflow: hidden;
+		position: relative;
+	}
+
+	.fui-content {
+		display: flex;
+		position: relative;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		transform: translateY(100%);
+		transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+		transition-duration: 3s;
+		transition-property: transform, opacity;
+		overflow: visible;
+	}
+
+	.fui-content--show {
+		transform: translateY(0);
+		opacity: 1;
+	}
+
+
+	.fui-title {
+		width: 100%;
+		height: 200rpx;
+		line-height: 200rpx;
+		opacity: 0;
+		transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+		transition-duration: 2.5s;
+		transition-property: opacity;
+		text-align: center;
+		font-size: 48rpx;
+		color: #fff;
+		font-weight: bold;
+		margin-top: 64rpx;
+	}
+
+	.fui-logo {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 32rpx 0 96rpx;
+		box-sizing: border-box;
+	}
+
+	.fui-bd {
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		position: relative;
+		z-index: 3;
+		background: #FFFFFF;
+		border-radius: 64rpx 64rpx 0 0;
+		transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+		transition-duration: 2s;
+		transition-property: transform, opacity;
+	}
+
+
+	.fui-sub__title {
+		opacity: 0;
+		transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+		transition-duration: 2.5s;
+		transition-property: opacity;
+		text-align: center;
+		font-size: 26rpx;
+		line-height: 48rpx;
+		padding: 60rpx 60rpx 32rpx;
+		box-sizing: border-box;
+		color: #465CFF;
+	}
+
+	.fui-title--show {
+		opacity: 1;
+	}
+
+	.fui-bd--show {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.fui-confirm__btn {
+		width: 100%;
+		padding: 40rpx 80rpx 0;
+		box-sizing: border-box;
+	}
+</style>

@@ -9,7 +9,7 @@
 			</view>
 		</view>
 		<view class="fui-tabs__box">
-			<scroll-view class="fui-scroll__box-tab" id="fui_tabs" :scroll-with-animation="true" :scroll-x="true"
+			<scroll-view class="fui-scroll__box-tab" id="fui_tabs" :scroll-with-animation="true" direction="horizontal"
 				:show-scrollbar="false" :scroll-into-view="scrollInto">
 				<view class="fui-scroll__view fui-align__center">
 					<view class="fui-tab__item" v-for="(item, index) in tabs" :key="index">
@@ -23,7 +23,7 @@
 			</scroll-view>
 			<swiper :current="tabIndex" class="fui-swiper__box" @change="tabChange" :style="{height:`${height}px`}">
 				<swiper-item class="fui-swiper__item" v-for="(tab, index) in tabs" :key="tab.id">
-					<scroll-view class="fui-scroll__box" :scroll-y="true" :style="{height:`${height}px`}">
+					<scroll-view :show-scrollbar="false" class="fui-scroll__box" direction="vertical" :style="{height:`${height}px`}">
 						<view class="fui-list__view">
 							<fui-list-cell padding="0 32rpx" :bottomBorder="false" radius="16rpx" :marginTop="24"
 								v-for="(item,idx) in tab.data" :key="idx" @onclick="href(tab.id,item.page,index)">
@@ -56,12 +56,13 @@
 		},
 		onReady() {
 			this.height = uni.getSystemInfoSync().windowHeight - this.fui.rpx2px(538);
+			console.log(this.height)
 		},
 		methods: {
 			tabClick(index : number) {
 				this.switchTab(index)
 			},
-			tabChange(e : SwiperChangeEvent) {
+			tabChange(e : UniSwiperChangeEvent) {
 				let index = e.detail.current;
 				this.switchTab(index);
 			},
@@ -198,12 +199,12 @@
 	}
 
 	.fui-swiper__box {
-		flex: 1;
+		width: 100%;
 		background-color: #F1F4FA;
 	}
 
 	.fui-swiper__item {
-		flex: 1;
+		width: 100%;
 		align-items: center;
 		justify-content: center;
 	}

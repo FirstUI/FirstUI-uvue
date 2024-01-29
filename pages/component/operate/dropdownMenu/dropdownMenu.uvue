@@ -76,6 +76,7 @@
 </template>
 
 <script>
+	import { ComponentPublicInstance } from 'vue'
 	import { FuiDropdownMenuOptionParam } from '@/components/firstui/fui-types/index.uts';
 	import { menus, menus1, menus2, menus3 } from './index.uts'
 	export default {
@@ -87,7 +88,6 @@
 				rangeShow: false,
 				sort: '默认排序',
 				sortShow: false,
-				//数据格式二
 				menus2: menus2 as FuiDropdownMenuOptionParam[],
 				question: '',
 				quesShow: false,
@@ -99,10 +99,11 @@
 		methods: {
 			filterTap(type : number) {
 				if (type == 1) {
-					(this.$refs['ddmRange'] as FuiDropdownMenuComponentPublicInstance).show()
+					(this.$refs['ddmRange'] as ComponentPublicInstance).$callMethod('show')
 					this.rangeShow = true;
 				} else {
-					(this.$refs['ddmSort'] as FuiDropdownMenuComponentPublicInstance).show()
+					(this.$refs['ddmSort'] as ComponentPublicInstance).$callMethod('show')
+					//(this.$refs['ddmSort'] as FuiDropdownMenuComponentPublicInstance).show()
 					this.sortShow = true;
 				}
 			},
@@ -123,7 +124,8 @@
 				this.sortShow = false;
 			},
 			quesTap() {
-				(this.$refs['ddmQues'] as FuiDropdownMenuComponentPublicInstance).show()
+				(this.$refs['ddmQues'] as ComponentPublicInstance).$callMethod('show')
+				// (this.$refs['ddmQues'] as FuiDropdownMenuComponentPublicInstance).show()s
 				this.quesShow = true;
 			},
 			quesItemClick(e : FuiDropdownMenuOptionParam) {
@@ -135,7 +137,8 @@
 				this.quesShow = false;
 			},
 			tagTap() {
-				(this.$refs['ddmTag'] as FuiDropdownMenuComponentPublicInstance).show()
+				(this.$refs['ddmTag'] as ComponentPublicInstance).$callMethod('show')
+				// (this.$refs['ddmTag'] as FuiDropdownMenuComponentPublicInstance).show()
 				this.tagShow = true;
 			},
 			tagItemClick(e : FuiDropdownMenuOptionParam) {
@@ -202,9 +205,8 @@
 	.fui-select {
 		position: relative;
 		height: 80rpx;
-		padding: 32rpx;
-		box-sizing: border-box;
-		flex: 1;
+		padding:32rpx;
+		box-sizing: border-box;	
 		display: flex;
 		flex-direction: row;
 		align-items: center;

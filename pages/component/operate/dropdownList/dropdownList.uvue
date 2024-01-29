@@ -59,6 +59,7 @@
 </template>
 
 <script>
+	import { ComponentPublicInstance } from 'vue'
 	import { FuiDropdownMenuOptionParam } from '@/components/firstui/fui-types/index.uts';
 	import { menusdata, menus2, menus3 } from './index.uts';
 	export default {
@@ -77,7 +78,8 @@
 		},
 		methods: {
 			assetsTap() {
-				(this.$refs['ddlAssets'] as FuiDropdownListComponentPublicInstance).show()
+				(this.$refs['ddlAssets'] as ComponentPublicInstance).$callMethod('show')
+				// (this.$refs['ddlAssets'] as FuiDropdownListComponentPublicInstance).show()
 				this.assetsShow = true;
 			},
 			assetsItemClick(e : FuiDropdownMenuOptionParam) {
@@ -89,7 +91,8 @@
 				this.assetsShow = false;
 			},
 			quesTap() {
-				(this.$refs['ddlQues'] as FuiDropdownListComponentPublicInstance).show()
+				(this.$refs['ddlQues'] as ComponentPublicInstance).$callMethod('show')
+				// (this.$refs['ddlQues'] as FuiDropdownListComponentPublicInstance).show()
 				this.quesShow = true;
 			},
 			quesItemClick(e : FuiDropdownMenuOptionParam) {
@@ -101,7 +104,8 @@
 				this.quesShow = false;
 			},
 			tagTap() {
-				(this.$refs['ddlTag'] as FuiDropdownListComponentPublicInstance).show()
+				(this.$refs['ddlTag'] as ComponentPublicInstance).$callMethod('show')
+				// (this.$refs['ddlTag'] as FuiDropdownListComponentPublicInstance).show()
 				this.tagShow = true;
 			},
 			tagItemClick(e : FuiDropdownMenuOptionParam) {

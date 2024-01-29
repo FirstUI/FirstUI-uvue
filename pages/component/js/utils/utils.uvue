@@ -114,6 +114,21 @@
 					<fui-button type="gray" btn-size="medium" text="格式化(繁体中文)" :bold="true" margin="24rpx 0"
 						@onclick="dateFormatAgo('tc')"></fui-button>
 				</view>
+				<text class="fui-section__title">生成随机颜色</text>
+				<view class="fui-btn__flex-center">
+					<text class="fui-page__desc" :style="{color:color}">随机颜色</text>
+					<fui-button type="gray" btn-size="medium" text="获取颜色" :bold="true" margin="24rpx 0"
+						@onclick="getRandomHexColor"></fui-button>
+				</view>
+				<text class="fui-section__title">金额转大写</text>
+				<view class="fui-btn__flex-center">
+					<fui-button type="gray" btn-size="medium" text="￥20.00" :bold="true" margin="24rpx 0"
+						@onclick="convertCurrency('￥20.00')"></fui-button>
+					<fui-button type="gray" btn-size="medium" text="￥1,020.52" :bold="true"
+						@onclick="convertCurrency('￥1,020.52')"></fui-button>
+					<fui-button type="gray" btn-size="medium" text="1314521" :bold="true" margin="24rpx 0"
+						@onclick="convertCurrency('1314521')"></fui-button>
+				</view>
 				<text class="fui-section__title">其他功能</text>
 				<text class="fui-page__desc">待扩展...</text>
 			</view>
@@ -138,11 +153,15 @@
 		getUrlParam,
 		getDateTimeSlot,
 		formatTimeAgo,
-		rpx2px
+		rpx2px,
+		getRandomHexColor,
+		convertCurrency
 	} from '@/components/firstui/fui-utils/index.uts';
 	export default {
 		data() {
-			return {}
+			return {
+				color: ''
+			}
 		},
 		methods: {
 			sleep() {
@@ -216,6 +235,17 @@
 			dateFormatAgo(lang : string) {
 				const date = '2023-10-15 22:56:15'
 				const val = formatTimeAgo(date, 1, lang)
+				console.log(val)
+				this.fui.toast(val)
+			},
+			getRandomHexColor() {
+				const val = getRandomHexColor()
+				console.log(val)
+				this.color = val
+				this.fui.toast(val)
+			},
+			convertCurrency(money : string) {
+				const val = convertCurrency(money)
 				console.log(val)
 				this.fui.toast(val)
 			}
