@@ -29,7 +29,7 @@
 				default: ''
 			},
 			size: {
-				type: Object,
+				type: [Object, String, Number],
 				default: 0
 			},
 			unit: {

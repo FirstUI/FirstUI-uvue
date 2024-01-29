@@ -83,14 +83,14 @@
 	 * @event {Function} onclick 点击输入框时触发，(event:string) => void
 	 * @event {Function} input 当键盘输入时，触发input事件，(event: string) => void
 	 * @event {Function} update:modelValue 输入框值改变时触发，用于双向绑定 (event: string) => void
-	 * @event {Function} focus 输入框聚焦时触发，(event: InputFocusEvent) => void
-	 * @event {Function} blur 输入框失去焦点时触发，(event: InputBlurEvent) => void
-	 * @event {Function} confirm 点击完成按钮时触发，(event: InputConfirmEvent) => void
-	 * @event {Function} keyboardheightchange 键盘高度发生变化的时候触发此事件，(event: InputKeyboardHeightChangeEvent) => void
+	 * @event {Function} focus 输入框聚焦时触发，(event: UniInputFocusEvent) => void
+	 * @event {Function} blur 输入框失去焦点时触发，(event: UniInputBlurEvent) => void
+	 * @event {Function} confirm 点击完成按钮时触发，(event: UniInputConfirmEvent) => void
+	 * @event {Function} keyboardheightchange 键盘高度发生变化的时候触发此事件，(event: UniInputKeyboardHeightChangeEvent) => void
 	 */
 	export default {
 		name: "fui-input",
-		emits: ['input', 'update:modelValue', 'focus', 'blur', 'confirm', 'click', 'keyboardheightchange'],
+		emits: ['input', 'update:modelValue', 'focus', 'blur', 'confirm', 'onclick', 'keyboardheightchange'],
 		props: {
 			required: {
 				type: Boolean,
@@ -141,12 +141,12 @@
 				default: ''
 			},
 			value: {
-				type: Object,
+				type: [Object, String, Number],
 				default: ''
 			},
 			//保留属性
 			modelValue: {
-				type: Object,
+				type: [Object, String, Number],
 				default: ''
 			},
 			type: {
@@ -231,7 +231,7 @@
 			},
 			radius: {
 				type: Number,
-				default: 8
+				default: 0
 			},
 			borderTop: {
 				type: Boolean,
@@ -284,7 +284,13 @@
 				if (this.inputBorder && this.borderColor != '') mp.set('border-color', this.borderColor);
 				if (!this.inputBorder && this.borderTop && this.borderColor != '') mp.set('border-top-color', this.borderColor);
 				if (!this.inputBorder && this.borderBottom && this.borderColor != '') mp.set('border-bottom-color', this.borderColor);
+				// #ifndef APP
+				return Object.fromEntries(mp);
+				// #endif
+
+				// #ifdef APP
 				return mp;
+				// #endif
 			}
 		},
 		watch: {
@@ -315,7 +321,7 @@
 				const isForm = this.getParent('fui-form');
 				if (isForm) {
 					const form = this.fuiForm as ComponentPublicInstance
-					(form.$data['formChildren'] as ComponentPublicInstance[]).push(this);
+					(form.$data['formChildren'] as ComponentPublicInstance[]).push(this as ComponentPublicInstance);
 				}
 			}, 50)
 		},
@@ -333,25 +339,22 @@
 					str = val as string;
 				} else if (typeof val == 'number') {
 					str = (val as number).toString()
-				} else if (val instanceof Int) {
-					str = Number.from(val).toString()
 				} else {
-					//不应该走到这里
 					str = val.toString()
 				}
 				return str;
 			},
 			setFocusOrBlur(focus : boolean) {
 				if (focus) {
-					(this.$refs[this.refId] as Element).focus()
+					(this.$refs[this.refId] as UniElement).focus()
 				} else {
-					(this.$refs[this.refId] as Element).blur()
+					(this.$refs[this.refId] as UniElement).blur()
 				}
 			},
 			isSafeInteger(num : number) : boolean {
 				return num >= -9007199254740991 && num <= 9007199254740991;
 			},
-			onInput(event : InputEvent) {
+			onInput(event : UniInputEvent) {
 				let value = event.detail.value;
 				if (this.trim) value = this.trimStr(value);
 				this.val = value;
@@ -377,13 +380,13 @@
 				this.$emit('input', inputValue);
 				this.$emit('update:modelValue', inputValue)
 			},
-			onFocus(event : InputFocusEvent) {
+			onFocus(event : UniInputFocusEvent) {
 				this.$emit('focus', event);
 			},
-			onBlur(event : InputBlurEvent) {
+			onBlur(event : UniInputBlurEvent) {
 				this.$emit('blur', event);
 			},
-			onConfirm(event : InputConfirmEvent) {
+			onConfirm(event : UniInputConfirmEvent) {
 				this.$emit('confirm', event);
 			},
 			onClear() {
@@ -396,7 +399,7 @@
 			fieldClick() {
 				this.$emit('onclick', this.name);
 			},
-			onKeyboardheightchange(e : InputKeyboardHeightChangeEvent) {
+			onKeyboardheightchange(e : UniInputKeyboardHeightChangeEvent) {
 				this.$emit('keyboardheightchange', e)
 			},
 			trimStr(str : string) : string {

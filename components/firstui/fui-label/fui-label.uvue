@@ -17,11 +17,6 @@
 	 */
 	export default {
 		name: "fui-label",
-		provide() {
-			return {
-				fuiLabel: this
-			}
-		},
 		props: {
 			//padding值：'20rpx 32rpx'
 			padding: {

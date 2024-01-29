@@ -48,7 +48,7 @@
 	 * @property {String} param {String} 自定义参数
 	 * @event {Function} change 数字输入框值改变时触发，(event: FuiInputNumberChangeParam) => void
 	 * @event {Function} input 数字输入框值改变时触发，(event: number) => void
-	 * @event {Function} blur 数字输入框失去焦点时触发，(event: InputBlurEvent) => void
+	 * @event {Function} blur 数字输入框失去焦点时触发，(event: UniInputBlurEvent) => void
 	 * @event {Function} update:modelValue 输入框值改变时触发，用于双向绑定 (event: number) => void
 	 */
 	export default {
@@ -56,7 +56,7 @@
 		emits: ['change', 'update:modelValue', 'input', 'blur'],
 		props: {
 			modelValue: {
-				type: Object,
+				type: [Object, String, Number],
 				default: 1
 			},
 			type: {
@@ -130,7 +130,7 @@
 			const isForm = this.getParent('fui-form');
 			if (isForm) {
 				const form = this.fuiForm as ComponentPublicInstance
-				(form.$data['formChildren'] as ComponentPublicInstance[]).push(this);
+				(form.$data['formChildren'] as ComponentPublicInstance[]).push(this as ComponentPublicInstance);
 			}
 		},
 		data() {
@@ -182,8 +182,6 @@
 					str = this.getCompareNumber(parseFloat(val as string));
 				} else if (typeof val == 'number') {
 					str = this.getCompareNumber(val as number)
-				} else if (val instanceof Int) {
-					str = this.getCompareNumber(Number.from(val))
 				} else {
 					str = this.getCompareNumber(parseFloat(val.toString()))
 				}
@@ -234,7 +232,7 @@
 			onMinus() {
 				this.calcNum('reduce');
 			},
-			blur(e : InputBlurEvent) {
+			blur(e : UniInputBlurEvent) {
 				let value = e.detail.value;
 				if (value != '' && !isNaN(parseFloat(value))) {
 					if (value.indexOf('.') != -1 && this.isInteger(parseFloat(value))) {
@@ -250,7 +248,7 @@
 				}, this.type == 'text' ? 100 : 50)
 			},
 			onConfirm() {
-				(this.$refs['fui_input_number'] as Element).blur()
+				(this.$refs['fui_input_number'] as UniElement).blur()
 			},
 			getParent(name : string) : boolean {
 				if (this.$parent == null) return false;

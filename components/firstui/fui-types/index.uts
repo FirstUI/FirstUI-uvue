@@ -27,7 +27,10 @@ export type FuiTextClickParam = {
 * @param {string} text {string} 数字文本内容
 * @param {string} param {string} 自定义参数 
 */
-export type FuiNumberClickParam = FuiTextClickParam;
+export type FuiNumberClickParam = {
+	text : string;
+	param : string;
+};
 
 
 /**

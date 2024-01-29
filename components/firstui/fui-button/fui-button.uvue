@@ -139,7 +139,13 @@
 				mp.set('border-right-color', this.iconColor)
 				mp.set('border-top-color', this.iconColor)
 				mp.set('border-bottom-color', this.iconColor)
+				// #ifndef APP
+				return Object.fromEntries(mp);
+				// #endif
+				
+				// #ifdef APP
 				return mp;
+				// #endif
 			},
 			getBackground() : string {
 				let color = this.background;
@@ -223,8 +229,8 @@
 			return {
 				times: 0,
 				isSpin: false,
-				element: null as Element | null,
-				hoverEle: null as Element | null
+				element: null as UniElement | null,
+				hoverEle: null as UniElement | null
 			};
 		},
 		mounted() {
@@ -254,25 +260,25 @@
 			switchHover(show : boolean) {
 				if (!this.highlight || this.disabled) return;
 				if (this.hoverEle == null) {
-					this.hoverEle = this.$refs['fui_button_hover'] as Element;
+					this.hoverEle = this.$refs['fui_button_hover'] as UniElement;
 				}
 				this.hoverEle!.style.setProperty('visibility', show ? 'visible' : 'hidden')
 			},
 			startSpin() {
 				if (this.element != null && this.isSpin) return;
 				if (this.element == null) {
-					this.element = this.$refs['fui_button_loading'] as Element;
+					this.element = this.$refs['fui_button_loading'] as UniElement;
 				}
 				this.times = this.times + 1
 				this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
-				this.element!.style.setProperty('transition-duration', '600')
+				this.element!.style.setProperty('transition-duration', '600ms')
 				this.isSpin = true
 			},
 			endSpin() {
 				this.isSpin = false
 				this.times = 0
 				this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
-				this.element!.style.setProperty('transition-duration', '0')
+				this.element!.style.setProperty('transition-duration', '0s')
 				this.element = null;
 			},
 			onEnd() {
@@ -335,7 +341,7 @@
 		border-width: 2px;
 		border-style: solid;
 		border-radius: 100px;
-		transition-duration: 600;
+		transition-duration: 600ms;
 		transition-property: transform;
 		transition-timing-function: linear;
 		transform: rotate(0deg);

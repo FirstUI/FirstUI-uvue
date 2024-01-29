@@ -2,7 +2,7 @@
 	<view class="fui-dropdown__menu-wrap" :class="{'fui-ddl__mask-bg':maskBackground==''}" :ref="refId"
 		:style="{background:maskBackground,zIndex:zIndex}" @tap="close(1)">
 		<view class="fui-dropdown__list" :style="{borderRadius:`${radius}rpx`,background:background}">
-			<scroll-view :show-scrollbar="false" class="fui-ddl__scroll" :scroll-y="true" :style="getStyles">
+			<scroll-view :show-scrollbar="false" class="fui-ddl__scroll" direction="vertical" :style="getStyles">
 				<template v-for="(model,index) in itemList" :key="index">
 					<view class="fui-dropdown__menu-item" :hover-stay-time="150" hover-class="fui-dropdown__item-active"
 						:style="{background:background,padding:padding,borderBottomColor:splitLine?lineColor:'transparent'}"
@@ -170,7 +170,7 @@
 			return {
 				refId: refId,
 				itemList: [] as FuiDropdownMenuOptionParam[],
-				element: null as null | Element
+				element: null as null | UniElement
 			};
 		},
 		computed: {
@@ -216,7 +216,7 @@
 			},
 			getEl() {
 				if (this.element == null) {
-					this.element = this.$refs[this.refId] as Element;
+					this.element = this.$refs[this.refId] as UniElement;
 				}
 			},
 			close(type : number) {
@@ -270,10 +270,6 @@
 
 	.fui-ddl__mask-bg {
 		background: $fui-bg-color-mask !important;
-	}
-
-	.fui-ddl__scroll {
-		flex: 1;
 	}
 
 	.fui-dropdown__list {

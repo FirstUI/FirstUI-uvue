@@ -188,8 +188,8 @@
 				refId: refId,
 				refMkId: refMkId,
 				itemList: [] as FuiDropdownMenuOptionParam[],
-				element: null as null | Element,
-				maskElement: null as null | Element,
+				element: null as null | UniElement,
+				maskElement: null as null | UniElement,
 				wrap_left: 0,
 				wrap_top: 0
 			};
@@ -234,10 +234,9 @@
 			},
 			getPosition(callback : (res : boolean) => void) {
 				uni.createSelectorQuery()
-					.in(this)
 					.select(`#${this.boxId}`)
 					.boundingClientRect()
-					.exec(ret => {
+					.exec((ret) => {
 						const node = ret[0] as NodeInfo;
 						const height = node.height as number
 						const top = node.top as number
@@ -272,10 +271,10 @@
 			},
 			getEl() {
 				if (this.element == null) {
-					this.element = this.$refs[this.refId] as Element;
+					this.element = this.$refs[this.refId] as UniElement;
 				}
 				if (this.maskElement == null) {
-					this.maskElement = this.$refs[this.refMkId] as Element;
+					this.maskElement = this.$refs[this.refMkId] as UniElement;
 				}
 			},
 			close(type : number) {

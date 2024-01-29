@@ -115,7 +115,7 @@
 				refId: refId,
 				times: 0,
 				isSpin: false,
-				element: null as Element | null,
+				element: null as UniElement | null,
 				loadingText: ''
 			}
 		},
@@ -139,11 +139,11 @@
 			startSpin() {
 				if (this.element != null && this.isSpin) return;
 				if (this.element == null) {
-					this.element = this.$refs[this.refId] as Element;
+					this.element = this.$refs[this.refId] as UniElement;
 				}
 				this.times = this.times + 1
 				this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
-				this.element!.style.setProperty('transition-duration', '800')
+				this.element!.style.setProperty('transition-duration', '800ms')
 				this.isSpin = true
 			},
 			onEnd() {
@@ -158,10 +158,10 @@
 
 <style scoped lang="scss">
 	@mixin loading_init {
-		transition-duration: 600;
+		transform: rotate(0deg);
+		transition-duration: 600ms;
 		transition-property: transform;
 		transition-timing-function: linear;
-		transform: rotate(0deg);
 	}
 
 	.fui-loading {

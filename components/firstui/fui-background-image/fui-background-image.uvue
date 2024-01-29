@@ -1,0 +1,63 @@
+<template>
+	<view class="fui-background__image-wrap"
+		:style="{position:absolute?'absolute':'fixed',background:background,zIndex:zIndex}">
+		<image :src="src" class="fui-background__image" :mode="aspectFill?'aspectFill':'scaleToFill'" v-if="src!=''">
+		</image>
+		<slot></slot>
+	</view>
+</template>
+
+<script>
+	/**
+	 * BackgroundImage 背景图
+	 * @description BackgroundImage 背景图，用于页面或内容块背景图设置。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} src {String} 背景图片地址，不传值可食用背景颜色
+	 * @property {String} background { String }	背景颜色
+	 * @property {Number} zIndex {Number}	层级z-index值
+	 * @property {Boolean} aspectFill {Boolean} 是否等比缩放裁剪，设为false不同设备图片可能发生变形
+	 * @property {Boolean} absolute {Boolean} 是否absolute布局，设为true则外层容器需设置position为非static值，默认fixed布局。
+	 */
+	export default {
+		name: "fui-background-image",
+		props: {
+			src: {
+				type: String,
+				default: ''
+			},
+			background: {
+				type: String,
+				default: 'transparent'
+			},
+			zIndex: {
+				type: Number,
+				default: -1
+			},
+			aspectFill: {
+				type: Boolean,
+				default: true
+			},
+			absolute: {
+				type: Boolean,
+				default: false
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-background__image-wrap {
+		width: 100%;
+		height: 100%;
+		/* pointer-events: none; */
+	}
+
+	.fui-background__image {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		/* #ifndef APP */
+		display: block;
+		/* #endif */
+	}
+</style>

@@ -12,8 +12,8 @@ export const unixjs = defineMixin({
 			refRight: refRight,
 			elId: elId,
 			MIN_DISTANCE: 10,
-			element: null as null | Element,
-			rElement: null as null | Element,
+			element: null as null | UniElement,
+			rElement: null as null | UniElement,
 			rightWidth: 0,
 			open: false,
 			direction: '',
@@ -58,7 +58,7 @@ export const unixjs = defineMixin({
 			const parent = this.getParent('fui-swipeaction-group')
 			if (parent) {
 				const group = this.group as ComponentPublicInstance
-				(group.$data['children'] as ComponentPublicInstance[]).push(this);
+				(group.$data['children'] as ComponentPublicInstance[]).push(this as ComponentPublicInstance);
 			}
 			this.init()
 		})
@@ -87,19 +87,19 @@ export const unixjs = defineMixin({
 		},
 		aniSwitch(isAdd : boolean) {
 			if (this.element == null) {
-				this.element = this.$refs[this.refLeft] as Element;
+				this.element = this.$refs[this.refLeft] as UniElement;
 			}
 			if (this.rElement == null) {
-				this.rElement = this.$refs[this.refRight] as Element;
+				this.rElement = this.$refs[this.refRight] as UniElement;
 			}
-			this.element!.style.setProperty('transition-duration', isAdd ? '300' : '0');
+			this.element!.style.setProperty('transition-duration', isAdd ? '300ms' : '0ms');
 			this.element!.style.setProperty('transition-property', isAdd ? 'transform' : '');
 			this.element!.style.setProperty('transition-timing-function', isAdd ? 'cubic-bezier(0.165, 0.84, 0.44, 1)' : '');
-			this.rElement!.style.setProperty('transition-duration', isAdd ? '300' : '0');
+			this.rElement!.style.setProperty('transition-duration', isAdd ? '300ms' : '0ms');
 			this.rElement!.style.setProperty('transition-property', isAdd ? 'transform' : '');
 			this.rElement!.style.setProperty('transition-timing-function', isAdd ? 'cubic-bezier(0.165, 0.84, 0.44, 1)' : '');
 		},
-		touchstart(e : TouchEvent) {
+		touchstart(e : UniTouchEvent) {
 			if (!this.disabled) {
 				this.aniSwitch(false);
 				this.x = this.left;
@@ -107,7 +107,7 @@ export const unixjs = defineMixin({
 				if (this.autoClose) this.closeSwipe();
 			}
 		},
-		touchmove(e : TouchEvent) : boolean {
+		touchmove(e : UniTouchEvent) : boolean {
 			if (this.disabled) return false;
 			this.stopTouchMove(e);
 			if (this.direction != 'horizontal') {
@@ -176,13 +176,13 @@ export const unixjs = defineMixin({
 			this.offsetX = 0;
 			this.offsetY = 0;
 		},
-		stopTouchStart(event : TouchEvent) {
+		stopTouchStart(event : UniTouchEvent) {
 			this.resetTouchStatus();
 			const touch = event.touches[0];
 			this.startX = touch.clientX;
 			this.startY = touch.clientY;
 		},
-		stopTouchMove(event : TouchEvent) {
+		stopTouchMove(event : UniTouchEvent) {
 			const touch = event.touches[0];;
 			this.deltaX = touch.clientX - this.startX;
 			this.deltaY = touch.clientY - this.startY;
@@ -194,7 +194,6 @@ export const unixjs = defineMixin({
 		},
 		getSelectorQuery() {
 			uni.createSelectorQuery()
-				.in(this)
 				.select(`#${this.elId}`)
 				.boundingClientRect()
 				.exec(ret => {

@@ -105,7 +105,7 @@
 				height: 0,
 				elId: elId,
 				isInit: false,
-				element: null as null | Element
+				element: null as null | UniElement
 			}
 		},
 		watch: {
@@ -128,8 +128,9 @@
 			if (parent) {
 				const collapse = this.collapse as ComponentPublicInstance;
 				const children = collapse.$data['children'] as ComponentPublicInstance[];
-				if (children.indexOf(this) == -1) {
-					children.push(this)
+				const _this = this as ComponentPublicInstance;
+				if (children.indexOf(_this) == -1) {
+					children.push(_this)
 				}
 			}
 		},
@@ -174,9 +175,6 @@
 			},
 			getCollapseHeight() {
 				uni.createSelectorQuery()
-					// #ifndef MP-ALIPAY
-					.in(this)
-					// #endif
 					.select(`#${this.elId}`)
 					.boundingClientRect()
 					.exec(ret => {
@@ -200,7 +198,7 @@
 			},
 			setCollapseState(expand : boolean) {
 				if (this.element == null) {
-					this.element = this.$refs[this.elId] as Element;
+					this.element = this.$refs[this.elId] as UniElement;
 				}
 				this.element!.style.setProperty('height', expand ? `${this.height}px` : '0px')
 			}

@@ -149,17 +149,17 @@
 			if (parent) {
 				this.isLabel = true
 				const label = this.fuiLabel as ComponentPublicInstance
-				(label.$data['childrens'] as ComponentPublicInstance[]).push(this);
+				(label.$data['childrens'] as ComponentPublicInstance[]).push(this as ComponentPublicInstance);
 			}
 			//用于submit、reset事件
 			const isForm = this.getParent('fui-form');
 			if (isForm) {
 				const form = this.fuiForm as ComponentPublicInstance
-				(form.$data['formChildren'] as ComponentPublicInstance[]).push(this);
+				(form.$data['formChildren'] as ComponentPublicInstance[]).push(this as ComponentPublicInstance);
 			}
 		},
 		methods: {
-			onChange(e : SwitchChangeEvent) {
+			onChange(e : UniSwitchChangeEvent) {
 				if (this.disabled) return;
 				this.emitChange(e.detail.value, false)
 			},

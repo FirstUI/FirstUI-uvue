@@ -1,6 +1,6 @@
 	<template>
 		<scroll-view class="fui-tabs__scrollbox" :class="{'fui-tabs__fixed':isFixed}" :scroll-with-animation="true"
-			:scroll-x="scroll" :show-scrollbar="false" :scroll-into-view="scrollInto"
+			:direction="scroll?'horizontal':'vertical'" :show-scrollbar="false" :scroll-into-view="scrollInto"
 			:style="{background:background,zIndex:isFixed?zIndex:1,top: isFixed  ? `${top}px`: 'auto'}">
 			<view class="fui-scroll__view" :class="{'fui-tabs__full':!scroll}">
 				<view v-for="(tab, index) in vals" :key="index" class="fui-tabs__item" :class="{'fui-tabs__full':!scroll}"

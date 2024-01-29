@@ -99,7 +99,7 @@
 			return {
 				refId: refId,
 				isShow: false,
-				element: null as null | Element,
+				element: null as null | UniElement,
 				current: -1,
 				btns: [] as FuiDialogButtonsParam[],
 				d_title: ''
@@ -188,7 +188,7 @@
 			},
 			_animation(visible : boolean) {
 				if (this.element == null) {
-					this.element = this.$refs[this.refId] as Element;
+					this.element = this.$refs[this.refId] as UniElement;
 				}
 				this.element!.style.setProperty('opacity', visible ? '1' : '0')
 				if (visible) {

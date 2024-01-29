@@ -36,11 +36,6 @@
 				default: true
 			}
 		},
-		provide() {
-			return {
-				fuiGrid: this
-			}
-		},
 		data() {
 			const elemId = `fui_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
 			return {
@@ -99,9 +94,6 @@
 				this.width = `${100 / this.columns}%`
 				if (this.square || isNoSupported) {
 					uni.createSelectorQuery()
-						// #ifndef MP-ALIPAY
-						.in(this)
-						// #endif
 						.select(`#${this.elemId}`)
 						.boundingClientRect()
 						.exec(ret => {

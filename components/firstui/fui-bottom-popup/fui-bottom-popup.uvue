@@ -64,8 +64,8 @@
 				refMkId: refMkId,
 				iphoneX: false,
 				isShow: false,
-				element: null as Element | null,
-				mkElement: null as Element | null
+				element: null as UniElement | null,
+				mkElement: null as UniElement | null
 			}
 		},
 		watch: {
@@ -133,10 +133,10 @@
 			},
 			_animation(visible : boolean) {
 				if (this.element == null) {
-					this.element = this.$refs[this.refId] as Element;
+					this.element = this.$refs[this.refId] as UniElement;
 				}
 				if (this.mkElement == null) {
-					this.mkElement = this.$refs[this.refMkId] as Element;
+					this.mkElement = this.$refs[this.refMkId] as UniElement;
 				}
 				this.element!.style.setProperty('transform', `translateY(${visible ? '0' : '100%'})`);
 				this.element!.style.setProperty('opacity', visible ? '1' : '0')

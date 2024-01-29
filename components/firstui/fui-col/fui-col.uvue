@@ -24,7 +24,6 @@
 	 */
 	export default {
 		name: "fui-col",
-		inject: ['fuiRow'],
 		props: {
 			span: {
 				type: Number,
@@ -50,10 +49,12 @@
 				nvueWidth: 0,
 				marginLeft: 0,
 				right: 0,
-				left: 0
+				left: 0,
+				fuiRow: null as null | ComponentPublicInstance
 			};
 		},
 		created() {
+			this.getParent('fui-row');
 			if (this.fuiRow != null) {
 				let parent = this.fuiRow as ComponentPublicInstance;
 				this.updateGutter(parent.$props['gutter'] as number)
@@ -99,6 +100,19 @@
 					this.right = this.getRpx(this.pullRight, width)
 				if (this.pushLeft >= 0)
 					this.left = this.getRpx(this.pushLeft, width)
+			},
+			getParent(name : string) : boolean {
+				if (this.$parent == null) return false;
+				let parent = this.$parent as ComponentPublicInstance;
+				let parentName = parent.$options['name'];
+				while (parentName != name) {
+					if (parent.$parent == null) return false;
+					parent = parent.$parent as ComponentPublicInstance;
+					if (parent.$options['name'] == '') return false;
+					parentName = parent.$options['name'];
+				}
+				this.fuiRow = parent;
+				return true;
 			}
 		}
 	};

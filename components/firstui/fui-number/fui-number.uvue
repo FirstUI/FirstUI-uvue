@@ -28,16 +28,14 @@
 		emits: ['onclick'],
 		name: "fui-number",
 		props: {
-			//数字值
 			text: {
-				type: Object,
+				type: [Object, String, Number],
 				default: ''
 			},
 			size: {
-				type: Object,
+				type: [Object, String, Number],
 				default: 0
 			},
-			//rpx | px
 			unit: {
 				type: String,
 				default: 'rpx'
@@ -46,22 +44,18 @@
 				type: String,
 				default: ''
 			},
-			//字重
 			fontWeight: {
 				type: String,
 				default: 'normal'
 			},
-			//是否禁用点击
 			disabled: {
 				type: Boolean,
 				default: false
 			},
-			//是否有点击效果
 			highlight: {
 				type: Boolean,
 				default: false
 			},
-			//none、 underline、line-through
 			decoration: {
 				type: String,
 				default: 'none'
@@ -96,7 +90,7 @@
 				return bind;
 			},
 			getNumber() : string {
-				let num = ''
+				let num : string;
 				if (typeof this.text == 'string') {
 					num = this.text as string;
 				} else if (typeof this.text == 'number') {
@@ -109,11 +103,11 @@
 		},
 		data() {
 			return {
-				numberEl: null as Element | null
+				numberEl: null as UniElement | null
 			}
 		},
 		mounted() {
-			this.numberEl = this.$refs['fui_number'] as Element;
+			this.numberEl = this.$refs['fui_number'] as UniElement;
 		},
 		methods: {
 			touchstart() {
@@ -125,6 +119,7 @@
 				this.numberEl?.style?.setProperty('opacity', 1);
 			},
 			handleClick() {
+				console.log(1)
 				if (this.disabled) return;
 				this.$emit('onclick', {
 					text: this.getNumber,

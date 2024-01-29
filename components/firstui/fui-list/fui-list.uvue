@@ -92,7 +92,6 @@
 			borderColor: {
 				type: String,
 				default: ''
-
 			},
 			topLeft: {
 				type: Number,
@@ -125,7 +124,7 @@
 	.fui-list__title,
 	.fui-list__footer {
 		box-sizing: border-box;
-		/* #ifndef UNI-APP-X */
+		/* #ifndef APP */
 		word-break: break-all;
 		/* #endif */
 	}

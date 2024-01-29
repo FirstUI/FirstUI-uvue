@@ -80,8 +80,7 @@
 					right: 0,
 					display: 'flex',
 					'justify-content': 'center',
-					'align-items': 'center',
-					'transition-duration': `0s`
+					'align-items': 'center'
 				};
 				// const mergeStyles = Object.assign({}, defStyles, this.styles);
 				for (let key in this.styles) {
@@ -97,7 +96,14 @@
 					}
 					defStyles['transform'] = this.getTransform(animationType, this.visible)
 				}
-				return JSON.parse<UTSJSONObject>(JSON.stringify(defStyles))!.toMap();
+				const mp = JSON.parse<UTSJSONObject>(JSON.stringify(defStyles))!.toMap();
+				// #ifdef APP
+				return mp
+				// #endif
+				
+				// #ifndef APP
+				return Object.fromEntries(mp);
+				// #endif
 			}
 		},
 		mounted() {
@@ -161,7 +167,7 @@
 					if (this.element == null) {
 						this.element = this.$refs[this.refId] as Element;
 					}
-					this.element!.style.setProperty('transition-duration', this.duration.toString())
+					this.element!.style.setProperty('transition-duration', `${this.duration}ms`)
 					if (animationType.includes('fade')) {
 						this.element!.style.setProperty('opacity', (show ? 1 : 0).toString())
 					} else {

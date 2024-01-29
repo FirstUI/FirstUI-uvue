@@ -64,8 +64,8 @@
 				refId: refId,
 				refMkId: refMkId,
 				isShow: false,
-				element: null as null | Element,
-				mkElement: null as null | Element
+				element: null as null | UniElement,
+				mkElement: null as null | UniElement
 			}
 		},
 		watch: {
@@ -107,10 +107,10 @@
 			},
 			_animation(visible : boolean) {
 				if (this.element == null) {
-					this.element = this.$refs[this.refId] as Element;
+					this.element = this.$refs[this.refId] as UniElement;
 				}
 				if (this.mkElement == null) {
-					this.mkElement = this.$refs[this.refMkId] as Element;
+					this.mkElement = this.$refs[this.refMkId] as UniElement;
 				}
 				const translateX = this.direction == 'left' ? '-100%' : '100%'
 				this.element!.style.setProperty('transform', `translateX(${visible ? '0' : translateX})`);

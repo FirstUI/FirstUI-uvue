@@ -120,7 +120,7 @@
 				refAniId: refAniId,
 				times: 0,
 				isSpin: false,
-				element: null as Element | null,
+				element: null as UniElement | null,
 				showLoadingText: ''
 			}
 		},
@@ -155,18 +155,18 @@
 			startSpin() {
 				if (this.element != null && this.isSpin) return;
 				if (this.element == null) {
-					this.element = this.$refs[this.refAniId] as Element;
+					this.element = this.$refs[this.refAniId] as UniElement;
 				}
 				this.times = this.times + 1
 				this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
-				this.element!.style.setProperty('transition-duration', '600')
+				this.element!.style.setProperty('transition-duration', '600ms')
 				this.isSpin = true
 			},
 			endSpin() {
 				this.isSpin = false
 				this.times = 0
 				this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
-				this.element!.style.setProperty('transition-duration', '0')
+				this.element!.style.setProperty('transition-duration', '0ms')
 				this.element = null;
 			},
 			onEnd() {
@@ -183,7 +183,7 @@
 	$fui-color-primary: #465CFF !default;
 
 	@mixin load_ani {
-		transition-duration: 600;
+		transition-duration: 600ms;
 		transition-property: transform;
 		transition-timing-function: linear;
 		transform: rotate(0deg);

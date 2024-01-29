@@ -30,7 +30,7 @@
 		emits: ['onclick'],
 		props: {
 			value: {
-				type: Object,
+				type: [Object, String, Number],
 				default: ''
 			},
 			max: {

@@ -19,11 +19,6 @@
 	 */
 	export default {
 		name: "fui-row",
-		provide() {
-			return {
-				fuiRow: this
-			}
-		},
 		props: {
 			//水平排列方式 start/end/center/space-around/space-between
 			justify: {

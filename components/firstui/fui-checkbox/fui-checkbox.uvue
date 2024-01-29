@@ -33,7 +33,6 @@
 	export default {
 		name: "fui-checkbox",
 		emits: ['change'],
-		inject: ['fuiCkGroup'],
 		props: {
 			value: {
 				type: String,
@@ -82,9 +81,10 @@
 		},
 		created() {
 			this.val = this.checked;
+			this.getParent('fui-checkbox-group')
 			if (this.fuiCkGroup != null) {
 				const group = this.fuiCkGroup as ComponentPublicInstance;
-				(group.$data['childrens'] as ComponentPublicInstance[]).push(this);
+				(group.$data['childrens'] as ComponentPublicInstance[]).push(this as ComponentPublicInstance);
 				const modelValue = group.$props['modelValue'] as string[];
 				if (modelValue.length > 0) {
 					this.val = modelValue.includes(this.value)
@@ -93,7 +93,7 @@
 			const parent = this.getParent('fui-label')
 			if (parent) {
 				const label = this.fuiLabel as ComponentPublicInstance
-				(label.$data['childrens'] as ComponentPublicInstance[]).push(this);
+				(label.$data['childrens'] as ComponentPublicInstance[]).push(this as ComponentPublicInstance);
 			}
 		},
 		computed: {
@@ -110,7 +110,13 @@
 					if (color != '') mp.set('border-color', color)
 					if (bgColor != '') mp.set('background', bgColor)
 				}
+				// #ifndef APP
+				return Object.fromEntries(mp);
+				// #endif
+				
+				// #ifdef APP
 				return mp;
+				// #endif
 			}
 		},
 		watch: {
@@ -131,7 +137,8 @@
 			return {
 				val: false,
 				styleVal: false,
-				fuiLabel: null as null | ComponentPublicInstance
+				fuiLabel: null as null | ComponentPublicInstance,
+				fuiCkGroup: null as null | ComponentPublicInstance
 			};
 		},
 		methods: {
@@ -154,7 +161,11 @@
 					if (parent.$options['name'] == '') return false;
 					parentName = parent.$options['name'];
 				}
-				this.fuiLabel = parent;
+				if (name == 'fui-checkbox-group') {
+					this.fuiCkGroup = parent;
+				} else {
+					this.fuiLabel = parent;
+				}
 				return true;
 			},
 			labelClick() {

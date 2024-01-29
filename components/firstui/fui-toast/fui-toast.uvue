@@ -71,7 +71,7 @@
 				src: '',
 				text: '',
 				refId: refToastId,
-				element: null as null | Element
+				element: null as null | UniElement
 			};
 		},
 		beforeUnmount() {
@@ -93,7 +93,7 @@
 				this.src = options.src == null ? '' : (options.src as string);
 				const duration = options.duration == null ? 2000 : (options.duration as number);
 				if (this.element == null) {
-					this.element = this.$refs[this.refId] as Element;
+					this.element = this.$refs[this.refId] as UniElement;
 				}
 				this.$nextTick(() => {
 					setTimeout(() => {

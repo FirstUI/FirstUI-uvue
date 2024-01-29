@@ -18,11 +18,6 @@
 	export default {
 		name: "fui-radio-group",
 		emits: ['change', 'update:modelValue'],
-		provide() {
-			return {
-				fuiRadioGroup: this
-			}
-		},
 		props: {
 			name: {
 				type: String,
@@ -50,7 +45,7 @@
 			const isForm = this.getParent('fui-form');
 			if (isForm) {
 				const form = this.fuiForm as ComponentPublicInstance
-				(form.$data['formChildren'] as ComponentPublicInstance[]).push(this);
+				(form.$data['formChildren'] as ComponentPublicInstance[]).push(this as ComponentPublicInstance);
 			}
 		},
 		methods: {

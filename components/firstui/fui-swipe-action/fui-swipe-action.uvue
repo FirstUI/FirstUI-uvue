@@ -1,10 +1,19 @@
 <template>
 	<view class="fui-swipe__action-wrap" :style="{marginTop:`${marginTop}rpx`,marginBottom:`${marginBottom}rpx`}">
 		<view class="fui-swipe__action-inner" :class="{'fui-swipe__action-visible':!isScale}" @tap.stop="stop">
+			<!-- #ifdef APP -->
 			<view :ref="refLeft" class="fui-swipe__action-left" @touchstart="touchstart" @touchmove="touchmove"
 				@touchend="touchend" @touchcancel="touchend">
 				<slot></slot>
 			</view>
+			<!-- #endif -->
+			<!-- #ifdef WEB -->
+			<view :ref="refLeft" class="fui-swipe__action-left" @touchstart="touchstart" @touchmove="touchmove"
+				@touchend="touchend" @touchcancel="touchend" @mousedown="mousedown" @mousemove="mousemove"
+				@mouseup="mouseup" @mouseleave="mouseleave">
+				<slot></slot>
+			</view>
+			<!-- #endif -->
 			<view :ref="refRight" class="fui-swipe__action-right"
 				:class="[`fui-swipe__action-${isScale?'scale':'translate'}`]" :id="elId">
 				<slot name="buttons">
@@ -24,7 +33,8 @@
 
 <script>
 	import { ComponentPublicInstance, type PropType } from 'vue'
-	import { unixjs } from './fui-swipe-unix.uts'
+	// mixins 目前在web端问题很多，无法识别页面props、方法等，导致编译报错
+	// import { unixjs } from './fui-swipe-unix.uts'
 	import { FuiSwipeActionButtonParam } from '../fui-types/index.uts'
 	import { fuiLang, getFuiLocaleLang } from '../fui-lang/index.uts'
 	/**
@@ -48,7 +58,7 @@
 	 */
 	export default {
 		name: "fui-swipe-action",
-		mixins: [unixjs],
+		// mixins: [unixjs],
 		emits: ['onclick', 'change'],
 		props: {
 			buttons: {
@@ -101,9 +111,37 @@
 			}
 		},
 		data() {
+			const elId = `fui_swipea_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			const refLeft = `fui_swipearef_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			const refRight = `fui_swipearef_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
 			return {
 				group: null as null | ComponentPublicInstance,
-				btns: [] as FuiSwipeActionButtonParam[]
+				btns: [] as FuiSwipeActionButtonParam[],
+				/* mixins */
+				left: 0,
+				isShow: false,
+				refLeft: refLeft,
+				refRight: refRight,
+				elId: elId,
+				MIN_DISTANCE: 10,
+				element: null as null | UniElement,
+				rElement: null as null | UniElement,
+				rightWidth: 0,
+				open: false,
+				direction: '',
+				deltaX: 0,
+				deltaY: 0,
+				offsetX: 0,
+				offsetY: 0,
+				startX: 0,
+				startY: 0,
+				x: 0,
+				clientX: 0,
+				// #ifdef WEB
+				movable: false,
+				isMove: false,
+				// #endif
+				timer: null as null | number
 			}
 		},
 		computed: {
@@ -130,7 +168,38 @@
 			},
 			buttons(vals : FuiSwipeActionButtonParam[]) {
 				this.getButtons(vals)
+				this.init()
+			},
+			visible(newVal : boolean) {
+				this.openState(newVal)
+			},
+			left() {
+				if (this.element == null) {
+					this.element = this.$refs[this.refLeft] as UniElement;
+				}
+				if (this.rElement == null) {
+					this.rElement = this.$refs[this.refRight] as UniElement;
+				}
+				this.element!.style.setProperty('transform', `translateX(${this.left}px)`);
+				if (this.isScale) {
+					this.rElement!.style.setProperty('transform', `scaleX(${(Math.abs(this.left / this.rightWidth))})`);
+				} else {
+					this.rElement!.style.setProperty('transform', `translateX(${this.left + this.rightWidth}px)`);
+				}
+			},
+			isShow(newVal : boolean) {
+				this.openState(newVal)
 			}
+		},
+		mounted() {
+			this.$nextTick(() => {
+				const parent = this.getParent('fui-swipeaction-group')
+				if (parent) {
+					const group = this.group as ComponentPublicInstance
+					(group.$data['children'] as ComponentPublicInstance[]).push(this as ComponentPublicInstance);
+				}
+				this.init()
+			})
 		},
 		beforeUnmount() {
 			this.unInstall()
@@ -146,8 +215,9 @@
 				if (this.group != null) {
 					const group = this.group as ComponentPublicInstance
 					const children = group.$data['children'] as ComponentPublicInstance[];
+					const _this = this as ComponentPublicInstance;
 					children.forEach((item : ComponentPublicInstance, index : number) => {
-						if (item === this) {
+						if (item == _this) {
 							children.splice(index, 1)
 						}
 					})
@@ -167,8 +237,193 @@
 				return true;
 			},
 			stop() {
+				// #ifndef WEB
+				if (this.clickClose && this.open) this.close();
+				// #endif
+
+				// #ifdef WEB
+				if (this.clickClose && this.open && !this.isMove) this.close();
+				// #endif
+			},
+			/* mixins */
+			init() {
+				if (this.timer != null) clearTimeout(this.timer as number);
+				this.timer = setTimeout(() => {
+					this.getSelectorQuery()
+				}, 100)
+				this.left = 0
+				this.x = 0
+			},
+			closeSwipe() {
+				if (this.group != null && this.autoClose) {
+					const group = this.group as ComponentPublicInstance;
+					group.$callMethod('closeAuto', this)
+				}
+			},
+			appTouchEnd(index : number, item : FuiSwipeActionButtonParam) {
+				const params = item;
+				params.index = index;
+				params.param = this.param;
 				if (this.clickClose) this.close();
+				this.$emit('onclick', params);
+			},
+			aniSwitch(isAdd : boolean) {
+				if (this.element == null) {
+					this.element = this.$refs[this.refLeft] as UniElement;
+				}
+				if (this.rElement == null) {
+					this.rElement = this.$refs[this.refRight] as UniElement;
+				}
+				this.element!.style.setProperty('transition-duration', isAdd ? '300ms' : '0ms');
+				this.element!.style.setProperty('transition-property', isAdd ? 'transform' : '');
+				this.element!.style.setProperty('transition-timing-function', isAdd ? 'cubic-bezier(0.165, 0.84, 0.44, 1)' : '');
+				this.rElement!.style.setProperty('transition-duration', isAdd ? '300ms' : '0ms');
+				this.rElement!.style.setProperty('transition-property', isAdd ? 'transform' : '');
+				this.rElement!.style.setProperty('transition-timing-function', isAdd ? 'cubic-bezier(0.165, 0.84, 0.44, 1)' : '');
+			},
+			touchstart(e : UniTouchEvent) {
+				if (!this.disabled) {
+					this.aniSwitch(false);
+					this.x = this.left;
+					this.stopTouchStart(e);
+					if (this.autoClose) this.closeSwipe();
+				}
+			},
+			touchmove(e : UniTouchEvent) : boolean {
+				if (this.disabled) return false;
+				this.stopTouchMove(e);
+				if (this.direction != 'horizontal') {
+					return false;
+				} else {
+					e.preventDefault()
+				}
+				this.move(this.x + this.deltaX)
+				return false
+			},
+			touchend() {
+				if (!this.disabled) this.moveDirection(this.left);
+			},
+			move(value : number) {
+				const rightWidth = this.rightWidth
+				this.left = Math.min(Math.max(value, -rightWidth), 0);
+			},
+			moveDirection(left : number) {
+				const threshold = this.threshold;
+				const open = this.open;
+				const rightWidth = this.rightWidth
+				if (this.deltaX == 0 && this.clickClose) {
+					this.openState(false)
+				} else {
+					if ((!open && rightWidth > 0 && -left > threshold) || (open && rightWidth > 0 && rightWidth + left <
+						threshold)) {
+						this.openState(true)
+					} else {
+						this.openState(false)
+					}
+				}
+			},
+			openState(type : boolean) {
+				const rightWidth = this.rightWidth
+				let left : number;
+				if (type) {
+					left = -rightWidth
+				} else {
+					left = 0
+				}
+				if (this.open != type) {
+					this.$emit('change', type)
+				}
+				this.open = type
+				this.aniSwitch(true)
+				this.$nextTick(() => {
+					this.move(left)
+					// #ifdef WEB
+					setTimeout(() => {
+						this.isMove = false;
+					}, 50)
+					// #endif
+				})
+			},
+			close() {
+				this.openState(false)
+			},
+			getDirection(x : number, y : number) : string {
+				if (x > y && x > this.MIN_DISTANCE) {
+					return 'horizontal';
+				}
+				if (y > x && y > this.MIN_DISTANCE) {
+					return 'vertical';
+				}
+				return '';
+			},
+			resetTouchStatus() {
+				this.direction = '';
+				this.deltaX = 0;
+				this.deltaY = 0;
+				this.offsetX = 0;
+				this.offsetY = 0;
+			},
+			stopTouchStart(event : UniTouchEvent) {
+				this.resetTouchStatus();
+				const touch = event.touches[0];
+				this.startX = touch.clientX;
+				this.startY = touch.clientY;
+			},
+			stopTouchMove(event : UniTouchEvent) {
+				const touch = event.touches[0];;
+				this.deltaX = touch.clientX - this.startX;
+				this.deltaY = touch.clientY - this.startY;
+				this.offsetX = Math.abs(this.deltaX);
+				this.offsetY = Math.abs(this.deltaY);
+				if (this.direction == '') {
+					this.direction = this.getDirection(this.offsetX, this.offsetY);
+				}
+			},
+			getSelectorQuery() {
+				uni.createSelectorQuery()
+					.select(`#${this.elId}`)
+					.boundingClientRect()
+					.exec(ret => {
+						const node = ret[0] as NodeInfo;
+						this.rightWidth = (node.width == null ? 0 : node.width) as number;
+						this.isShow = this.visible
+					})
+			},
+			// #ifdef WEB
+			isPC() : boolean {
+				if (typeof navigator != 'object') return false;
+				const userAgentInfo = navigator['userAgent'];
+				const Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+				let flag = true;
+				for (let v = 0; v < Agents.length - 1; v++) {
+					if (userAgentInfo.indexOf(Agents[v]) > 0) {
+						flag = false;
+						break;
+					}
+				}
+				return flag;
+			},
+			mousedown(e : UniTouchEvent) {
+				if (!this.isPC()) return
+				this.movable = true
+				this.touchstart(e)
+			},
+			mousemove(e : UniTouchEvent) {
+				if (!this.isPC() || !this.movable) return;
+				this.isMove = true;
+				this.touchmove(e)
+			},
+			mouseup() {
+				if (!this.isPC() || !this.movable) return;
+				this.movable = false
+				this.touchend()
+			},
+			mouseleave() {
+				if (!this.isPC() || !this.movable) return;
+				this.movable = false
+				this.touchend()
 			}
+			// #endif
 		}
 	}
 </script>

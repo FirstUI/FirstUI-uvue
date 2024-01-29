@@ -23,7 +23,6 @@
 	export default {
 		name: "fui-grid-item",
 		emits: ['onclick'],
-		inject: ['fuiGrid'],
 		props: {
 			highlight: {
 				type: Boolean,
@@ -43,7 +42,8 @@
 				columns: 0,
 				showBorder: true,
 				width: '0',
-				height: '0'
+				height: '0',
+				fuiGrid: null as null | ComponentPublicInstance
 			};
 		},
 		computed: {
@@ -51,10 +51,18 @@
 				const mp : Map<string, string> = new Map();
 				mp.set('width', this.width);
 				if (this.height != '0') mp.set('height', this.height);
-				return mp
+
+				// #ifndef APP
+				return Object.fromEntries(mp);
+				// #endif
+
+				// #ifdef APP
+				return mp;
+				// #endif
 			}
 		},
 		created() {
+			this.getParent('fui-grid')
 			this.init()
 		},
 		beforeUnmount() {
@@ -74,10 +82,23 @@
 					const grid = this.fuiGrid as ComponentPublicInstance;
 					this.columns = grid.$props['columns'] as number;
 					this.showBorder = grid.$props['showBorder'] as boolean;
-					(grid.$data['children'] as ComponentPublicInstance[]).push(this);
+					(grid.$data['children'] as ComponentPublicInstance[]).push(this as ComponentPublicInstance);
 					this.width = grid.$data['width'] as string;
 					this.height = grid.$data['height'] as string;
 				}
+			},
+			getParent(name : string) : boolean {
+				if (this.$parent == null) return false;
+				let parent = this.$parent as ComponentPublicInstance;
+				let parentName = parent.$options['name'];
+				while (parentName != name) {
+					if (parent.$parent == null) return false;
+					parent = parent.$parent as ComponentPublicInstance;
+					if (parent.$options['name'] == '') return false;
+					parentName = parent.$options['name'];
+				}
+				this.fuiGrid = parent;
+				return true;
 			},
 			handleClick() {
 				if (this.fuiGrid != null) {
@@ -133,6 +154,6 @@
 	}
 
 	.fui-grid__highlight {
-		background-color: $fui-bg-color-hover;
+		background: $fui-bg-color-hover !important;
 	}
 </style>

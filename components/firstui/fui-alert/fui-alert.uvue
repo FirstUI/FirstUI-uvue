@@ -21,6 +21,7 @@
 </template>
 
 <script>
+	// import fuiIcon from "@/components/firstui/fui-icon/fui-icon.uvue"
 	/**
 	 * Alert 警告框
 	 * @description Alert 警告框，可自定义颜色，图标等。
@@ -49,6 +50,9 @@
 	export default {
 		name: "fui-alert",
 		emits: ['leftClick', 'onclick', 'close'],
+		// components: {
+		// 	fuiIcon
+		// },
 		props: {
 			type: {
 				type: String,

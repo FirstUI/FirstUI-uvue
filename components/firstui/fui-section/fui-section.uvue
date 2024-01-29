@@ -12,10 +12,11 @@
 				v-if="title">{{title}}</text>
 			<slot name="right"></slot>
 		</view>
-		<view class="fui-sections__descr" :style="getDescrTop"
-			:class="{'fui-sections__descr-top':descrTop==0}"
+		<view class="fui-sections__descr" :style="getDescrTop" :class="{'fui-sections__descr-top':descrTop==0}"
 			v-if="descr">
-			<text class="fui-sections__descr-text" :class="{'fui-sections__descr-size':descrSize==0,'fui-sections__descr-color':descrColor==''}" :style="getDescrStyle">{{descr}}</text>
+			<text class="fui-sections__descr-text"
+				:class="{'fui-sections__descr-size':descrSize==0,'fui-sections__descr-color':descrColor==''}"
+				:style="getDescrStyle">{{descr}}</text>
 		</view>
 		<slot name="descr"></slot>
 	</view>
@@ -88,7 +89,7 @@
 				default: 0
 			},
 			isLine: {
-				type: Object,
+				type: [Object, Boolean],
 				default: false
 			},
 			lineWidth: {
@@ -147,18 +148,37 @@
 				if (this.size != 0 || this.lineHeight != 0) {
 					style.set('line-height', `${this.lineHeight == 0 ? this.size : this.lineHeight}rpx`);
 				}
+				// style.forEach(function (value : any | null, key : string) { })
+				// #ifndef APP
+				return Object.fromEntries(style);
+				// #endif
+				
+				// #ifdef APP
 				return style;
+				// #endif
 			},
 			getDescrStyle() : object {
 				const style : Map<string, any> = new Map()
 				if (this.descrSize != 0) style.set('font-size', `${this.descrSize}rpx`);
 				if (this.descrColor != '') style.set('color', this.descrColor);
+				// #ifndef APP
+				return Object.fromEntries(style);
+				// #endif
+				
+				// #ifdef APP
 				return style;
+				// #endif
 			},
 			getDescrTop() : object {
 				const style : Map<string, any> = new Map()
 				if (this.descrTop != 0) style.set('padding-top', `${this.descrTop}rpx`)
+				// #ifndef APP
+				return Object.fromEntries(style);
+				// #endif
+				
+				// #ifdef APP
 				return style;
+				// #endif
 			}
 		},
 		methods: {
@@ -196,7 +216,7 @@
 	}
 
 	.fui-sections__title-text {
-		/* #ifndef UNI-APP-X */
+		/* #ifndef APP */
 		word-break: break-all;
 		/* #endif */
 	}

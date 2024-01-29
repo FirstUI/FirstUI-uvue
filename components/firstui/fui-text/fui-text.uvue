@@ -54,7 +54,7 @@
 				default: ''
 			},
 			size: {
-				type: Object,
+				type: [Object, Number, String],
 				default: 0
 			},
 			unit: {
@@ -103,7 +103,7 @@
 			},
 			//Boolean 类型特殊处理
 			highlight: {
-				type: Object,
+				type: [Object, Boolean],
 				default: false
 			},
 			disable: {
@@ -198,6 +198,10 @@
 					intent.setData(uri);
 					context.startActivity(intent);
 					// #endif
+
+					// #ifdef WEB
+					window.location.href = `tel://${this.text}`;
+					// #endif
 				}
 			}
 		}
@@ -231,8 +235,9 @@
 		flex-shrink: 0;
 	}
 
-	/* #ifndef UNI-APP-X */
+	/* #ifndef APP */
 	.fui-text__content {
+		max-width: 100%;
 		word-break: break-all;
 	}
 

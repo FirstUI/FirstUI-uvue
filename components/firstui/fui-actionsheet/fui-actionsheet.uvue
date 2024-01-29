@@ -111,18 +111,14 @@
 				isShow: false,
 				iphoneX: false,
 				vals: [] as FuiActionSheetItemParam[],
-				element: null as Element | null,
-				mkElement: null as Element | null,
+				element: null as UniElement | null,
+				mkElement: null as UniElement | null,
 				isActive: false,
 				themeStyl: '',
 				cancelText: ''
 			}
 		},
 		computed: {
-			getStyle() : object {
-				const mp : Map<string, string> = new Map();
-				return mp
-			},
 			locale() : string {
 				return fuiLang.locale
 			}
@@ -160,7 +156,7 @@
 			}
 		},
 		created() {
-			// #ifdef APP-IOS || MP || H5
+			// #ifdef APP-IOS || WEB || MP
 			this.iphoneX = this.isPhoneX();
 			// #endif 
 			const list = JSON.parse<FuiActionSheetItemParam[]>(JSON.stringify(this.itemList))
@@ -210,10 +206,10 @@
 			},
 			_animation(visible : boolean) {
 				if (this.element == null) {
-					this.element = this.$refs[this.refAsId] as Element;
+					this.element = this.$refs[this.refAsId] as UniElement;
 				}
 				if (this.mkElement == null) {
-					this.mkElement = this.$refs[this.refAsMkId] as Element;
+					this.mkElement = this.$refs[this.refAsMkId] as UniElement;
 				}
 
 				this.mkElement!.style.setProperty('opacity', visible ? '1' : '0')
