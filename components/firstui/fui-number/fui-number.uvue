@@ -1,6 +1,6 @@
 <template>
 	<text class="fui-digitalnumbers"
-		:class="{'fui-number__size':isBind,'fui-number__color':color=='','fui-number__lineheight':lineHeight && isBind }"
+		:class="{'fui-number__size':isBind,'fui-number__color':color=='','fui-number__lineheight':lineHeight && isBind,'fui-digitalnumbers__active': highlight && !disabled}"
 		:style="{color:color, fontSize: getSize, fontWeight: fontWeight,lineHeight:lineHeight?getSize:'normal',textDecoration:decoration}"
 		@tap="handleClick" @touchstart="touchstart" @touchcancel="touchend" @touchend="touchend"
 		ref="fui_number">{{getNumber}}</text>
@@ -153,8 +153,15 @@
 
 	.fui-digitalnumbers {
 		font-family: DigitalNumbers;
-		/* #ifdef H5 */
+		/* #ifdef WEB */
 		cursor: pointer;
 		/* #endif */
 	}
+
+	/* #ifdef WEB */
+	.fui-digitalnumbers__active:active {
+		opacity: 0.5;
+	}
+
+	/* #endif */
 </style>

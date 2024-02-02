@@ -85,3 +85,21 @@ declare interface FuifSwipeactionGroupComponentPublicInstance {
 	*/
 	close() : void;
 }
+
+/**
+* HalfScreen 半屏弹窗
+*/
+declare interface FuiHalfScreenComponentPublicInstance {
+	/**
+	* 类型：()=>void
+	* @tutorial https://unix.firstui.cn/
+	* @description 显示弹窗
+	*/
+	show() : void;
+	/**
+	* 类型：()=>void
+	* @tutorial https://unix.firstui.cn/
+	* @description 隐藏/关闭弹窗
+	*/
+	hidden() : void;
+}

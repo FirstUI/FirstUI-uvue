@@ -51,14 +51,7 @@
 				const mp : Map<string, string> = new Map();
 				mp.set('width', this.width);
 				if (this.height != '0') mp.set('height', this.height);
-
-				// #ifndef APP
-				return Object.fromEntries(mp);
-				// #endif
-
-				// #ifdef APP
 				return mp;
-				// #endif
 			}
 		},
 		created() {

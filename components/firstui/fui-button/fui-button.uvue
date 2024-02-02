@@ -1,6 +1,6 @@
 <template>
 	<view class="fui-button__wrap"
-		:class="[getWidth=='' || getWidth=='100%'?'fui-button__flex-1':'',disabled && disabledBackground=='' ? 'fui-button__opacity' : '',background=='' && disabledBackground=='' && !plain?`fui-button__${type}`:'',height=='' && btnSize==''?'fui-button__height':'',radius==''?'fui-button__radius':'']"
+		:class="[getWidth=='' || getWidth=='100%'?'fui-button__flex-1':'',disabled && disabledBackground=='' ? 'fui-button__opacity' : '',background=='' && disabledBackground=='' && !plain?`fui-button__${type}`:'',height=='' && btnSize==''?'fui-button__height':'',radius==''?'fui-button__radius':'',highlight && !disabled ?'fui-button__active':'']"
 		:style="{width: getWidth,height: getHeight,margin:margin,borderRadius: radius,background:getBackground,borderWidth:borderColor==''?'0px':borderWidth,borderColor:getBorderColor}"
 		@touchstart="handleStart" @touchend="handleEnd" @touchcancel="handleEnd" @tap="handleTap">
 		<view ref="fui_button_loading" @transitionend="onEnd" class="fui-button__spin" :style="getStyl" v-if="loading">
@@ -139,13 +139,7 @@
 				mp.set('border-right-color', this.iconColor)
 				mp.set('border-top-color', this.iconColor)
 				mp.set('border-bottom-color', this.iconColor)
-				// #ifndef APP
-				return Object.fromEntries(mp);
-				// #endif
-				
-				// #ifdef APP
 				return mp;
-				// #endif
 			},
 			getBackground() : string {
 				let color = this.background;
@@ -245,17 +239,20 @@
 			this.element = null;
 			this.hoverEle = null
 		},
-
 		methods: {
 			handleStart() {
+				// #ifndef WEB
 				this.switchHover(true)
+				// #endif
 			},
 			handleTap(e : MouseEvent) {
 				if (this.disabled) return;
 				this.$emit('onclick', e);
 			},
 			handleEnd() {
+				// #ifndef WEB
 				this.switchHover(false)
+				// #endif
 			},
 			switchHover(show : boolean) {
 				if (!this.highlight || this.disabled) return;
@@ -334,6 +331,18 @@
 		visibility: hidden;
 		pointer-events: none;
 	}
+
+	/* #ifdef WEB */
+	.fui-button__active {
+		cursor: pointer;
+	}
+
+	.fui-button__active:active .fui-button__hover {
+		visibility: visible;
+	}
+
+	/* #endif */
+
 
 	.fui-button__spin {
 		width: 32rpx;

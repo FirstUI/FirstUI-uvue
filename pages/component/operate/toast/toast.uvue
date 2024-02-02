@@ -44,15 +44,9 @@
 			showToast(type : number) {
 				let options = {} as FuiToastShowParam
 				if (type == 3) {
-					//写法一：仅在easycom模式下使用【web端暂不支持】
-					// #ifndef APP
+					//写法一：仅在easycom模式下使用
+					// (this.$refs['toastRef'] as FuiToastComponentPublicInstance).show(options)
 					(this.$refs['toastRef'] as ComponentPublicInstance).$callMethod('show', options)
-						// #endif
-
-						// #ifdef APP
-						(this.$refs['toastRef'] as FuiToastComponentPublicInstance).show(options)
-					// #endif
-
 				} else {
 					if (type == 1) {
 						options.src = "/static/images/common/img_logo.png";

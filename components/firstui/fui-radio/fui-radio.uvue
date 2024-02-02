@@ -119,13 +119,7 @@
 					if (color != '') mp.set('border-color', color)
 					if (bgColor != '') mp.set('background', bgColor)
 				}
-				// #ifndef APP
-				return Object.fromEntries(mp);
-				// #endif
-
-				// #ifdef APP
 				return mp;
-				// #endif
 			}
 		},
 		data() {

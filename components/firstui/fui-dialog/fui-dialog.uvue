@@ -287,11 +287,20 @@
 		border-left-style: solid;
 		border-left-color: $fui-color-border;
 		text-align: center;
+		/* #ifdef WEB */
+		cursor: pointer;
+		/* #endif */
 	}
 
 	.fui-dialog__btn-active {
 		background: $fui-bg-color-hover;
 	}
+	
+	/* #ifdef WEB */
+	.fui-dialog__btn:active{
+		background: $fui-bg-color-hover;
+	}
+	/* #endif */
 
 	.fui-dialog__btn-first {
 		border-left-width: 0 !important;

@@ -308,11 +308,21 @@
 				this.onHalfTouchEnd()
 				// #endif
 			},
+			/**
+			* 类型：()=>void
+			* @tutorial https://unix.firstui.cn/
+			* @description 显示弹窗
+			*/
 			show() {
 				setTimeout(() => {
 					this.switchHalfScreen(true)
 				}, 20)
 			},
+			/**
+			* 类型：()=>void
+			* @tutorial https://unix.firstui.cn/
+			* @description 隐藏/关闭弹窗
+			*/
 			hidden() {
 				this.switchHalfScreen(false)
 			},

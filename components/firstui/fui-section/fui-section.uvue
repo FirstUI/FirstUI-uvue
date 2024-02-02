@@ -149,36 +149,18 @@
 					style.set('line-height', `${this.lineHeight == 0 ? this.size : this.lineHeight}rpx`);
 				}
 				// style.forEach(function (value : any | null, key : string) { })
-				// #ifndef APP
-				return Object.fromEntries(style);
-				// #endif
-				
-				// #ifdef APP
 				return style;
-				// #endif
 			},
 			getDescrStyle() : object {
 				const style : Map<string, any> = new Map()
 				if (this.descrSize != 0) style.set('font-size', `${this.descrSize}rpx`);
 				if (this.descrColor != '') style.set('color', this.descrColor);
-				// #ifndef APP
-				return Object.fromEntries(style);
-				// #endif
-				
-				// #ifdef APP
 				return style;
-				// #endif
 			},
 			getDescrTop() : object {
 				const style : Map<string, any> = new Map()
 				if (this.descrTop != 0) style.set('padding-top', `${this.descrTop}rpx`)
-				// #ifndef APP
-				return Object.fromEntries(style);
-				// #endif
-				
-				// #ifdef APP
 				return style;
-				// #endif
 			}
 		},
 		methods: {

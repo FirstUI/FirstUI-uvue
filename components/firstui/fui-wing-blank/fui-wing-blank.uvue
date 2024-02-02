@@ -56,13 +56,7 @@
 				if (this.marginTop != 0) mp.set('margin-top', `${this.marginTop}rpx`);
 				if (this.marginBottom != 0) mp.set('margin-bottom', `${this.marginBottom}rpx`);
 				if (this.gap != 0) mp.set('padding', `0 ${this.gap}rpx`);
-				// #ifndef APP
-				return Object.fromEntries(mp);
-				// #endif
-				
-				// #ifdef APP
 				return mp;
-				// #endif
 			}
 		},
 		methods: {

@@ -97,13 +97,7 @@
 					defStyles['transform'] = this.getTransform(animationType, this.visible)
 				}
 				const mp = JSON.parse<UTSJSONObject>(JSON.stringify(defStyles))!.toMap();
-				// #ifdef APP
 				return mp
-				// #endif
-				
-				// #ifndef APP
-				return Object.fromEntries(mp);
-				// #endif
 			}
 		},
 		mounted() {

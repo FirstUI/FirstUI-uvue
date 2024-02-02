@@ -192,6 +192,9 @@
 		border-right-width: 0.5px;
 		border-right-style: solid;
 		font-weight: 400;
+		/* #ifdef WEB */
+		cursor: pointer;
+		/* #endif */
 	}
 
 	.fui-link__text-border {

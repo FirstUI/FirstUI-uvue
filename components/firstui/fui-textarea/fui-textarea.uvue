@@ -265,13 +265,7 @@
 				if (this.textareaBorder && this.borderColor != '') mp.set('border-color', this.borderColor);
 				if (!this.textareaBorder && this.borderTop && this.borderColor != '') mp.set('border-top-color', this.borderColor);
 				if (!this.textareaBorder && this.borderBottom && this.borderColor != '') mp.set('border-bottom-color', this.borderColor);
-				// #ifndef APP
-				return Object.fromEntries(mp);
-				// #endif
-
-				// #ifdef APP
 				return mp;
-				// #endif
 			}
 		},
 		data() {
