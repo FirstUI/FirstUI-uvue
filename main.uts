@@ -1,13 +1,15 @@
-import App from './App.uvue'
-import fui from './common/fui-app'
+import App from './App.uvue';
+import fui from './common/fui-app';
 
-import { createSSRApp } from 'vue'
+import { createSSRApp } from 'vue';
+
 export function createApp() {
-	const app = createSSRApp(App)
+	const app = createSSRApp(App);
 	//以下代码需要开发工具升级至 Hbuilder x 3.9.9+ (正式版本如果没有则下载alpha版本)
+	//web端暂时请勿使用，发行后部分uni api可能失效，待修复【!important】
 	app.use(function (app) {
-		app.config.globalProperties.fui = fui
-	})
+		app.config.globalProperties.fui = fui;
+	});
 
 	return {
 		app

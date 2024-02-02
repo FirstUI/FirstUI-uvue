@@ -1,0 +1,140 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<view class="fui-align__center">
+					<fui-text font-weight="600" size="36" text="HalfScreen"></fui-text>
+					<image class="fui-vip__icon" src="/static/images/index/light/icon_member_3x.png"></image>
+				</view>
+				<text class="fui-page__desc">HalfScreen 半屏弹窗，从底部弹出的浮层，引导用户进行相关操作，支持滑动关闭。</text>
+			</view>
+			<view class="fui-page__bd">
+				<fui-button type="gray" btn-size="medium" text="基础使用" :bold="true" margin="24rpx"
+					@onclick="showPopup(1)"></fui-button>
+				<fui-button type="gray" btn-size="medium" text="案例一" :bold="true" @onclick="showPopup(2)">
+				</fui-button>
+				<fui-button type="gray" btn-size="medium" text="案例二" :bold="true" margin="24rpx"
+					@onclick="showPopup(3)">
+				</fui-button>
+			</view>
+			<fui-half-screen ref="halfRef" title="标题一">
+				<fui-list-cell @onclick="onTap" v-for="(item,index) in list" :key="index">item{{item}}</fui-list-cell>
+			</fui-half-screen>
+			<fui-half-screen :height="620" ref="halfInstance" background="#F3F3F5">
+				<view class="fui-popup--box">
+					<fui-text font-weight="bold" text="FirstUI UNIX" padding="0 0 0 12rpx"></fui-text>
+					<fui-text text="unix.firstui.cn" color="#7F7F7F" :size="24" padding="8rpx 0 0 12rpx"></fui-text>
+
+					<view class="fui-list--wrap">
+						<fui-list-cell>
+							<view class="fui-flex__between">
+								<fui-text font-weight="bold" :size="28" text="官网链接"></fui-text>
+								<fui-text text="www.firstui.cn" color="#7F7F7F" :size="24"></fui-text>
+							</view>
+						</fui-list-cell>
+						<fui-list-cell>
+							<view class="fui-flex__between">
+								<fui-text font-weight="bold" :size="28" text="文档地址"></fui-text>
+								<fui-text text="unix.firstui.cn" color="#7F7F7F" :size="24"></fui-text>
+							</view>
+						</fui-list-cell>
+						<fui-list-cell>
+							<view class="fui-flex__between">
+								<fui-text font-weight="bold" :size="28" text="GitHub地址"></fui-text>
+								<fui-text text="github.com/FirstUI/FirstUI-uvue" color="#7F7F7F" :size="24"></fui-text>
+							</view>
+						</fui-list-cell>
+
+						<fui-list-cell>
+							<view class="fui-flex__between">
+								<fui-text font-weight="bold" :size="28" text="插件市场" color="#FF2B2B"></fui-text>
+								<fui-text text="ext.dcloud.net.cn/plugin?id=16294" color="#FF2B2B"
+									:size="24"></fui-text>
+							</view>
+						</fui-list-cell>
+					</view>
+				</view>
+			</fui-half-screen>
+			<fui-half-screen :height="0" title="请选择性别" :size="24" color="#7F7F7F" :close-icon="false"
+				ref="halfScreen">
+				<fui-list-cell :topBorder="true" :bottom-left="0" @onclick="bindClick('男')">
+					<view class="fui-flex__center">
+						<fui-text align="center" text="男"></fui-text>
+					</view>
+				</fui-list-cell>
+				<fui-list-cell :bottom-left="0" @onclick="bindClick('女')">
+					<view class="fui-flex__center">
+						<fui-text align="center" text="女"></fui-text>
+					</view>
+				</fui-list-cell>
+				<fui-list-cell :bottom-border="false" @onclick="bindClick('未知')">
+					<view class="fui-flex__center">
+						<fui-text align="center" text="未知"></fui-text>
+					</view>
+				</fui-list-cell>
+			</fui-half-screen>
+		</view>
+
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	import { ComponentPublicInstance } from 'vue'
+	export default {
+		data() {
+			return {
+				list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+			}
+		},
+		methods: {
+			showPopup(type : number) {
+				if (type == 1) {
+					(this.$refs['halfRef'] as ComponentPublicInstance).$callMethod('show');
+				} else if (type == 2) {
+					(this.$refs['halfInstance'] as ComponentPublicInstance).$callMethod('show');
+				} else {
+					(this.$refs['halfScreen'] as ComponentPublicInstance).$callMethod('show');
+				}
+			},
+			onTap() {
+				this.fui.toast('点击了～');
+			},
+			bindClick(sex : string) {
+				this.fui.toast(sex);
+				//关闭弹层
+				(this.$refs['halfScreen'] as ComponentPublicInstance).$callMethod('hidden');
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-page__bd {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+
+	.fui-popup--box {
+		width: 100%;
+		padding: 48rpx 32rpx 32rpx;
+		box-sizing: border-box;
+	}
+
+	.fui-list--wrap {
+		width: 100%;
+		border-radius: 24rpx;
+		overflow: hidden;
+		margin-top: 32rpx;
+	}
+
+	.fui-flex__between,
+	.fui-flex__center {
+		width: 100%;
+	}
+</style>

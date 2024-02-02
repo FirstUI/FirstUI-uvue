@@ -5,9 +5,14 @@
 		<view class="fui-wrap">
 			<text class="fui-title" :class="{'fui-title--show':visible}">FirstUI UNIX</text>
 			<view class="fui-content" :class="{'fui-content--show':visible}">
-				<view class="fui-logo">
+				<view class="fui-logo" ref="logoEl" @transitionend="onLogoEnd">
 					<fui-avatar src="/static/images/common/logo.png" size="large"></fui-avatar>
 				</view>
+				<image ref="waveEl" class="fui-img__wave" :class="{'fui-img__size':isPc}"
+					src="/static/images/demo/wave.png" mode="aspectFill" @transitionend="onWaveEnd"></image>
+				<image ref="waveBgEl" class="fui-img__wave fui-img__wave-bg" :class="{'fui-img__size':isPc}"
+					src="/static/images/demo/wave.png" mode="aspectFill">
+				</image>
 				<view class="fui-bd" :class="{'fui-bd--show':visible}">
 					<text class="fui-sub__title" :class="{'fui-title--show':visible}">FirstUI（unix）组件库，一款适配 uni-app x
 						的轻量、简洁、高效、全面的移动端组件库。</text>
@@ -16,6 +21,8 @@
 					</view>
 				</view>
 			</view>
+
+			<fui-footer :isFixed="true" text="Copyright © 2024 unix.firstui.cn"></fui-footer>
 		</view>
 	<!-- #ifdef APP -->
 	</scroll-view>
@@ -27,20 +34,107 @@
 	export default {
 		data() {
 			return {
-				visible: false
+				visible: false,
+				waveEl: null as null | UniElement,
+				waveBgEl: null as null | UniElement,
+				logoEl: null as null | UniElement,
+				isWaveAni: true,
+				isPc: false,
+				times: 0,
+				content: ['FirstUI']
 			}
+		},
+		onLoad() {
+			// #ifdef WEB
+			this.isPc = this.isPC()
+			// #endif
 		},
 		onReady() {
 			//暂时不做关闭逻辑操作，每次打开先显示此页面
 			setTimeout(() => {
 				this.visible = true
+				// #ifdef APP
+				this.getEl()
+				this.onSatrtAni(true)
+				this.logoAni()
+				// #endif
 			}, 500)
+		},
+		onResize() {
+			// #ifdef WEB
+			this.isPc = this.isPC()
+			// #endif
 		},
 		methods: {
 			goIndex() {
 				uni.reLaunch({
-					url:'/pages/tabbar/index/index'
+					url: '/pages/tabbar/index/index'
 				})
+			},
+			// #ifdef WEB
+			isPC() : boolean {
+				if (typeof navigator != 'object') return false;
+				const userAgentInfo = navigator['userAgent'];
+				const Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+				let flag = true;
+				for (let v = 0; v < Agents.length - 1; v++) {
+					if (userAgentInfo.indexOf(Agents[v]) > 0) {
+						flag = false;
+						break;
+					}
+				}
+				return flag;
+			},
+			// #endif
+			logoAni() {
+				if (this.logoEl == null) {
+					this.logoEl = this.$refs['logoEl'] as UniElement;
+				}
+				const aniArr = [
+					'translateY(20rpx) rotate(-15deg)',
+					'translateY(0rpx) rotate(25deg)',
+					'translateY(-20rpx) rotate(- 20deg)',
+					'translateY(-10rpx) rotate(15deg)',
+					'translateY(10rpx) rotate(- 25deg)',
+					'translateY(15rpx) rotate(15deg)',
+					'translateY(20rpx) rotate(- 15deg)'
+				]
+				this.logoEl!.style.setProperty('transform', aniArr[this.times]);
+			},
+			onLogoEnd() {
+				this.times = this.times == 6 ? 0 : (this.times + 1);
+				this.logoAni()
+			},
+			getEl() {
+				if (this.waveEl == null) {
+					this.waveEl = this.$refs['waveEl'] as UniElement;
+				}
+				if (this.waveBgEl == null) {
+					this.waveBgEl = this.$refs['waveBgEl'] as UniElement;
+				}
+			},
+			onSatrtAni(isAni : boolean) {
+				this.isWaveAni = isAni;
+				this.waveEl!.style.setProperty('transform', `translateX(${isAni ? 1125 : 125}rpx)`);
+				this.waveBgEl!.style.setProperty('transform', `translateX(${isAni ? 1375 : 375}rpx)`);
+			},
+			setDuration(reset : boolean) {
+				this.waveEl!.style.setProperty('transition-duration', `${reset ? 0 : 10}s`);
+				this.waveBgEl!.style.setProperty('transition-duration', `${reset ? 0 : 10.25}s`);
+			},
+			onReset() {
+				this.getEl()
+				this.setDuration(true)
+				this.onSatrtAni(false)
+				setTimeout(() => {
+					this.setDuration(false)
+					this.onSatrtAni(true)
+				}, 0)
+			},
+			onWaveEnd() {
+				// #ifdef APP
+				if (this.isWaveAni) this.onReset()
+				// #endif
 			}
 		}
 	}
@@ -101,7 +195,51 @@
 		justify-content: center;
 		margin: 32rpx 0 96rpx;
 		box-sizing: border-box;
+		position: relative;
+		z-index: 3;
+		/* #ifdef APP */
+		transform: rotate(0deg);
+		transition-duration: 1.4s;
+		transition-property: transform;
+		transition-timing-function: ease-in-out;
+		/* #endif */
+		/* #ifdef WEB */
+		animation: logo_way 10s ease-in-out infinite;
+		/* #endif */
 	}
+
+	/* #ifdef WEB */
+	@keyframes logo_way {
+		0% {
+			transform: translate3d(0, 20rpx, 0) rotate(-15deg);
+		}
+
+		17% {
+			transform: translate3d(0, 0rpx, 0) rotate(25deg);
+		}
+
+		34% {
+			transform: translate3d(0, -20rpx, 0) rotate(-20deg);
+		}
+
+		50% {
+			transform: translate3d(0, -10rpx, 0) rotate(15deg);
+		}
+
+		67% {
+			transform: translate3d(0, 10rpx, 0) rotate(-25deg);
+		}
+
+		84% {
+			transform: translate3d(0, 15rpx, 0) rotate(15deg);
+		}
+
+		100% {
+			transform: translate3d(0, 20rpx, 0) rotate(-15deg);
+		}
+	}
+
+	/* #endif */
 
 	.fui-bd {
 		width: 100%;
@@ -144,4 +282,92 @@
 		padding: 40rpx 80rpx 0;
 		box-sizing: border-box;
 	}
+
+	.fui-img__wave {
+		height: 260rpx;
+		width: 2250rpx;
+		position: absolute;
+		right: 0;
+		top: 140rpx;
+		opacity: 0.725;
+		z-index: 2;
+		/* #ifdef APP */
+		transform: translateX(125rpx);
+		transition-duration: 10s;
+		transition-property: transform;
+		transition-timing-function: linear;
+		/* #endif */
+
+		/* #ifdef WEB */
+		animation: wave 10s linear infinite;
+		/* #endif */
+	}
+
+	/* #ifdef WEB */
+	@media all and (min-width:750px) {
+		.fui-img__size {
+			height: 520rpx;
+			width: 4500rpx;
+		}
+	}
+
+	/* #endif */
+
+	.fui-img__wave-bg {
+		z-index: 1;
+		/* #ifdef APP */
+		transform: translateX(375rpx);
+		transition-duration: 10.25s;
+		transition-property: transform;
+		transition-timing-function: linear;
+		/* #endif */
+
+		/* #ifdef WEB */
+		animation: wave-bg 10.25s linear infinite;
+		/* #endif */
+	}
+
+
+	.wave {
+		position: absolute;
+		z-index: 3;
+		right: 0;
+		bottom: 0;
+		opacity: 0.725;
+		height: 260rpx;
+		width: 2250rpx;
+		/* #ifdef WEB */
+		animation: wave 10s linear infinite;
+		/* #endif */
+	}
+
+	.wave-bg {
+		z-index: 1;
+		/* #ifdef WEB */
+		animation: wave-bg 10.25s linear infinite;
+		/* #endif */
+	}
+
+	/* #ifdef WEB */
+	@keyframes wave {
+		from {
+			transform: translate3d(125rpx, 0, 0);
+		}
+
+		to {
+			transform: translate3d(1125rpx, 0, 0);
+		}
+	}
+
+	@keyframes wave-bg {
+		from {
+			transform: translate3d(375rpx, 0, 0);
+		}
+
+		to {
+			transform: translate3d(1375rpx, 0, 0);
+		}
+	}
+
+	/* #endif */
 </style>

@@ -188,6 +188,9 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		text-align: center;
+		/* #ifdef WEB */
+		white-space: nowrap;
+		/* #endif */
 	}
 
 	.fui-avatar__size-small {

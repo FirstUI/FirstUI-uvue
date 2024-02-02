@@ -231,6 +231,9 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		lines: 1;
+		/* #ifdef WEB */
+		white-space: nowrap;
+		/* #endif */
 	}
 
 	.fui-card__header-right {

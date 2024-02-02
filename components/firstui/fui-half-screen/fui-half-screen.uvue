@@ -1,0 +1,454 @@
+<template>
+	<view class="fui-half__screen-mask" :style="{ zIndex: zIndex,background:maskBackground}" :ref="refMkId"
+		@tap.stop="handleClose">
+		<view :ref="refId" class="fui-half__screen-wrap"
+			:style="{borderTopLeftRadius:`${radius}rpx`,borderTopRightRadius:`${radius}rpx`,height:getHeight,background:background}"
+			@touchstart="onHalfTouchStart" @touchmove="onHalfTouchMove" @touchend="onHalfTouchEnd"
+			@touchcancel="onHalfTouchEnd" @mousedown="mousedown" @mousemove="mousemove" @mouseup="mouseup"
+			@mouseleave="mouseleave" @tap.stop="stop">
+			<text class="fui-half__screen-title"
+				:style="{fontSize:`${size}rpx`,color:color,fontWeight:isBold?'bold':'normal'}"
+				v-if="title!=''">{{title}}</text>
+			<view class="fui-half__screen-close" @tap.stop="emitHide" v-if="closeIcon">
+				<fui-icon name="clear-fill" :size="48" :color="iconColor"></fui-icon>
+			</view>
+			<scroll-view :ref="refScrollId" class="fui-half__screen-scroll" :bounces="true"
+				:direction="scrollDirection">
+				<slot></slot>
+			</scroll-view>
+			<view class="fui-hs__safe-weex" v-if="iphoneX && safeArea"></view>
+		</view>
+	</view>
+</template>
+
+<script>
+	// import fuiIcon from "@/components/firstui/fui-icon/fui-icon.uvue"
+	/**
+	 * HalfScreen 半屏弹窗
+	 * @description HalfScreen 半屏弹窗，First UI字体图标库。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {Number} height {Number} 弹窗高度，设置为0则为auto
+	 * @property {String} unit {String} 高度单位，rpx｜px
+	 * @property {String} background {String} 背景颜色
+	 * @property {String} title {String} 标题内容
+	 * @property {Number} size {Number} 标题字体大小，单位rpx
+	 * @property {Boolean} isBold {Boolean} 标题字体是否加粗
+	 * @property {String} color {String} 标题字体颜色
+	 * @property {Number} radius {Number} 弹窗顶部左右圆角值，单位rpx
+	 * @property {Number} zIndex {Number} 层级z-index值
+	 * @property {Boolean} closeIcon {Boolean} 是否显示关闭图标
+	 * @property {String} iconColor {String} 关闭图标颜色
+	 * @property {Boolean} maskClosable {Boolean} 点击遮罩是否关闭弹窗
+	 * @property {String} maskBackground {String} 遮罩背景颜色
+	 * @property {Number} threshold {Number} 滑动多少距离以上弹窗关闭，单位px
+	 * @property {Boolean} disabled {Boolean} 是否禁止滑动关闭弹窗
+	 * @property {Boolean} safeArea {Boolean} 是否适配iphonex等机型底部安全区
+	 * @event {Function} close 弹窗关闭时触发，(event: number) => void
+	 */
+	export default {
+		name: "fui-half-screen",
+		emits: ['close'],
+		// components: {
+		// 	fuiIcon
+		// },
+		props: {
+			height: {
+				type: Number,
+				default: 640
+			},
+			unit: {
+				type: String,
+				default: 'rpx'
+			},
+			background: {
+				type: String,
+				default: '#fff'
+			},
+			title: {
+				type: String,
+				default: ''
+			},
+			size: {
+				type: Number,
+				default: 32
+			},
+			isBold: {
+				type: Boolean,
+				default: false
+			},
+			color: {
+				type: String,
+				default: '#181818'
+			},
+			radius: {
+				type: Number,
+				default: 24
+			},
+			zIndex: {
+				type: Number,
+				default: 996
+			},
+			closeIcon: {
+				type: Boolean,
+				default: true
+			},
+			iconColor: {
+				type: String,
+				default: '#ccc'
+			},
+			maskClosable: {
+				type: Boolean,
+				default: false
+			},
+			maskBackground: {
+				type: String,
+				default: 'rgba(0,0,0,.6)'
+			},
+			threshold: {
+				type: Number,
+				default: 60
+			},
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			safeArea: {
+				type: Boolean,
+				default: true
+			}
+		},
+		computed: {
+			getHeight() : string {
+				let height = 'auto'
+				if (this.height != 0) {
+					const ipx = this.unit == 'px' ? 34 : 68
+					height = this.iphoneX && this.safeArea ? `${this.height + ipx}${this.unit}` : `${this.height}${this.unit}`
+				}
+				return height;
+			}
+		},
+		data() {
+			const refId = `fui_hs_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			const refMkId = `fui_hsmk_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			const refScrollId = `fui_hsc_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				iphoneX: false,
+				MIN_DISTANCE: 10,
+				refId: refId,
+				refMkId: refMkId,
+				refScrollId: refScrollId,
+				scrollDirection: 'vertical',
+				halfMove: false,
+				halfScreenY: 0,
+				halfOffset: 0,
+				halfHeight: 0,
+				bAnimation: false,
+				mkEl: null as null | UniElement,
+				halfEl: null as null | UniElement,
+				scrollEl: null as null | UniElement,
+				movable: false
+			};
+		},
+		methods: {
+			handleClose() {
+				if (!this.maskClosable) return;
+				this.switchHalfScreen(false)
+				this.$emit('close', 2);
+			},
+			onHalfTouchStart() {
+				if (!this.disabled) {
+					this.halfEl?.style?.setProperty('transition-duration', '0ms');
+				}
+			},
+			onHalfTouchMove(e : UniTouchEvent) {
+				if (this.bAnimation || this.disabled) return;
+				let top : number = this.scrollEl?.scrollTop ?? 0;
+				let p = e.touches[0];
+				const classList = e.target?.classList;
+				let className = ''
+				if (classList != null && classList.length > 0) {
+					className = classList[0]
+				}
+				if (top <= 0.01 || this.halfMove || className == 'fui-half__screen-title') {
+					if (this.halfScreenY == 0) {
+						this.halfScreenY = p.clientY;
+					}
+					let offset = p.clientY - this.halfScreenY;
+					if (offset > 0) {
+						this.halfMove = true;
+						// #ifdef APP
+						this.scrollEl?.setAttribute('direction', 'none');
+						// #endif
+						// #ifdef WEB
+						this.scrollDirection = 'none';
+						// #endif
+						this.halfEl?.style?.setProperty('transform', 'translateY(' + offset.toFixed(2) + 'px)');
+						this.halfOffset = offset;
+					} else if (this.halfOffset > 0) {
+						offset = this.halfScreenY - p.clientY;
+						if (offset > this.halfOffset) {
+							offset = 0;
+							this.halfMove = false;
+						}
+						// #ifdef APP
+						this.scrollEl?.setAttribute('direction', 'vertical');
+						// #endif
+						// #ifdef WEB
+						this.scrollDirection = 'vertical';
+						// #endif
+						this.halfEl?.style?.setProperty('transform', 'translateY(' + offset.toFixed(2) + 'px)');
+						this.halfOffset = offset;
+					}
+				}
+				// #ifdef WEB
+				e.preventDefault();
+				// #endif
+			},
+			onHalfTouchEnd() {
+				this.halfScreenY = 0;
+				if (this.bAnimation || this.disabled) return;
+				if (this.halfOffset >= this.threshold) {
+					this.switchHalfScreen(false);
+					this.$emit('close', 1);
+				} else {
+					this.resumeHalfScreen();
+				}
+			},
+			switchHalfScreen(visible : boolean) {
+				if (visible && ('visible' == this.halfEl?.style?.getPropertyValue('visibility'))) return;
+				this.halfMove = false;
+				// #ifdef APP
+				this.scrollEl?.setAttribute('direction', 'vertical');
+				// #endif
+				// #ifdef WEB
+				this.scrollDirection = 'vertical';
+				// #endif
+				this.halfScreenY = 0;
+				this.halfOffset = 0;
+				let top = '0px';
+				this.halfEl!.style.setProperty('opacity', visible ? '1' : '0')
+				this.mkEl!.style.setProperty('opacity', visible ? '1' : '0')
+				if (visible) {
+					this.halfEl?.style?.setProperty('visibility', 'visible');
+					this.mkEl!.style.setProperty('visibility', 'visible');
+					this.halfEl?.style?.setProperty('transition-timing-function', 'ease-in-out');
+				} else {
+					top = `${this.halfHeight}px`//'100%'
+					this.halfEl?.style?.setProperty('transition-timing-function', 'linear');
+				}
+				this.halfEl?.style?.setProperty('transition-duration', '300ms');
+				this.halfEl?.style?.setProperty('transform', `translateY(${top})`);
+				setTimeout(() => {
+					if (!visible) {
+						this.mkEl!.style.setProperty('visibility', 'hidden');
+						this.halfEl?.style?.setProperty('visibility', 'hidden');
+						this.halfEl?.style?.setProperty('transition-duration', '0ms');
+					}
+					this.bAnimation = false;
+				}, 320)
+				this.bAnimation = true;
+			},
+			resumeHalfScreen() {
+				this.halfEl?.style?.setProperty('transition-duration', '300ms');
+				this.halfEl?.style?.setProperty('transition-timing-function', 'ease-in-out');
+				this.halfEl?.style?.setProperty('transform', 'translateY(0px)');
+				this.halfMove = false;
+				// #ifdef APP
+				this.scrollEl?.setAttribute('direction', 'vertical');
+				// #endif
+				// #ifdef WEB
+				this.scrollDirection = 'vertical';
+				// #endif
+				this.halfScreenY = 0;
+				this.halfOffset = 0;
+				setTimeout(() => {
+					this.bAnimation = false;
+				}, 300)
+				this.bAnimation = true;
+			},
+			// #ifdef WEB
+			isPC() : boolean {
+				if (typeof navigator != 'object') return false;
+				const userAgentInfo = navigator['userAgent'];
+				const Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+				let flag = true;
+				for (let v = 0; v < Agents.length - 1; v++) {
+					if (userAgentInfo.indexOf(Agents[v]) > 0) {
+						flag = false;
+						break;
+					}
+				}
+				return flag;
+			},
+			// #endif
+			mousedown() {
+				// #ifdef WEB
+				if (!this.isPC()) return
+				this.movable = true
+				this.onHalfTouchStart()
+				// #endif
+			},
+			mousemove(e : UniTouchEvent) {
+				// #ifdef WEB
+				if (!this.isPC() || !this.movable) return;
+				// #endif
+				this.onHalfTouchMove(e)
+			},
+			mouseup() {
+				// #ifdef WEB
+				if (!this.isPC() || !this.movable) return;
+				this.movable = false
+				this.onHalfTouchEnd()
+				// #endif
+			},
+			mouseleave() {
+				// #ifdef WEB
+				if (!this.isPC() || !this.movable) return;
+				this.movable = false
+				this.onHalfTouchEnd()
+				// #endif
+			},
+			show() {
+				setTimeout(() => {
+					this.switchHalfScreen(true)
+				}, 20)
+			},
+			hidden() {
+				this.switchHalfScreen(false)
+			},
+			emitHide() {
+				this.switchHalfScreen(false)
+				this.$emit('close', 3);
+			},
+			// #ifdef APP-IOS || MP || H5
+			isPhoneX() : boolean {
+				if (!this.safeArea) return false;
+				//34px
+				const res : GetSystemInfoResult = uni.getSystemInfoSync();
+				let iphonex = false;
+				let models = ['iphonex', 'iphonexr', 'iphonexsmax']
+				for (let i = 11; i < 20; i++) {
+					models.push(`iphone${i}`)
+					models.push(`iphone${i}mini`)
+					models.push(`iphone${i}pro`)
+					models.push(`iphone${i}promax`)
+				}
+				const model = res.model.replace(/\s/g, "").toLowerCase()
+				const newModel = model.split('<')[0]
+				if (models.includes(model) || models.includes(newModel) || res.safeAreaInsets.bottom > 0) {
+					iphonex = true;
+				}
+				return iphonex;
+			},
+			// #endif
+			stop() { }
+		},
+		created() {
+			// #ifdef APP-IOS || MP || WEB
+			this.iphoneX = this.isPhoneX();
+			// #endif
+		},
+		mounted() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					this.halfEl = this.$refs[this.refId] as UniElement;
+					this.scrollEl = this.$refs[this.refScrollId] as UniElement;
+					this.mkEl = this.$refs[this.refMkId] as UniElement;
+					this.halfHeight = this.halfEl!.getBoundingClientRect().height;
+				}, 50)
+			})
+		},
+		updated() {
+			this.halfHeight = this.halfEl?.getBoundingClientRect()?.height ?? 0;
+		}
+	}
+</script>
+
+<style>
+	.fui-half__screen-mask {
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		display: flex;
+		flex-direction: row;
+		align-items: flex-end;
+		justify-content: center;
+		transition-property: opacity, visibility;
+		transition-timing-function: ease-in-out;
+		transition-duration: 0.3s;
+		border-bottom-width: 0;
+		overflow: hidden;
+		visibility: hidden;
+		opacity: 0;
+	}
+
+	.fui-half__screen-wrap {
+		width: 100%;
+		transition-property: transform, opacity, visibility;
+		transition-timing-function: ease-in-out;
+		transition-duration: 0.3s;
+		min-height: 20rpx;
+		overflow: hidden;
+		transform: translateY(100%);
+		opacity: 0;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+		/* #ifdef WEB */
+		touch-action: none;
+		/* #endif */
+	}
+
+	.fui-half__slide-line {
+		width: 80rpx;
+		height: 10rpx;
+		background: #ccc;
+		border-radius: 8rpx;
+		position: absolute;
+		left: 50%;
+		top: 16rpx;
+		transform: translateX(-50%);
+	}
+
+	.fui-half__screen-title {
+		width: 100%;
+		height: 96rpx;
+		line-height: 96rpx;
+		padding: 8rpx 96rpx 0 64rpx;
+		box-sizing: border-box;
+		flex-shrink: 0;
+		overflow: hidden;
+		/* #ifdef WEB */
+		white-space: nowrap;
+		touch-action: none;
+		/* #endif */
+		lines: 1;
+		text-overflow: ellipsis;
+		text-align: center;
+	}
+
+	.fui-half__screen-close {
+		position: absolute;
+		right: 32rpx;
+		top: 32rpx;
+		z-index: 2;
+		/* #ifdef WEB */
+		cursor: pointer;
+		/* #endif */
+	}
+
+	.fui-half__screen-scroll {
+		width: 100%;
+		flex: 1;
+		/* #ifdef WEB */
+		touch-action: none;
+		/* #endif */
+	}
+
+	.fui-hs__safe-weex {
+		width: 100%;
+		height: 34px;
+	}
+</style>

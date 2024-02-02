@@ -23,7 +23,8 @@
 			</scroll-view>
 			<swiper :current="tabIndex" class="fui-swiper__box" @change="tabChange" :style="{height:`${height}px`}">
 				<swiper-item class="fui-swiper__item" v-for="(tab, index) in tabs" :key="tab.id">
-					<scroll-view :show-scrollbar="false" class="fui-scroll__box" direction="vertical" :style="{height:`${height}px`}">
+					<scroll-view :show-scrollbar="false" class="fui-scroll__box" direction="vertical"
+						:style="{height:`${height}px`}">
 						<view class="fui-list__view">
 							<fui-list-cell padding="0 32rpx" :bottomBorder="false" radius="16rpx" :marginTop="24"
 								v-for="(item,idx) in tab.data" :key="idx" @onclick="href(tab.id,item.page,index)">
@@ -55,10 +56,26 @@
 			}
 		},
 		onReady() {
-			this.height = uni.getSystemInfoSync().windowHeight - this.fui.rpx2px(538);
-			console.log(this.height)
+			this.getHeight()
+		},
+		onResize() {
+			this.getHeight()
 		},
 		methods: {
+			getHeight() {
+				// #ifdef WEB
+				try {
+					this.height = uni.getSystemInfoSync().windowHeight - this.fui.rpx2px(538);
+				} catch (e) {
+					//TODO handle the exception
+					this.height = 400
+				}
+				// #endif
+
+				// #ifndef WEB
+				this.height = uni.getSystemInfoSync().windowHeight - this.fui.rpx2px(538);
+				// #endif
+			},
 			tabClick(index : number) {
 				this.switchTab(index)
 			},
@@ -236,4 +253,15 @@
 		height: 48rpx;
 		flex-shrink: 0;
 	}
+
+	/* #ifdef WEB */
+	@media all and (min-width:750px) {
+
+		.fui-swiper__box,
+		.fui-scroll__box {
+			height: 800rpx !important
+		}
+	}
+
+	/* #endif */
 </style>

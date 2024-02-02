@@ -203,6 +203,9 @@
 		width: 100%;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		/* #ifdef WEB */
+		white-space: nowrap;
+		/* #endif */
 	}
 
 	.fui-alert__icon-close {

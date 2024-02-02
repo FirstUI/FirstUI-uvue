@@ -1,0 +1,397 @@
+<template>
+	<view class="fui-slider__wrap"
+		:style="{height:`${blockHeight}px`,marginTop:`${marginTop}rpx`,marginBottom:`${marginBottom}rpx`}">
+		<view class="fui-slider__inner" :style="{height:`${height}px`,borderRadius:`${radius}px`,background:background}"
+			:id="refId">
+			<view class="fui-slider__bg" :class="{'fui-slider__bg-color':activeColor==''}"
+				:style="{background:activeColor}" :ref="bgId"></view>
+		</view>
+		<view class="fui-slider__handle" :class="{'fui-slider__disabled':disabled}"
+			:style="{width:`${blockWidth}px`,height:`${blockHeight}px`,borderRadius:`${blockRadius}px`,background:blockColor}"
+			@touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" @mousedown="mousedown" :ref="handleId">
+		</view>
+		<slot>
+			<text class="fui-slider__value"
+				:style="{width:`${valueWidth}rpx`,color:valueColor,fontSize:`${valueSize}rpx`}"
+				v-if="showValue">{{start}}</text>
+		</slot>
+	</view>
+</template>
+
+<script>
+	/**
+	 * Slider 滑块选择器
+	 * @description Slider 滑块选择器，用于选择特定的值。
+	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} name {String} 表单的控件名称
+	 * @property {Number} height {Number} slider高度，单位px
+	 * @property {Number} radius {Number} slider圆角值，单位px	
+	 * @property {Number} min {Number} 最小值
+	 * @property {Number} max {Number} 最大值
+	 * @property {Number} step {Number} 步长，取值必须大于 0，并且可被(max - min)整除
+	 * @property {Number} modelValue {Number} 默认取值
+	 * @property {String} background {String} slider未选择时背景颜色
+	 * @property {String} activeColor {String} slider已选择部分背景颜色	
+	 * @property {Number} blockWidth {Number} 滑块宽度，单位px
+	 * @property {Number} blockHeight {Number} 滑块高度，单位px
+	 * @property {String} blockColor {String} 滑块背景颜色		
+	 * @property {Number} blockRadius {Number} 滑块圆角值，单位px
+	 * @property {Boolean} disabled {Boolean} 是否禁止滑动选择/仅展示
+	 * @property {Boolean} showValue {Boolean} 是否显示value值	
+	 * @property {Number} valueWidth {Number} value框宽度，单位rpx
+	 * @property {Number} valueSize {Number} value字体大小，单位rpx	
+	 * @property {String} valueColor {String} value字体颜色
+	 * @property {Number} marginTop {Number} 组件margin-top值，单位rpx
+	 * @property {Number} marginBottom {Number} 组件margin-bottom值，单位rpx
+	 * @event {Function} change 滑动结束时触发，(event: number) => void
+	 * @event {Function} changing 滑动时触发，实时数据，(event: number) => void
+	 * @event {Function} update:modelValue 滑动时触发，实时数据，用于双向绑定，(event: number) => void
+	 */
+	export default {
+		name: "fui-slider",
+		emits: ['change', 'changing', 'update:modelValue'],
+		props: {
+			name: {
+				type: String,
+				default: ''
+			},
+			height: {
+				type: Number,
+				default: 2
+			},
+			radius: {
+				type: Number,
+				default: 2
+			},
+			min: {
+				type: Number,
+				default: 0
+			},
+			max: {
+				type: Number,
+				default: 100
+			},
+			step: {
+				type: Number,
+				default: 1
+			},
+			modelValue: {
+				type: Number,
+				default: 0
+			},
+			background: {
+				type: String,
+				default: '#e1e1e1'
+			},
+			activeColor: {
+				type: String,
+				default: ''
+			},
+			blockWidth: {
+				type: Number,
+				default: 28
+			},
+			blockHeight: {
+				type: Number,
+				default: 28
+			},
+			blockColor: {
+				type: String,
+				default: '#fff'
+			},
+			blockRadius: {
+				type: Number,
+				default: 14
+			},
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			showValue: {
+				type: Boolean,
+				default: false
+			},
+			valueWidth: {
+				type: Number,
+				default: 56
+			},
+			valueSize: {
+				type: Number,
+				default: 28
+			},
+			valueColor: {
+				type: String,
+				default: '#333'
+			},
+			marginTop: {
+				type: Number,
+				default: 0
+			},
+			marginBottom: {
+				type: Number,
+				default: 0
+			}
+		},
+		watch: {
+			modelValue(val) {
+				let start = this.getStartVal(val)
+				this.initValue = start
+				this.start = start
+			}
+		},
+		data() {
+			const refId = `fui_sld_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			const bgId = `fui_sldb_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			const handleId = `fui_hsld_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			return {
+				refId: refId,
+				handleId: handleId,
+				bgId: bgId,
+				start: 0,
+				initValue: 0,
+				drag: false,
+				startX: 0,
+				lastLeft: 0,
+				onceLeft: 0,
+				width: 0,
+				handleNode: null as null | UniElement,
+				bgNode: null as null | UniElement,
+				movable: false
+			};
+		},
+		mounted() {
+			this.$nextTick(() => {
+				setTimeout(() => {
+					this.getWidth()
+					this.start = this.getStartVal(this.modelValue);
+					this.initValue = this.start;
+					this.initData(this.modelValue)
+				}, 50)
+			})
+		},
+		methods: {
+			getWidth() {
+				const element = uni.getElementById(this.refId)!;
+				this.width = element.getBoundingClientRect().width;
+			},
+			format(value : number) : number {
+				const step = this.step
+				return Math.round(Math.max(this.min, Math.min(value, this.max)) / step) * step;
+			},
+			change(value : number) {
+				this.$emit('change', value);
+				this.$emit('update:modelValue', value)
+			},
+			changing(value : number) {
+				this.$emit('changing', value);
+				this.$emit('update:modelValue', value)
+			},
+			changeValue(value : number, isEnd : boolean) {
+				this.start = value;
+				if (isEnd) {
+					this.change(value)
+				} else {
+					this.changing(value)
+				}
+			},
+			isInteger(val : number) : boolean {
+				let isInt = true;
+				if (val > Math.floor(val)) {
+					isInt = false
+				}
+				return isInt;
+			},
+			styleChange(value : number, isEnd : boolean) {
+				let _val = this.format(value);
+				if (!this.isInteger(this.step)) {
+					const len = this.step.toString().split('.')[1].length;
+					const isInteger = this.isInteger(parseFloat(value.toFixed(len)))
+					_val = parseFloat(_val.toFixed(isInteger ? 0 : len))
+				}
+
+				value = _val;
+				this.changeValue(value, isEnd)
+				const min = this.min
+				const max = this.max
+				const dvalue = max - min;
+				const maxWidth = this.width - this.blockWidth;
+				const width = (value - min) / dvalue * maxWidth;
+				this.lastLeft = width
+				if (isEnd) {
+					this.onceLeft = width
+				}
+
+				if (this.handleNode == null) {
+					this.handleNode = this.$refs[this.handleId] as UniElement;
+				}
+				if (this.bgNode == null) {
+					this.bgNode = this.$refs[this.bgId] as UniElement;
+				}
+				this.bgNode!.style.setProperty('transform', `translateX(${width - this.width}px)`)
+				this.handleNode!.style.setProperty('transform', `translate(${width}px,-50%)`)
+			},
+			initData(value : number) {
+				this.startX = 0;
+				this.lastLeft = 0;
+				this.onceLeft = 0;
+				this.styleChange(value, true)
+			},
+			getStartVal(val : number) : number {
+				const min = this.min
+				const max = this.max
+				return Math.max(min, Math.min(val, max))
+			},
+			// #ifdef WEB
+			isPC() : boolean {
+				if (typeof navigator != 'object') return false;
+				const userAgentInfo = navigator['userAgent'];
+				const Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+				let flag = true;
+				for (let v = 0; v < Agents.length - 1; v++) {
+					if (userAgentInfo.indexOf(Agents[v]) > 0) {
+						flag = false;
+						break;
+					}
+				}
+				return flag;
+			},
+			// #endif
+			mousedown(e : UniTouchEvent) {
+				// #ifdef WEB
+				if (!this.isPC()) return
+				this.movable = true
+				this.touchstart(e)
+				const _this = this;
+				window.onmousemove = function (event : any) {
+					const _e = {} as UniTouchEvent;
+					if (event['touches'] == null || event['touches'] == undefined) {
+						_e['touches'] = [{
+							clientX: event['clientX'],
+							clientY: event['clientY']
+						}] as UniTouch[]
+					}
+					if (!_this.isPC() || !_this.movable) return
+					_this.touchmove(_e)
+				}
+				window.onmouseup = function () {
+					if (!_this.isPC() || !_this.movable) return
+					_this.touchend()
+					_this.movable = false
+				}
+				// #endif
+
+				// #ifndef WEB
+				console.log(e)
+				// #endif
+			},
+			touchstart(e : UniTouchEvent) {
+				let touch = e.touches[0];
+				this.startX = touch.clientX
+			},
+			touchmove(e : UniTouchEvent) {
+				if (this.disabled) return;
+				let touch = e.touches[0];
+				let pageX = touch.clientX;
+				this.drag = true
+				let left = pageX - this.startX + this.onceLeft;
+				left = left < 0 ? 0 : left;
+				if (this.width == 0) this.getWidth();
+				let maxWidth = this.width - this.blockWidth;
+				left = left >= maxWidth ? maxWidth : left;
+				let dvalue = this.max - this.min;
+				let value = (left / maxWidth) * dvalue + this.min;
+				this.lastLeft = left
+				this.styleChange(value, false)
+				// #ifdef WEB
+				if (!this.isPC()) e.preventDefault();
+				// #endif
+				// #ifdef APP
+				e.preventDefault();
+				// #endif
+			},
+			touchend() {
+				if (this.disabled) return;
+				if (this.drag) {
+					let maxWidth = this.width - this.blockWidth;
+					let dvalue = this.max - this.min;
+					let value = (this.lastLeft / maxWidth) * dvalue + this.min;
+					this.styleChange(value, true)
+					this.drag = false
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	$fui-color-primary: #465CFF !default;
+	$fui-color-shadow: rgba(2, 4, 38, 0.05) !default;
+
+	@mixin slider_bg {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+
+	.fui-slider__wrap {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		position: relative;
+		overflow: visible;
+	}
+
+	.fui-slider__inner {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.fui-slider__value {
+		flex-shrink: 0;
+		padding-left: 8rpx;
+		font-weight: normal;
+		text-align: center;
+		box-sizing: border-box;
+		white-space: nowrap;
+	}
+
+	.fui-slider__bg {
+		@include slider_bg;
+		z-index: 2;
+		transition-duration: 0ms;
+		transform: translateX(-100%);
+	}
+
+
+	.fui-slider__handle {
+		position: absolute;
+		box-shadow: 0 0 4px $fui-color-shadow;
+		/* #ifdef WEB */
+		cursor: grab;
+		/* #endif */
+		top: 50%;
+		left: 0;
+		z-index: 3;
+		transform: translateY(-50%);
+		transition-duration: 0ms;
+
+	}
+
+	/* #ifdef WEB */
+	.fui-slider__disabled {
+		cursor: not-allowed !important;
+	}
+
+	/* #endif */
+
+	.fui-slider__bg-color {
+		background: $fui-color-primary !important;
+	}
+</style>

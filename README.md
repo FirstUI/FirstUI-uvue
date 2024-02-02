@@ -107,6 +107,19 @@ GitHub地址：[https://github.com/FirstUI/FirstUI-uvue](https://github.com/Firs
 
 ### 更新日志
 
+#### V1.2.1 (2024-02-02)
+
+- 启动页动画调整优化，加入波浪动画。
+
+- 新增 HalfScreen 半屏弹窗 组件，支持下滑关闭。
+
+- 新增 Slider 滑块选择器 组件。
+
+- Utils 工具类 组件优化，新增部分方法。
+
+- 优化部分已知问题。
+
+
 #### V1.2.0 (2024-01-29)
 
 - 重要优化：本次更新开发工具需升级至Hbuilderx 4.0+，更新后必须升级开发工具（alpha版本）。
@@ -203,7 +216,8 @@ GitHub地址：[https://github.com/FirstUI/FirstUI-uvue](https://github.com/Firs
 
 - 优化已知问题。
 
-#### V1.1.0（2024-01-23）
+
+#### V1.1.0（2024-01-22）
 
 - 新增 DropdownMenu 下拉菜单 组件。
 

@@ -165,6 +165,9 @@
 		lines: 1;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		/* #ifdef WEB */
+		white-space: nowrap;
+		/* #endif */
 	}
 
 	.fui-tag__primary-dark {

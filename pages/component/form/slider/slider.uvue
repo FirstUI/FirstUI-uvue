@@ -1,0 +1,58 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<view class="fui-align__center">
+					<fui-text font-weight="600" size="36" text="Slider"></fui-text>
+					<image class="fui-vip__icon" src="/static/images/index/light/icon_member_3x.png"></image>
+				</view>
+				<text class="fui-page__desc">Slider 滑动选择器，用于选择特定的值。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<text class="fui-section__title fui-mtop--0">默认使用</text>
+				<fui-slider :margin-top="32" @change="onChange" @changing="onChanging"></fui-slider>
+				<text class="fui-section__title">初始值/显示value：{{value}}</text>
+				<fui-slider :margin-top="32" v-model="value" :showValue="true"></fui-slider>
+				<text class="fui-section__title">调整步长</text>
+				<fui-slider :margin-top="32" :step="5" :showValue="true"></fui-slider>
+				<text class="fui-section__title">最小值/最大值</text>
+				<fui-slider :margin-top="32" :step="0.1" :min="0" :max="10" :showValue="true"></fui-slider>
+				<text class="fui-section__title">仅显示/禁止滑动</text>
+				<fui-slider :margin-top="32" :model-value="70" :showValue="true" :disabled="true"></fui-slider>
+				<text class="fui-section__title">调整颜色</text>
+				<fui-slider :margin-top="32" :showValue="true" background="rgba(255, 183, 3, .3)"
+					activeColor="#FFB703" blockColor="#FFB703" valueColor="#FFB703"></fui-slider>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				value: 50
+			}
+		},
+		methods: {
+			onChange(e : number) {
+				console.log(e)
+				this.fui.toast(`您选择的值为：${e}`)
+			},
+			//需要实时数据时使用
+			onChanging(e : number) {
+				console.log(e)
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-wrap {
+		padding-bottom: 96rpx;
+	}
+</style>

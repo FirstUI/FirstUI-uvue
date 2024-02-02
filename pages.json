@@ -559,6 +559,26 @@
 				"navigationBarTitleText": "背景图",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/component/nav/halfScreen/halfScreen",
+			"style": {
+				// #ifdef H5
+				"titleNView": false,
+				// #endif
+				"navigationBarTitleText": "半屏弹窗",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/form/slider/slider",
+			"style": {
+				// #ifdef H5
+				"titleNView": false,
+				// #endif
+				"navigationBarTitleText": "滑动选择器",
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"globalStyle": {

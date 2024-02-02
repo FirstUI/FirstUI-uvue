@@ -29,7 +29,7 @@ export const unixjs = defineMixin({
 		}
 	},
 	watch: {
-		visible(newVal) {
+		visible(newVal:boolean) {
 			this.openState(newVal)
 		},
 		left() {
@@ -46,7 +46,7 @@ export const unixjs = defineMixin({
 				this.rElement!.style.setProperty('transform', `translateX(${this.left + this.rightWidth}px)`);
 			}
 		},
-		isShow(newVal) {
+		isShow(newVal:boolean) {
 			this.openState(newVal)
 		},
 		buttons() {

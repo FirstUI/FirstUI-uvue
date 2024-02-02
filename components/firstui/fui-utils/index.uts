@@ -1,6 +1,6 @@
 /*!
  * 工具类：常用数据处理工具
- * Utils - v1.0.1 (2024/01/20, 10:00 AM)
+ * Utils - v1.2.1 (2024/01/20, 10:00 AM)
  * https://github.com/FirstUI/FirstUI-uvue | Released under Apache License 2.0
  *
  * 官网地址：https://firstui.cn/
@@ -426,9 +426,9 @@ export function convertCurrency(money : any) : string {
 	//最大处理的数字
 	const maxNum = 999999999999999.9999;
 	//金额整数部分
-	let integerNum:string;
+	let integerNum : string;
 	//金额小数部分
-	let decimalNum:string;
+	let decimalNum : string;
 	//输出的中文金额字符串
 	let chineseStr = '';
 	//分离金额后用的数组，预定义
@@ -453,7 +453,7 @@ export function convertCurrency(money : any) : string {
 		let zeroCount = 0;
 		let IntLen = integerNum.length;
 		for (let i = 0; i < IntLen; i++) {
-			let n = integerNum.substring(i, i+1);
+			let n = integerNum.substring(i, i + 1);
 			let p = IntLen - i - 1;
 			let q = p / 4;
 			let m = p % 4;
@@ -477,7 +477,7 @@ export function convertCurrency(money : any) : string {
 	if (decimalNum != '') {
 		let decLen = decimalNum.length;
 		for (let i = 0; i < decLen; i++) {
-			let n = decimalNum.substring(i, i+1);
+			let n = decimalNum.substring(i, i + 1);
 			if (n != '0') {
 				chineseStr += cnNums[parseInt(n)] + cnDecUnits[i];
 			}
@@ -489,4 +489,27 @@ export function convertCurrency(money : any) : string {
 		chineseStr += cnInteger;
 	}
 	return chineseStr;
+}
+
+/**
+ * @description 判断环境是否为PC
+ **/
+export function isPC() : boolean {
+	// #ifndef WEB
+	return false;
+	// #endif
+
+	// #ifdef WEB
+	if (typeof navigator != 'object') return false;
+	const userAgentInfo = navigator['userAgent'];
+	const Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+	let flag = true;
+	for (let v = 0; v < Agents.length - 1; v++) {
+		if (userAgentInfo.indexOf(Agents[v]) > 0) {
+			flag = false;
+			break;
+		}
+	}
+	return flag;
+	// #endif
 }

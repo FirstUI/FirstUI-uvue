@@ -1,7 +1,7 @@
 <template>
 	<view class="fui-bottom__popup-wrap" :style="{ zIndex: zIndex,background:maskBackground}" @tap.stop="handleClose"
 		:ref="refMkId">
-		<view :ref="refId" class="fui-bottom__popup" :class="{'fui-bp__safe-weex':iphoneX && safeArea}"
+		<view @tap.stop="stop" :ref="refId" class="fui-bottom__popup" :class="{'fui-bp__safe-weex':iphoneX && safeArea}"
 			:style="{borderTopLeftRadius:`${radius}rpx`,borderTopRightRadius:`${radius}rpx`,background: background}">
 			<slot></slot>
 		</view>
@@ -81,7 +81,7 @@
 			}
 		},
 		created() {
-			// #ifdef APP-IOS || MP || H5
+			// #ifdef APP-IOS || MP || WEB
 			this.iphoneX = this.isPhoneX();
 			// #endif
 		},
@@ -150,7 +150,8 @@
 						this.element!.style.setProperty('visibility', 'hidden');
 					}, 300)
 				}
-			}
+			},
+			stop() { }
 		}
 	};
 </script>

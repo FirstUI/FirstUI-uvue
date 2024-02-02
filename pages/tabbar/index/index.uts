@@ -91,7 +91,7 @@ export const tabs = [{
 	}, {
 		icon: 'lazyload',
 		name: 'BackgroundImage 背景图',
-		vip: false,
+		vip: true,
 		page: 'backgroundImage'
 	}] as TabsItem[]
 }, {
@@ -132,6 +132,11 @@ export const tabs = [{
 		name: 'Textarea 多行输入框',
 		vip: false,
 		page: 'textarea'
+	}, {
+		icon: 'slider',
+		name: 'Slider 滑动选择器',
+		vip: true,
+		page: 'slider'
 	}] as TabsItem[]
 }, {
 	id: 'operate',
@@ -210,6 +215,11 @@ export const tabs = [{
 		name: 'TopPopup 顶部弹出层',
 		vip: false,
 		page: 'topPopup'
+	}, {
+		icon: 'bottompopup',
+		name: 'HalfScreen 半屏弹窗',
+		vip: true,
+		page: 'halfScreen'
 	}] as TabsItem[]
 }, {
 	id: 'data',
