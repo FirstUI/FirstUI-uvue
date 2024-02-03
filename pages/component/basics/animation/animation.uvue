@@ -30,8 +30,8 @@
 				<fui-button type="gray" btn-size="medium" text="Custom" :bold="true"
 					@onclick="ani(['slide-left','slide-top','fade'],false)"></fui-button>
 			</view>
-			<fui-animation :duration="500" :animationType="mode" :styles="styles" :visible="isShow" @onclick="handleClick"
-				@change="change" @transitionend="transitionend">
+			<fui-animation :duration="500" :animationType="mode" :styles="styles" :visible="isShow"
+				@onclick="handleClick" @change="change">
 				<view class="fui-ani__box fui-flex__center">
 					<fui-text text="FirstUI" color="#fff"></fui-text>
 				</view>
@@ -48,12 +48,11 @@
 			return {
 				isShow: false,
 				mode: ['fade'] as string[],
-				styles: {} as UTSJSONObject,
-				isChangeMode: false
+				styles: {} as UTSJSONObject
 			}
 		},
 		onReady() {
-			//初始化显示动画，需在onReady之后，否则无动画效果
+			//初始化显示动画，需在onReady之后
 			// this.ani(['slide-top'], false)
 		},
 		methods: {
@@ -63,21 +62,15 @@
 				} else {
 					this.styles['background-color'] = 'rgba(0,0,0,0)';
 				}
+
 				//如果两次设置的动画效果一致则直接显示
 				if (JSON.stringify(mode) == JSON.stringify(this.mode)) {
 					this.isShow = !this.isShow;
 				} else {
-					//动态设置mode值后需要等待transitionend事件触发时去设置显示
-					//温馨提示：动态设置mode有延时，不建议动态设置【可以使用多个组件去完成不同效果】
-					this.isChangeMode = true
 					this.mode = mode;
-				}
-
-			},
-			transitionend() {
-				if (this.isChangeMode) {
-					this.isChangeMode = false;
-					this.isShow = true;
+					setTimeout(() => {
+						this.isShow = !this.isShow;
+					}, 50)
 				}
 			},
 			handleClick() {

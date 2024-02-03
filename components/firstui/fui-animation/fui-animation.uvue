@@ -1,5 +1,5 @@
 <template>
-	<view :ref="refId" class="fui-popup__animation" :style="getStyle" @tap="change" @transitionend="onEnd">
+	<view :ref="refId" class="fui-popup__animation" :style="getStyle" @tap="change">
 		<slot></slot>
 	</view>
 </template>
@@ -50,8 +50,6 @@
 			return {
 				refId: refAniId,
 				isShow: false,
-				aniShow: false,
-				isAction: false,
 				element: null as Element | null
 			};
 		},
@@ -62,12 +60,19 @@
 						this.open();
 					} else {
 						if (this.isShow) this.close();
-						this.isAction = true;
 					}
 				},
 				immediate: true
+			},
+			animationType(vals : string[]) {
+				const transform = this.getTransform(vals, this.isShow)
+				if (this.element == null) {
+					this.element = this.$refs[this.refId] as Element;
+				}
+				if (transform != '') this.element!.style.setProperty('transition-duration', `0ms`);
+				this.element!.style.setProperty('transition-property', 'opacity');
+				this.element!.style.setProperty('transform', transform);
 			}
-
 		},
 		computed: {
 			getStyle() : object {
@@ -89,25 +94,11 @@
 
 				const animationType = JSON.parse<string[]>(JSON.stringify(this.animationType))
 				if (animationType != null) {
-					if (animationType.includes('fade')) {
-						defStyles['opacity'] = (this.visible ? 1 : 0).toString()
-					} else {
-						defStyles['opacity'] = '1'
-					}
-					defStyles['transform'] = this.getTransform(animationType, this.visible)
+					defStyles['opacity'] = (this.visible ? 1 : 0).toString()
 				}
 				const mp = JSON.parse<UTSJSONObject>(JSON.stringify(defStyles))!.toMap();
 				return mp
 			}
-		},
-		mounted() {
-			this.$nextTick(() => {
-				setTimeout(() => {
-					if (!this.visible) {
-						this.close();
-					}
-				}, 50);
-			})
 		},
 		methods: {
 			change() {
@@ -118,7 +109,6 @@
 					setTimeout(() => {
 						this.isShow = true;
 						this.setAni(true);
-						this.isAction = true;
 					}, 50);
 				});
 			},
@@ -153,7 +143,6 @@
 				return transform;
 			},
 			setAni(show : boolean) {
-				this.aniShow = show;
 				const animationType = JSON.parse<string[]>(JSON.stringify(this.animationType))
 				let transform : string;
 				if (animationType != null) {
@@ -161,28 +150,23 @@
 					if (this.element == null) {
 						this.element = this.$refs[this.refId] as Element;
 					}
+					this.element!.style.setProperty('transition-property', 'opacity, transform, visibility');
 					this.element!.style.setProperty('transition-duration', `${this.duration}ms`)
-					if (animationType.includes('fade')) {
-						this.element!.style.setProperty('opacity', (show ? 1 : 0).toString())
-					} else {
-						this.element!.style.setProperty('opacity', '1')
-					}
 					if (transform != '') this.element!.style.setProperty('transform', transform);
 					if (show) this.element!.style.setProperty('visibility', 'visible');
+					this.element!.style.setProperty('opacity', (show ? 1 : 0).toString());
+
+					if (!show) {
+						setTimeout(() => {
+							this.element!.style.setProperty('visibility', 'hidden');
+							this.isShow = false;
+							this.$emit('change', this.isShow);
+						}, this.duration)
+					} else {
+						this.$emit('change', this.isShow);
+					}
 				}
 
-			},
-			onEnd() {
-				if (!this.aniShow && this.isAction) {
-					this.element!.style.setProperty('visibility', 'hidden');
-					this.isShow = false;
-					this.element = null;
-				}
-				this.$emit('transitionend')
-				if (this.isAction) {
-					this.$emit('change', this.isShow);
-					this.isAction = false
-				}
 			}
 		}
 	};
@@ -196,5 +180,6 @@
 		position: relative;
 		z-index: 99;
 		visibility: hidden;
+		opacity: 0;
 	}
 </style>
