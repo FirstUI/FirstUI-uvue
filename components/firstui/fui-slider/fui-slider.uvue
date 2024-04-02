@@ -19,6 +19,7 @@
 </template>
 
 <script>
+	import { ComponentPublicInstance } from 'vue'
 	/**
 	 * Slider 滑块选择器
 	 * @description Slider 滑块选择器，用于选择特定的值。
@@ -156,8 +157,17 @@
 				width: 0,
 				handleNode: null as null | UniElement,
 				bgNode: null as null | UniElement,
-				movable: false
+				movable: false,
+				fuiForm: null as null | ComponentPublicInstance
 			};
+		},
+		created() {
+			//用于submit、reset事件
+			const isForm = this.getParent('fui-form');
+			if (isForm) {
+				const form = this.fuiForm as ComponentPublicInstance
+				(form.$data['formChildren'] as ComponentPublicInstance[]).push(this as ComponentPublicInstance);
+			}
 		},
 		mounted() {
 			this.$nextTick(() => {
@@ -260,6 +270,18 @@
 				// #ifdef WEB
 				if (!this.isPC()) return
 				this.movable = true
+				if (e['touches'] == null || e['touches'] == undefined) {
+					e['touches'] = [{
+						clientX: e['clientX'],
+						clientY: e['clientY'],
+						identifier: 1,
+						pageX: e['pageX'],
+						pageY: e['pageY'],
+						screenX: e['screenX'],
+						screenY: e['screenY']
+					}] as UniTouch[];
+
+				}
 				this.touchstart(e)
 				const _this = this;
 				window.onmousemove = function (event : any) {
@@ -318,6 +340,25 @@
 					this.styleChange(value, true)
 					this.drag = false
 				}
+			},
+			getParent(name : string) : boolean {
+				if (this.$parent == null) return false;
+				let parent = this.$parent as ComponentPublicInstance;
+				let parentName = parent.$options['name'];
+				while (parentName != name) {
+					if (parent.$parent == null) return false;
+					parent = parent.$parent as ComponentPublicInstance;
+					if (parent.$options['name'] == '') return false;
+					parentName = parent.$options['name'];
+				}
+				this.fuiForm = parent;
+				return true;
+			},
+			reset() {
+				this.initData(this.min)
+			},
+			getSubmitValue() : number {
+				return this.start;
 			}
 		}
 	}

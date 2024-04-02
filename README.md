@@ -107,6 +107,37 @@ GitHub地址：[https://github.com/FirstUI/FirstUI-uvue](https://github.com/Firs
 
 ### 更新日志
 
+#### V1.2.6（2024-04-02）
+
+- 新增常用的基础样式class，类（class）选择器，用于页面布局，详见文档。
+
+- 新增 Form 表单校验 组件，支持 submit/reset 事件 [vip]。
+
+- 新增 FormItem 表单项 组件，可结合 Form组件进行校验 [vip]。
+
+- 新增 Validator 表单验证 组件（uts）[vip]。
+
+- 新增 FormField 表单字段 组件，用于表单传递数据。
+
+- Button 按钮 组件优化，新增formType属性，结合Form组件实现 submit/reset 事件。
+
+- Input 输入框 组件优化，可结合Form组件进行表单相关操作。
+
+- Textarea 多行输入框 组件优化，可结合Form组件进行表单相关操作。
+
+- InputNumber 数字输入框 组件优化，可结合Form组件进行表单相关操作。
+
+- Radio 单选框 组件优化，可结合Form组件进行表单相关操作。
+
+- Checkbox 复选框 组件优化，可结合Form组件进行表单相关操作。
+
+- Switch 开关 组件优化，可结合Form组件进行表单相关操作。
+
+- Slider 滑块选择器 组件优化，可结合Form组件进行表单相关操作，修复pc端可能报错的问题。
+
+- 新增表单示例，用于演示表单数据收集与重置（submit/reset）。
+
+
 #### V1.2.5（2024-02-03）
 
 - 重要优化：本次更新开发工具需升级至Hbuilderx 4.01.20+，更新后必须升级开发工具（alpha版本）。

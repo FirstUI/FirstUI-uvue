@@ -1,0 +1,75 @@
+/*!
+ * common v1.0.0 (https://unix.firstui.cn)
+ * Copyright 2024 FirstUI.
+ * Licensed under the Apache license
+ */
+
+/* ipx 底部安全区域 */
+.fs-safe__area{
+	padding-bottom: 34px;
+}
+
+/* hover */
+.fs-hover{
+	/* #ifdef WEB */
+	cursor: pointer;
+	/* #endif */
+	
+	/* #ifdef APP */
+	background: $fv-bg-color-hover;
+	/* #endif */
+}
+.fs-text__hover{
+	/* #ifdef WEB */
+	cursor: pointer;
+	/* #endif */
+	
+	/* #ifdef APP */
+	opacity: .5;
+	/* #endif */
+}
+
+/* #ifndef APP */
+.fs-hover:active{
+	background: $fv-bg-color-hover;
+}
+.fs-text__hover:active{
+	opacity: .5;
+}
+/* #endif */
+
+
+
+.fs-full{
+	width: 100%;
+}
+
+.fs-disabled{
+	opacity: $fv-opacity-disabled;
+	/* #ifdef WEB */
+	cursor: not-allowed;
+	/* #endif */
+}
+
+/* thin 细边线 0.5px*/
+.fs-cell__thin{
+	position: relative;
+	/* #ifdef APP */
+	border-bottom: 0.5px solid $fv-color-border;
+	/* #endif */
+}
+
+/* #ifndef APP */
+.fs-cell__thin::after{
+	content: ' ';
+	position: absolute;
+	border-bottom: 1px solid $fv-color-border;
+	-webkit-transform: scaleY(0.5);
+	transform: scaleY(0.5);
+	bottom: 0;
+	left: 32rpx;
+	right: 0;
+	z-index: 1;
+	pointer-events: none;
+}
+/* #endif */

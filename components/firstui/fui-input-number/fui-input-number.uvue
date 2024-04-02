@@ -30,6 +30,7 @@
 	 * InputNumber 数字输入框
 	 * @description InputNumber 数字输入框，该组件多用于购物车加减商品等场景。
 	 * @tutorial https://unix.firstui.cn/
+	 * @property {String} name {String} 数字输入框名称
 	 * @property {String} modelValue {Number,String} 输入框值
 	 * @property {String} type {String} 	输入框类型，可选值：number、text（主要用于输入负号小数点
 	 * @property {Number} min {Number} 最小值，支持负数
@@ -55,6 +56,10 @@
 		name: 'fui-input-number',
 		emits: ['change', 'update:modelValue', 'input', 'blur'],
 		props: {
+			name: {
+				type: String,
+				default: ''
+			},
 			modelValue: {
 				type: [Object, String, Number],
 				default: 1
@@ -137,7 +142,9 @@
 			return {
 				inputValue: '0',
 				oldValue: '0',
-				fuiForm: null as null | ComponentPublicInstance
+				fuiForm: null as null | ComponentPublicInstance,
+				//1-string 2-number 3-boolean 4-string[] 5-number[]
+				valueType: 2
 			};
 		},
 		computed: {
@@ -267,6 +274,9 @@
 			reset() {
 				this.onConfirm()
 				this.inputValue = this.getValue(this.min);
+			},
+			getSubmitValue() : number {
+				return parseFloat(this.getValue(this.inputValue))
 			}
 		}
 	};

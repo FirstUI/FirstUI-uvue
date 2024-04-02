@@ -1,7 +1,15 @@
 <template>
 	<view class="fui-input__wrap"
-		:class="{'fui-input__border-uvue':inputBorder,'fui-input__border-color':inputBorder && borderColor=='','fui-input__border-top':!inputBorder && borderTop,'fui-input__bordertop-color':!inputBorder && borderTop && borderColor=='','fui-input__border-bottom':!inputBorder && borderBottom,'fui-input__borderbtm-color':!inputBorder && borderBottom && borderColor=='','fui-input__disabled-styl':disabled && disabledStyle}"
+		:class="{'fui-input__border-uvue':inputBorder,'fui-input__border-color':inputBorder && borderColor=='','fui-input__disabled-styl':disabled && disabledStyle}"
 		:style="getStyle" @tap="fieldClick">
+		<view v-if="borderTop && !inputBorder"
+			:style="{background:borderColor,left:`${topLeft}rpx`,right:`${topRight}rpx`}" class="fui-input__border-top"
+			:class="{'fui-input__background':borderColor==''}">
+		</view>
+		<!-- #ifndef APP -->
+		<view class="fui-input__border" :class="{'fui-input__border-color':borderColor==''}"
+			:style="{borderRadius:getBorderRadius,borderColor:borderColor}" v-if="inputBorder"></view>
+		<!-- #endif -->
 		<view class="fui-input__required" v-if="required">
 			<text :style="{color:requiredColor}" class="fui-input__asterisk-text"
 				:class="{'fui-input__asterisk-color':requiredColor==''}">*</text>
@@ -29,6 +37,9 @@
 			</view>
 		</view>
 		<slot></slot>
+		<view v-if="borderBottom  && !inputBorder"
+			:style="{background:borderColor,left:`${bottomLeft}rpx`,right:`${bottomRight}rpx`}"
+			class="fui-input__border-bottom" :class="{'fui-input__background':borderColor==''}"></view>
 	</view>
 </template>
 
@@ -73,7 +84,11 @@
 	 * @property {Boolean} isFillet {Boolean} input是否显示为圆角，设置为true则属性radius失效
 	 * @property {Number} radius {Number} 自定义input圆角值，单位rpx
 	 * @property {Boolean} borderTop {Boolean} 是否显示上边框	
+	 * @property {Number} topLeft {Number} 上边框left值，单位rpx
+	 * @property {Number} topRight {Number} 上边框right值，单位rpx
 	 * @property {Boolean} borderBottom {Boolean} 是否显示下边框
+	 * @property {Number} bottomLeft {Number} 下边框right值，单位rpx
+	 * @property {Number} bottomRight {Number} 下边框right值，单位rpx
 	 * @property {String} borderColor {String} 边框颜色
 	 * @property {Boolean} trim	 {Boolean} 是否自动去除两端的空格
 	 * @property {String} textAlign {String} 输入框内容对齐方式，可选值：left、center、right
@@ -237,9 +252,25 @@
 				type: Boolean,
 				default: false
 			},
+			topLeft: {
+				type: Number,
+				default: 0
+			},
+			topRight: {
+				type: Number,
+				default: 0
+			},
 			borderBottom: {
 				type: Boolean,
 				default: true
+			},
+			bottomLeft: {
+				type: Number,
+				default: 32
+			},
+			bottomRight: {
+				type: Number,
+				default: 0
 			},
 			borderColor: {
 				type: String,
@@ -267,11 +298,13 @@
 			}
 		},
 		data() {
-			const refInputId = `fui_input_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			const refInputId = `fui_input_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`;
 			return {
 				refId: refInputId,
 				val: '',
-				fuiForm: null as null | ComponentPublicInstance
+				fuiForm: null as null | ComponentPublicInstance,
+				//1-string 2-number 3-boolean 4-string[] 5-number[]
+				valueType: 1
 			}
 		},
 		computed: {
@@ -281,10 +314,17 @@
 				mp.set('background', this.backgroundColor);
 				mp.set('margin-top', `${this.marginTop}rpx`);
 				mp.set('border-radius', this.isFillet ? '120px' : `${this.radius}rpx`);
+				// #ifdef APP
 				if (this.inputBorder && this.borderColor != '') mp.set('border-color', this.borderColor);
-				if (!this.inputBorder && this.borderTop && this.borderColor != '') mp.set('border-top-color', this.borderColor);
-				if (!this.inputBorder && this.borderBottom && this.borderColor != '') mp.set('border-bottom-color', this.borderColor);
+				// #endif
 				return mp;
+			},
+			getBorderRadius() : string {
+				let radius = `${this.radius * 2}rpx`
+				if (this.isFillet) {
+					radius = '240px'
+				}
+				return radius;
 			}
 		},
 		watch: {
@@ -418,6 +458,9 @@
 				this.val = '';
 				this.$emit('input', '');
 				this.$emit('update:modelValue', '')
+			},
+			getSubmitValue() : string {
+				return this.val
 			}
 		}
 	}
@@ -438,37 +481,81 @@
 		align-items: center;
 		position: relative;
 		box-sizing: border-box;
+		/* #ifndef  APP*/
+		border-width: 0 !important;
+		overflow: visible;
+		/* #endif */
 	}
 
+	/* #ifdef APP */
 	.fui-input__border-uvue {
 		border-width: $fui-input-border-width;
 		border-style: solid;
 	}
 
+	/* #endif */
+
 	.fui-input__border-color {
 		border-color: $fui-color-border !important;
 	}
 
-	.fui-input__border-top {
-		border-top-width: $fui-input-border-width;
-		border-top-style: solid;
+	.fui-input__background {
+		background: $fui-color-border !important;
 	}
 
-	.fui-input__bordertop-color {
-		border-top-color: $fui-color-border !important;
+	.fui-input__border-top {
+		position: absolute;
+		top: 0;
+		/* #ifdef APP */
+		height: $fui-input-border-width;
+		/* #endif */
+		/* #ifndef APP */
+		height: 1px;
+		-webkit-transform: scaleY(0.5);
+		transform: scaleY(0.5);
+		transform-origin: 0 0;
+		z-index: 1;
+		/* #endif */
+		pointer-events: none;
 	}
 
 	.fui-input__border-bottom {
-		border-bottom-width: $fui-input-border-width;
-		border-bottom-style: solid;
+		position: absolute;
+		bottom: 0;
+		/* #ifdef APP */
+		height: $fui-input-border-width;
+		/* #endif */
+		/* #ifndef APP */
+		height: 1px;
+		-webkit-transform: scaleY(0.5) translateZ(0);
+		transform: scaleY(0.5) translateZ(0);
+		transform-origin: 0 100%;
+		z-index: 1;
+		/* #endif */
+		pointer-events: none;
 	}
 
-	.fui-input__borderbtm-color {
-		border-bottom-color: $fui-color-border !important;
+	/* #ifndef APP */
+	.fui-input__border {
+		position: absolute;
+		height: 200%;
+		width: 200%;
+		border-width: 1px;
+		border-style: solid;
+		border-color: $fui-color-border;
+		transform-origin: 0 0;
+		transform: scale(0.5) translateZ(0);
+		left: 0;
+		top: 0;
+		border-radius: 16rpx;
+		pointer-events: none;
+		z-index: 1;
 	}
 
+	/* #endif */
 
 	.fui-input__required {
+		transform: translateZ(0);
 		position: absolute;
 		left: 12rpx;
 		height: 100%;

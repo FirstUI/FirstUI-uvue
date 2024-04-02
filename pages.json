@@ -579,6 +579,76 @@
 				"navigationBarTitleText": "滑动选择器",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/component/basics/css/css",
+			"style": {
+				// #ifdef H5
+				"titleNView": false,
+				// #endif
+				"navigationBarTitleText": "css",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/css/flex/flex",
+			"style": {
+				// #ifdef H5
+				"titleNView": false,
+				// #endif
+				"navigationBarTitleText": "flex 布局",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/css/text/text",
+			"style": {
+				// #ifdef H5
+				"titleNView": false,
+				// #endif
+				"navigationBarTitleText": "text 文本",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/css/color/color",
+			"style": {
+				// #ifdef H5
+				"titleNView": false,
+				// #endif
+				"navigationBarTitleText": "color 颜色",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/css/margin/margin",
+			"style": {
+				// #ifdef H5
+				"titleNView": false,
+				// #endif
+				"navigationBarTitleText": "margin 外边距",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/css/padding/padding",
+			"style": {
+				// #ifdef H5
+				"titleNView": false,
+				// #endif
+				"navigationBarTitleText": "padding 内边距",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/component/css/radius/radius",
+			"style": {
+				// #ifdef H5
+				"titleNView": false,
+				// #endif
+				"navigationBarTitleText": "radius 圆角",
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"globalStyle": {

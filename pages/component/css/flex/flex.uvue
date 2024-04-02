@@ -1,0 +1,63 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Flex</text>
+				<text class="fui-page__desc">Flex 布局，引入scss或css文件直接使用class即可。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<view class="fs-flex">
+					<text class="fs-p24 fs-bg__white fs-size__28 fs-flex__1">fs-flex__1</text>
+					<text class="fs-p24 fs-bg__primary fs-size__28 fs-color__white fs-flex__1">fs-flex__1</text>
+					<text class="fs-p24 fs-bg__warning fs-size__28 fs-color__white fs-flex1 ">fs-flex1</text>
+				</view>
+				<view class="fs-mt32 fs-flex__center">
+					<text class="fs-p24 fs-bg__white fs-size__28">fs-flex__center</text>
+				</view>
+				<view class="fs-mt32 fs-flex__between">
+					<text class="fs-p24 fs-bg__white fs-size__28">fs-flex__between</text>
+					<text class="fs-p24 fs-bg__warning fs-color__white fs-size__28">fs-flex__between</text>
+				</view>
+				
+				<view class="fs-mt32 fs-flex__row">
+					<text class="fs-p24 fs-bg__white fs-size__28">fs-flex__row</text>
+					<text class="fs-p24 fs-bg__warning fs-color__white fs-size__28">fs-flex__row</text>
+				</view>
+				
+				<view class="fs-mt32 fs-flex__column">
+					<text class="fs-p24 fs-bg__white fs-size__28">fs-flex__column</text>
+					<text class="fs-p24 fs-bg__warning fs-color__white fs-size__28">fs-flex__column</text>
+				</view>
+				
+				<view class="fs-mt32 fs-bg__white fs-align__center" style="height: 160rpx;">
+					<text class="fs-p24 fs-bg__warning fs-color__white fs-size__28">fs-align__center</text>
+				</view>
+				
+				<view class="fs-mt32 fs-p24 fs-bg__white fs-flex fs-justify__end">
+					<text class="fs-p24 fs-bg__warning fs-color__white fs-size__28">fs-justify__end</text>
+				</view>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+<style>
+
+</style>

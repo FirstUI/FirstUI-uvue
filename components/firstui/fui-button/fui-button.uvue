@@ -16,6 +16,7 @@
 </template>
 
 <script>
+	import { ComponentPublicInstance } from 'vue';
 	/**
 	 * Button 按钮
 	 * @description Button 按钮，支持自定义大小、颜色等。
@@ -40,7 +41,8 @@
 	 * @property {Boolean} disabled	{Boolean} 是否禁用
 	 * @property {Boolean}loading {Boolean} 是否显示加载图标
 	 * @property {String} iconColor	{String} loading圆环背景色
-	 * @property {String} activeColor loading圆环高亮部分颜色
+	 * @property {String} activeColor {String} loading圆环高亮部分颜色
+	 * @property {String} formType {String} 用于 form 组件，点击分别会触发 form 组件的 submit/reset 事件
 	 * @event {Function} onclick 按钮点击事件，(event: MouseEvent) => void
 	 */
 	export default {
@@ -130,6 +132,11 @@
 			activeColor: {
 				type: String,
 				default: "#FFFFFF"
+			},
+			//V1.2.6+
+			formType: {
+				type: String,
+				default: ''
 			}
 		},
 		computed: {
@@ -224,8 +231,12 @@
 				times: 0,
 				isSpin: false,
 				element: null as UniElement | null,
-				hoverEle: null as UniElement | null
+				hoverEle: null as UniElement | null,
+				fuiForm: null as null | ComponentPublicInstance
 			};
+		},
+		created() {
+			this.getParent('fui-form')
 		},
 		mounted() {
 			this.$nextTick(() => {
@@ -248,6 +259,10 @@
 			handleTap(e : MouseEvent) {
 				if (this.disabled) return;
 				this.$emit('onclick', e);
+				if (this.formType != '' && this.fuiForm != null) {
+					const form = this.fuiForm as ComponentPublicInstance;
+					form.$callMethod('buttonEvent', this.formType)
+				}
 			},
 			handleEnd() {
 				// #ifndef WEB
@@ -283,6 +298,19 @@
 					this.times = this.times + 1
 					this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
 				}
+			},
+			getParent(name : string) : boolean {
+				if (this.$parent == null) return false;
+				let parent = this.$parent as ComponentPublicInstance;
+				let parentName = parent.$options['name'];
+				while (parentName != name) {
+					if (parent.$parent == null) return false;
+					parent = parent.$parent as ComponentPublicInstance;
+					if (parent.$options['name'] == '') return false;
+					parentName = parent.$options['name'];
+				}
+				this.fuiForm = parent;
+				return true;
 			}
 		}
 	};

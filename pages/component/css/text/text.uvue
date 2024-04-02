@@ -1,0 +1,56 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Text</text>
+				<text class="fui-page__desc">Text 文本，引入scss或css文件直接使用class即可。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<text class="fs-size__h1">大标题（fs-size__h1）</text>
+				<text class="fs-size__h2 fs-pt48">二级标题（fs-size__h2）</text>
+				<text class="fs-size__h3 fs-pt32">🍃 在生活的这个大舞台上，我们每个人都是演员，有的扮演善良，有的演绎坚韧，而有的人，却选择了在幕后悄悄挑动是非。他们像阴影中的幽灵，试图用窃窃私语和恶意中伤来扰乱他人的步伐。然而，真理和光明总是能够穿透最深的黑暗。💡</text>
+				<text class="fs-size__h3 fs-pt24">🌼愿你早日明白，真正的力量在于建设和创造，而非破坏。(fs-size__h3)</text>
+				<text class="fs-size__h4 fs-pt24">斜晖悄然暗淡，再美的华尔兹也即将落幕，芊芊素影，含蓄婉转，让这别致的戏，更像一出戏。唯美的幕布下，残留一丝悠扬的轻叹。(fs-size__h4)</text>
+				<text class="fs-size__h5 fs-pt32">烟雨江南一荷塘，梦里锦书云收藏。荷叶凝珠碧晶莹，塘风清吹波光滟。(fs-size__h5)</text>
+				<!-- 24rpx～64rpx -->
+				<text class="fs-size__24 fs-pt32">采采流水，蓬蓬远春。窈窕深谷，时见美人。碧桃满春树，风日水滨。柳阴路曲，流莺比邻。乘之愈往，识之愈真。如将不尽，与古为新。(fs-size__24)</text>
+				<text class="fs-size__25 fs-pt32">青春短暂，时光荏苒，让我们以梦想为航标，奋勇前行。(fs-size__25)</text>
+				<text class="fs-size__26 fs-pt32">诗酒趁年华，青春作伴，梦想为马。(fs-size__26)</text>
+				<text class="fs-size__28 fs-pt32">青春短暂，珍惜时光，岁月不老，我们不散。(fs-size__28)</text>
+				<text class="fs-size__30 fs-pt32">落叶归根，轻揽时光，静待花开。(fs-size__30)</text>
+				<text class="fs-size__32 fs-pt32">时光荏苒，苒苒岁月里我们不断成长。(fs-size__32)</text>
+				<text class="fs-size__34 fs-pt32">梦想就像一双翅膀，能带我们飞翔，让我们追寻生命中的美好。(fs-size__34)</text>
+				<text class="fs-size__36 fs-pt36">风起，云涌。(fs-size__36)</text>
+				<text class="fs-size__38 fs-pt36">心静，自然凉。(fs-size__38)</text>
+				<text class="fs-size__40 fs-pt36">雪落，无声胜有声。(fs-size__40)</text>
+				<text class="fs-size__44 fs-pt36">月升，星沉(fs-size__44)</text>
+				<text class="fs-size__48 fs-pt40">花开，满园春。(fs-size__48)</text>
+				<text class="fs-size__52 fs-pt40">晨起，霞满天。(fs-size__52)</text>
+				<text class="fs-size__56 fs-pt44">夜色，(fs-size__56)</text>
+				<text class="fs-size__60 fs-pt48">深如海。(fs-size__60)</text>
+				<text class="fs-size__64 fs-pt48">不期而遇。(fs-size__64)</text>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+<style>
+
+</style>

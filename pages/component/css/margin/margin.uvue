@@ -1,0 +1,52 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Margin</text>
+				<text class="fui-page__desc">Margin 外边距，引入scss或css文件直接使用class即可。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt0">fs-mt0（margin-top:0）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt2">fs-mt2（margin-top:2rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt4">fs-mt4（margin-top:4rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt8">fs-mt8（margin-top:8rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt12">fs-mt12（margin-top:12rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt16">fs-mt16（margin-top:16rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt20">fs-mt20（margin-top:20rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt24">fs-mt24（margin-top:24rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt28">fs-mt28（margin-top:28rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt30">fs-mt30（margin-top:30rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt32">fs-mt32（margin-top:32rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt48">fs-mt48（margin-top:48rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-m48">fs-m48（margin:48rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mx48">fs-mx48（margin-left:48rpx;margin-right:48rpx;）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-my48">fs-my48（margin-top:48rpx;margin-bottom:48rpx;）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mb48">fs-mb48（margin-bottom:48rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt0">fs-mt0（margin-bottom:0）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt32 fs-ml32">fs-ml32（margin-left:32rpx）</text>
+				<text class="fs-bg__white fs-p32 fs-size__28 fs-mt32 fs-mr32">fs-mr32（margin-right:32rpx）</text>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+<style>
+
+</style>

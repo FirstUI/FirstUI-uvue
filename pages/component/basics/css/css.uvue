@@ -1,0 +1,56 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">CSS</text>
+				<text class="fui-page__desc">CSS 常用样式，类（class）选择器，用于页面布局，更多使用详见文档。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<fui-button type="gray" btn-size="medium" text="color 颜色" :bold="true" margin="24rpx 0"
+					@onclick="href('color')"></fui-button>
+				<fui-button type="gray" btn-size="medium" text="text 文本" :bold="true" @onclick="href('text')">
+				</fui-button>
+				<fui-button type="gray" btn-size="medium" text="flex 布局" :bold="true" margin="24rpx 0" @onclick="href('flex')">
+				</fui-button>
+				<fui-button type="gray" btn-size="medium" text="margin 外边距" :bold="true"
+					@onclick="href('margin')">
+				</fui-button>
+				<fui-button type="gray" btn-size="medium" text="padding 内边距" :bold="true" margin="24rpx 0"
+					@onclick="href('padding')">
+				</fui-button>
+				<fui-button type="gray" btn-size="medium" text="radius 圆角" :bold="true"
+					@onclick="href('radius')">
+				</fui-button>
+
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+			href(page : string) {
+				this.fui.href(`/pages/component/css/${page}/${page}`, false)
+			}
+		}
+	}
+</script>
+
+<style>
+	.fui-page__bd {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+</style>

@@ -1,0 +1,94 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Padding</text>
+				<text class="fui-page__desc">Padding 内边距，引入scss或css文件直接使用class即可。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<view class="fs-flex fs-bg__white fs-p0">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p0（padding:0）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-p2">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p2（padding:2rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-p4">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p4（padding:4rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-p8">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p8（padding:8rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-p12">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p12（padding:12rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-p16">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p16（padding:16rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-p20">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p20（padding:20rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-p24">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p24（padding:24rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-p28">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p28（padding:28rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-p30">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p30（padding:30rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-p32">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p32（padding:32rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-p36">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p36（padding:36rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-p40">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p40（padding:40rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-p48">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-p48（padding:48rpx）</text>
+				</view>
+				
+				<view class="fs-flex fs-bg__white fs-mt24 fs-pt32">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-pt32（padding-top:32rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-pb32">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-pb32（padding-bottom:32rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-pl32">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-pl32（padding-left:32rpx）</text>
+				</view>
+				<view class="fs-flex fs-justify__end fs-bg__white fs-mt24 fs-pr32">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-pr32（padding-right:32rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-px32">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-px32（左右 32rpx）</text>
+				</view>
+				<view class="fs-flex fs-bg__white fs-mt24 fs-py32">
+					<text class="fs-bg__warning fs-p32 fs-size__28">fs-py32（上下 32rpx）</text>
+				</view>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+<style>
+
+</style>

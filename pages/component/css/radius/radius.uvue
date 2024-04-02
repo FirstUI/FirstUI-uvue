@@ -1,0 +1,47 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Radius</text>
+				<text class="fui-page__desc">Radius 圆角，引入scss或css文件直接使用class即可。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<text class="fs-p40 fs-bg__white fs-size__28 fs-radius__sm">fs-radius__sm</text>
+				<text class="fs-p40 fs-mt24 fs-bg__white fs-size__28 fs-radius__md">fs-radius__md</text>
+				<text class="fs-p40 fs-mt24 fs-bg__white fs-size__28 fs-radius__lg">fs-radius__lg</text>
+				<text class="fs-p40 fs-mt24 fs-bg__white fs-size__28 fs-radius__circle">fs-radius__circle</text>
+				<text class="fs-p40 fs-mt24 fs-bg__white fs-size__28 fs-radius__4">fs-radius__4</text>
+				<text class="fs-p40 fs-mt24 fs-bg__white fs-size__28 fs-radius__8">fs-radius__8</text>
+				<text class="fs-p40 fs-mt24 fs-bg__white fs-size__28 fs-radius__12">fs-radius__12</text>
+				<text class="fs-p40 fs-mt24 fs-bg__white fs-size__28 fs-radius__16">fs-radius__16</text>
+				<text class="fs-p40 fs-mt24 fs-bg__white fs-size__28 fs-radius__24">fs-radius__24</text>
+				<text class="fs-p40 fs-mt24 fs-bg__white fs-size__28 fs-radius__30">fs-radius__30</text>
+				<text class="fs-p40 fs-mt24 fs-bg__white fs-size__28 fs-radius__32">fs-radius__32</text>
+				<text class="fs-p40 fs-mt24 fs-bg__white fs-size__28 fs-radius__36">fs-radius__36</text>
+				<text class="fs-p40 fs-mt24 fs-bg__white fs-size__28 fs-radius__48">fs-radius__48</text>
+				<text class="fs-p40 fs-mt24 fs-bg__white fs-size__28 fs-radius__200">fs-radius__200</text>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+<style>
+
+</style>

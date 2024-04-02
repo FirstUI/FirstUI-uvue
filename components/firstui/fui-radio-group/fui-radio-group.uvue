@@ -90,6 +90,9 @@
 				this.val = '';
 				this.modelChange('')
 				this.radioChange('');
+			},
+			getSubmitValue() : string {
+				return this.val == '' ? this.modelValue : this.val;
 			}
 		}
 	}

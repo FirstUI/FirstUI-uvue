@@ -1,0 +1,109 @@
+<template>
+	<!-- #ifdef APP -->
+	<scroll-view style="flex:1">
+	<!-- #endif -->
+		<view class="fui-wrap">
+			<view class="fui-page__hd">
+				<text class="fui-page__title">Color</text>
+				<text class="fui-page__desc">Color 颜色，引入scss或css文件直接使用class即可，可通过变量调整主题色。</text>
+			</view>
+			<view class="fui-page__bd fui-page__spacing">
+				<text class="fui-section__title fui-mtop--0">字体颜色</text>
+				<view class="fs-flex__row fs-flex__wrap">
+					<view class="fs-p36 fs-bg__white fs-m12">
+						<text class="fs-color__primary fs-size__28" :selectable="true">fs-color__primary</text>
+					</view>
+					<view class="fs-p36 fs-bg__white fs-m12">
+						<text class="fs-color__success fs-size__28" :selectable="true">fs-color__success</text>
+					</view>
+					<view class="fs-p36 fs-bg__white fs-m12">
+						<text class="fs-color__warning fs-size__28" :selectable="true">fs-color__warning</text>
+					</view>
+					<view class="fs-p36 fs-bg__white fs-m12">
+						<text class="fs-color__danger fs-size__28" :selectable="true">fs-color__danger</text>
+					</view>
+					<view class="fs-p36 fs-bg__white fs-m12">
+						<text class="fs-color__purple fs-size__28" :selectable="true">fs-color__purple</text>
+					</view>
+					<view class="fs-p36 fs-bg__white fs-m12">
+						<text class="fs-color__title fs-size__28" :selectable="true">fs-color__title</text>
+					</view>
+					<view class="fs-p36 fs-bg__white fs-m12">
+						<text class="fs-color__section fs-size__28" :selectable="true">fs-color__section</text>
+					</view>
+					<view class="fs-p36 fs-bg__white fs-m12">
+						<text class="fs-color__subtitle fs-size__28" :selectable="true">fs-color__subtitle</text>
+					</view>
+					<view class="fs-p36 fs-bg__white fs-m12">
+						<text class="fs-color__label fs-size__28" :selectable="true">fs-color__label</text>
+					</view>
+					<view class="fs-p36 fs-bg__white fs-m12">
+						<text class="fs-color__minor fs-size__28" :selectable="true">fs-color__minor</text>
+					</view>
+					<view class="fs-p36 fs-bg__primary fs-m12">
+						<text class="fs-color__white fs-size__28" :selectable="true">fs-color__white</text>
+					</view>
+					<view class="fs-p36 fs-bg__white fs-m12">
+						<text class="fs-color__link fs-size__28" :selectable="true">fs-color__link</text>
+					</view>
+				</view>
+
+				<text class="fui-section__title">背景颜色</text>
+
+				<view class="fs-flex__row fs-flex__wrap">
+					<view class="fs-p36 fs-bg__primary fs-m12">
+						<text class="fs-color__white fs-size__28" :selectable="true">fs-bg__primary</text>
+					</view>
+					<view class="fs-p36 fs-bg__success fs-m12">
+						<text class="fs-color__white fs-size__28" :selectable="true">fs-bg__success</text>
+					</view>
+					<view class="fs-p36 fs-bg__warning fs-m12">
+						<text class="fs-color__white fs-size__28" :selectable="true">fs-bg__warning</text>
+					</view>
+					<view class="fs-p36 fs-bg__danger fs-m12">
+						<text class="fs-color__white fs-size__28" :selectable="true">fs-bg__danger</text>
+					</view>
+					<view class="fs-p36 fs-bg__purple fs-m12">
+						<text class="fs-color__white fs-size__28" :selectable="true">fs-bg__purple</text>
+					</view>
+					<view class="fs-p36 fs-bg__white fs-m12">
+						<text class="fs-color__title fs-size__28" :selectable="true">fs-bg__white</text>
+					</view>
+					<view class="fs-p36 fs-bg__page fs-m12">
+						<text class="fs-color__title fs-size__28" :selectable="true">fs-bg__page</text>
+					</view>
+					<view class="fs-p36 fs-bg__content fs-m12">
+						<text class="fs-color__title fs-size__28" :selectable="true">fs-bg__content</text>
+					</view>
+					<view class="fs-p36 fs-bg__hover fs-m12">
+						<text class="fs-color__white fs-size__28" :selectable="true">fs-bg__hover</text>
+					</view>
+					<view class="fs-p36 fs-bg__mask fs-m12">
+						<text class="fs-color__white fs-size__28" :selectable="true">fs-bg__mask</text>
+					</view>
+				</view>
+			</view>
+		</view>
+	<!-- #ifdef APP -->
+	</scroll-view>
+	<!-- #endif -->
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+<style lang="scss">
+	.fs-p36 {
+		width: 45%;
+	}
+</style>

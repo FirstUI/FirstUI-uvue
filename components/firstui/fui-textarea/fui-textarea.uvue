@@ -274,7 +274,9 @@
 				refId: refTextAreatId,
 				count: 0,
 				val: '',
-				fuiForm: null as null | ComponentPublicInstance
+				fuiForm: null as null | ComponentPublicInstance,
+				//1-string 2-number 3-boolean 4-string[] 5-number[]
+				valueType: 1
 			};
 		},
 		watch: {
@@ -400,6 +402,9 @@
 			reset() {
 				this.setFocusOrBlur(false)
 				this.clear()
+			},
+			getSubmitValue() : string {
+				return this.val
 			}
 		}
 	}

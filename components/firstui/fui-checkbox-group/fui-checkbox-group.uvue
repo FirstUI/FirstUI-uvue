@@ -65,6 +65,7 @@
 				this.checkboxChange(vals)
 			},
 			modelChange(vals : string[]) {
+				this.vals = vals;
 				this.childrens.forEach((item : ComponentPublicInstance) => {
 					const value = item.$props['value'] as string;
 					if (vals.includes(value)) {
@@ -94,6 +95,9 @@
 				})
 				this.vals = [] as string[];
 				this.checkboxChange(this.vals)
+			},
+			getSubmitValue() : string[] {
+				return this.vals;
 			}
 		}
 	}

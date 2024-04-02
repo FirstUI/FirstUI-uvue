@@ -191,11 +191,13 @@
 				}
 				return true;
 			},
-			//考虑一下是还原还是重置，暂时做重置处理（还原需记录初始值）
 			reset() {
 				this.val = false;
 				this.$emit('change', false);
 				this.$emit('update:checked', false);
+			},
+			getSubmitValue() : boolean {
+				return this.val;
 			}
 		}
 	}
@@ -286,7 +288,6 @@
 		width: 50px;
 		height: 30px;
 		border-radius: 15px;
-
 		transition: transform .3s
 	}
 
