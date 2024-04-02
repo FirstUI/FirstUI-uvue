@@ -32,7 +32,9 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	/*每个页面公共css */
 	@import "@/common/fui-app.css";
+	/*css基础布局样式，按需引入*/
+	@import '@/components/firstui/fui-css/firstui.scss';
 </style>

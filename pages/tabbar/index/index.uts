@@ -49,6 +49,11 @@ export const tabs = [{
 		name: 'Animation 动画',
 		vip: false,
 		page: 'animation'
+	}, {
+		icon: 'color',
+		name: 'Css 常用样式',
+		vip: false,
+		page: 'css'
 	}] as TabsItem[]
 }, {
 	id: 'layout',
