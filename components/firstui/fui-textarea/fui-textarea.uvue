@@ -4,23 +4,23 @@
 		:style="getStyle" @tap="fieldClick">
 		<view class="fui-textarea__required" :class="{'fui-textarea__required-top':flexStart}" v-if="required">
 			<text class="fui-textarea__asterisk-text" :class="{'fui-textarea__asterisk-color':requiredColor==''}"
-				:style="{color:requiredColor}">*</text>
+				:style="getRequiredColor">*</text>
 		</view>
 		<view class="fui-textarea__label" :style="{minWidth:labelWidth+'rpx'}" v-if="label">
-			<text :class="{'fui-textarea__label-size':labelSize==0}"
-				:style="{fontSize:`${labelSize}rpx`,lineHeight:`${labelSize}rpx`,color:labelColor}">{{label}}</text>
+			<text :class="{'fui-textarea__label-size':labelSize==0}" :style="getLabelStyl">{{label}}</text>
 		</view>
 		<slot name="left"></slot>
 		<view class="fui-textarea__flex-1">
 			<textarea :ref="refId" class="fui-textarea__self"
 				:class="{'fui-textarea__disabled':disabled,'fui-textarea__size':size==0}"
 				:style="{textAlign:textAlign, height:height,minHeight:minHeight,fontSize:`${size}rpx`,color:color}"
-				placeholder-class="fui-textarea-placeholder" :name="name" :value="val" :placeholder="placeholder"
-				:placeholderStyle="placeholderStyle" :disabled="disabled" :cursor-spacing="cursorSpacing"
-				:maxlength="maxlength" :auto-height="autoHeight" :show-confirm-bar="showConfirmBar" :cursor="cursor"
-				:selection-start="selectionStart" :selection-end="selectionEnd" :adjust-position="adjustPosition"
-				:hold-keyboard="holdKeyboard" @focus="onFocus" @blur="onBlur" @input="onInput" @confirm="onConfirm"
-				@linechange="onLinechange" @keyboardheightchange="onKeyboardheightchange"></textarea>
+				placeholder-class="fui-textarea-placeholder" :name="name" :value="val"
+				:placeholder="val!=''?'':placeholder" :placeholderStyle="placeholderStyle" :disabled="disabled"
+				:cursor-spacing="cursorSpacing" :maxlength="maxlength" :auto-height="autoHeight"
+				:show-confirm-bar="showConfirmBar" :cursor="cursor" :selection-start="selectionStart"
+				:selection-end="selectionEnd" :adjust-position="adjustPosition" :hold-keyboard="holdKeyboard"
+				@focus="onFocus" @blur="onBlur" @input="onInput" @confirm="onConfirm" @linechange="onLinechange"
+				@keyboardheightchange="onKeyboardheightchange"></textarea>
 			<view class="fui-textarea__counter" v-if="isCounter">
 				<text
 					:style="{fontSize:`${counterSize}rpx`,color:counterColor}">{{maxlength!=-1?`${count}/${maxlength}`:count}}</text>
@@ -266,6 +266,20 @@
 				if (!this.textareaBorder && this.borderTop && this.borderColor != '') mp.set('border-top-color', this.borderColor);
 				if (!this.textareaBorder && this.borderBottom && this.borderColor != '') mp.set('border-bottom-color', this.borderColor);
 				return mp;
+			},
+			getRequiredColor() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.requiredColor != '') mp.set('color', this.requiredColor);
+				return mp;
+			},
+			getLabelStyl() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.labelColor != '') mp.set('color', this.labelColor);
+				if (this.labelSize != 0) {
+					mp.set('fontSize', `${this.labelSize}rpx`);
+					mp.set('lineHeight', `${this.labelSize}rpx`);
+				}
+				return mp;
 			}
 		},
 		data() {
@@ -505,7 +519,7 @@
 		width: 100%;
 		overflow: visible;
 		box-sizing: border-box;
-		padding: 0;
+		padding: 0 !important;
 	}
 
 	.fui-textarea__size {

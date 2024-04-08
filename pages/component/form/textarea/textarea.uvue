@@ -13,7 +13,7 @@
 				<text class="fui-section__title">带标题</text>
 				<fui-textarea :required="true" :flexStart="true" label="标题" placeholder="请输入内容"></fui-textarea>
 				<text class="fui-section__title">调整高度、必填</text>
-				<fui-textarea :required="true" height="40rpx" label="标题" placeholder="请输入内容"></fui-textarea>
+				<fui-textarea padding="20rpx 32rpx" :required="true" height="40rpx" label="标题" placeholder="请输入内容" :autoHeight="true"></fui-textarea>
 				<text class="fui-section__title">输入长度计数、双向绑定</text>
 				<fui-textarea :isCounter="true" placeholder="请输入内容" v-model="text"></fui-textarea>
 				<text class="fui-section__title">带边框</text>

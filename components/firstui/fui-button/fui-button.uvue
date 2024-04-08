@@ -1,9 +1,12 @@
 <template>
 	<view class="fui-button__wrap"
 		:class="[getWidth=='' || getWidth=='100%'?'fui-button__flex-1':'',disabled && disabledBackground=='' ? 'fui-button__opacity' : '',background=='' && disabledBackground=='' && !plain?`fui-button__${type}`:'',height=='' && btnSize==''?'fui-button__height':'',radius==''?'fui-button__radius':'',highlight && !disabled ?'fui-button__active':'']"
-		:style="{width: getWidth,height: getHeight,margin:margin,borderRadius: radius,background:getBackground,borderWidth:borderColor==''?'0px':borderWidth,borderColor:getBorderColor}"
+		:style="{width: getWidth,height: getHeight,margin:margin,borderRadius: radius,background:getBackground,border:`${borderColor==''?'0px':borderWidth} solid`,borderColor:getBorderColor}"
 		@touchstart="handleStart" @touchend="handleEnd" @touchcancel="handleEnd" @tap="handleTap">
 		<view ref="fui_button_loading" @transitionend="onEnd" class="fui-button__spin" :style="getStyl" v-if="loading">
+			<!-- #ifdef APP-IOS -->
+			<view class="fui-button__spin-dot" :style="{background:activeColor}"></view>
+			<!-- #endif -->
 		</view>
 		<text class="fui-button__text"
 			:class="{'fui-btn__gray-color':background=='' && disabledBackground=='' && !plain && type=='gray' && color=='#fff','fui-text__bold':bold,'fui-button__size':size==0 && btnSize=='','fui-button__height-text':height=='' && btnSize==''}"
@@ -142,10 +145,16 @@
 		computed: {
 			getStyl() : object {
 				const mp : Map<string, string> = new Map()
+				// #ifndef APP-IOS
 				mp.set('border-left-color', this.activeColor)
 				mp.set('border-right-color', this.iconColor)
 				mp.set('border-top-color', this.iconColor)
 				mp.set('border-bottom-color', this.iconColor)
+				// #endif
+				// #ifdef APP-IOS
+				//ios端暂时不支持单边框颜色，设置border-radius
+				mp.set('border-color', this.iconColor)
+				// #endif
 				return mp;
 			},
 			getBackground() : string {
@@ -238,6 +247,7 @@
 		created() {
 			this.getParent('fui-form')
 		},
+		// #ifndef WEB
 		mounted() {
 			this.$nextTick(() => {
 				setTimeout(() => {
@@ -245,6 +255,7 @@
 				}, 200)
 			})
 		},
+		// #endif
 		beforeUnmount() {
 			this.isSpin = false
 			this.element = null;
@@ -294,10 +305,12 @@
 				this.element = null;
 			},
 			onEnd() {
+				// #ifndef WEB
 				if (this.isSpin && this.loading) {
 					this.times = this.times + 1
 					this.element!.style.setProperty('transform', `rotate(${this.times * 360}deg)`)
 				}
+				// #endif
 			},
 			getParent(name : string) : boolean {
 				if (this.$parent == null) return false;
@@ -334,7 +347,6 @@
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
-		border-style: solid;
 		box-sizing: border-box;
 		overflow: hidden;
 	}
@@ -384,7 +396,47 @@
 		transform: rotate(0deg);
 		box-sizing: border-box;
 		margin-right: 8rpx;
+		position: relative;
+		/* #ifdef WEB */
+		animation: rotate 0.6s linear infinite;
+		/* #endif */
 	}
+
+
+	/* #ifdef WEB */
+	@-webkit-keyframes rotate {
+		0% {
+			transform: rotate(0deg);
+		}
+
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	@keyframes rotate {
+		0% {
+			transform: rotate(0deg);
+		}
+
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	/* #endif */
+
+	/* #ifdef APP-IOS */
+	.fui-button__spin-dot {
+		position: absolute;
+		width: 12rpx;
+		height: 12rpx;
+		border-radius: 8rpx;
+		left: 0;
+		top: 0;
+	}
+
+	/* #endif */
 
 	.fui-button__text {
 		text-align: center;

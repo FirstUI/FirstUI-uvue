@@ -76,6 +76,18 @@
 						</fui-list-cell>
 					</fui-label>
 				</fui-radio-group>
+				<text class="fui-section__title">修改选中后样式</text>
+				<fui-radio-group>
+					<fui-label v-for="(item,index) in radioItems" :key="index">
+						<fui-list-cell>
+							<view class="fui-align__center">
+								<fui-radio :checked="item.checked" :value="item.value" :style-type="2">
+								</fui-radio>
+								<text class="fui-text">{{item.name}}</text>
+							</view>
+						</fui-list-cell>
+					</fui-label>
+				</fui-radio-group>
 			</view>
 		</view>
 	<!-- #ifdef APP -->

@@ -145,7 +145,7 @@
 			const bgId = `fui_sldb_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
 			const handleId = `fui_hsld_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
 			return {
-				refId: refId,
+				refId: refId as string,
 				handleId: handleId,
 				bgId: bgId,
 				start: 0,

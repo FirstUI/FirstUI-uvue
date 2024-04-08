@@ -1,11 +1,11 @@
 <template>
-	<view v-if="width" :style="getStyle" class="fui-grid__item">
+	<view v-if="width!='0'" :style="getStyle" class="fui-grid__item">
 		<view :hover-class="highlight?'fui-grid__highlight':''" :hover-stay-time="150"
 			:style="{background:backgroundColor }" class="fui-grid__item-box" @tap="handleClick">
-			<view class="fui-grid__border-right" v-if="showBorder"></view>
-			<view class="fui-grid__border-bottom" v-if="showBorder"></view>
 			<slot></slot>
 		</view>
+		<view class="fui-grid__border-right" v-if="showBorder"></view>
+		<view class="fui-grid__border-bottom" v-if="showBorder"></view>
 	</view>
 </template>
 
@@ -107,7 +107,7 @@
 <style lang="scss">
 	$fui-color-border: #EEEEEE !default;
 	$fui-bg-color-hover: rgba(0, 0, 0, 0.2) !default;
-	$fui-grid-border-width: 0.5px !default;
+	$fui-grid-border-width: 1px !default;
 
 	@mixin fui_grid_border {
 		position: absolute;
@@ -122,6 +122,8 @@
 		display: flex;
 		flex-shrink: 0;
 		box-sizing: border-box;
+		overflow: visible;
+		position: relative;
 	}
 
 	.fui-grid__item-box {
@@ -129,19 +131,20 @@
 		display: flex;
 		flex-direction: column;
 		box-sizing: border-box;
-		position: relative;
 	}
 
-	// 部分机型设置边框0.5px 不显示，此处做兼容处理
 	.fui-grid__border-right {
-		width: $fui-grid-border-width;
-		top: 0;
 		@include fui_grid_border;
+		width: $fui-grid-border-width;
+		transform-origin: 100% 0;
+		transform: scaleX(0.5);
+		top: 0;
 	}
 
 	.fui-grid__border-bottom {
-		position: absolute;
 		height: $fui-grid-border-width;
+		transform-origin: 0 100%;
+		transform: scaleY(0.5);
 		left: 0;
 		@include fui_grid_border;
 	}

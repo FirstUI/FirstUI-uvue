@@ -150,7 +150,7 @@
 					if (this.element == null) {
 						this.element = this.$refs[this.refId] as Element;
 					}
-					this.element!.style.setProperty('transition-property', 'opacity, transform, visibility');
+					this.element!.style.setProperty('transition-property', 'opacity, transform');
 					this.element!.style.setProperty('transition-duration', `${this.duration}ms`)
 					if (transform != '') this.element!.style.setProperty('transform', transform);
 					if (show) this.element!.style.setProperty('visibility', 'visible');
@@ -176,7 +176,7 @@
 	.fui-popup__animation {
 		transition-timing-function: ease;
 		transition-duration: 0.3s;
-		transition-property: transform, visibility, opacity;
+		transition-property: transform, opacity;
 		position: relative;
 		z-index: 99;
 		visibility: hidden;

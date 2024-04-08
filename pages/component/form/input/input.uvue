@@ -6,11 +6,11 @@
 			<view class="fui-page__hd">
 				<text class="fui-page__title">Input</text>
 				<text class="fui-page__desc">Input 输入框，该组件是对原生input组件的增强，内置了常用布局样式，同时包含 input 所有功能。</text>
-			</view>
+			</view> 
 			<view class="fui-page__bd">
 				<text class="fui-section__title fui-mtop--0">基本使用</text>
 				<fui-input :borderTop="true" placeholder="请输入用户名" @input="input"></fui-input>
-				<fui-input placeholder="请输入手机号码" :maxlength="11"></fui-input>
+				<!-- <fui-input placeholder="请输入手机号码" :maxlength="11"></fui-input> -->
 				<text class="fui-section__title">带标题</text>
 				<fui-input label="标题" :borderTop="true" placeholder="这是一个输入框"></fui-input>
 				<fui-input label="标题文字" placeholder="请输入文本"></fui-input>

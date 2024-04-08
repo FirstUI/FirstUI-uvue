@@ -7,7 +7,7 @@
 				</view>
 			</slot>
 		</view>
-		<input ref="fui_input_number" :confirm-hold="false" :type="type" v-model="inputValue" :disabled="disabled"
+		<input ref="fui_input_number" :confirm-hold="false" :type="type" :value="inputValue" :disabled="disabled"
 			@blur="blur" @confirm="onConfirm" class="fui-number__input"
 			:style="{ color: color, fontSize: size + 'rpx', background: backgroundColor, height: `${height}rpx`, minHeight: `${height}rpx`, width: `${width}rpx`,borderRadius:`${radius}rpx`,marginLeft:`${margin}rpx`,marginRight:`${margin}rpx`}" />
 		<view class="fui-number__plus" :style="{minWidth:signWidth+'rpx',minHeight:signWidth+'rpx'}"
@@ -241,6 +241,7 @@
 			},
 			blur(e : UniInputBlurEvent) {
 				let value = e.detail.value;
+				this.inputValue = value;
 				if (value != '' && !isNaN(parseFloat(value))) {
 					if (value.indexOf('.') != -1 && this.isInteger(parseFloat(value))) {
 						value = value.split('.')[0];

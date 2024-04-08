@@ -4,7 +4,7 @@
 			:style="{background:background}">
 			<view class="fui-collapse__title">
 				<slot></slot>
-			</view>
+			</view> 
 			<view v-if="arrow"
 				:class="{'fui-collapse__arrow-close':!isOpen,'fui-collapse__arrow-active': isOpen, 'fui-collapse__item-ani': animation}"
 				class="fui-collapse__arrow" :style="{marginRight:`${arrowRight}rpx`}">
@@ -13,7 +13,7 @@
 			<view v-if="isBorder" :style="{background:borderColor,left:`${borderLeft}rpx`}" class="fui-collapse__border"
 				:class="{'fui-collapse__border-color':borderColor==''}"></view>
 		</view>
-		<view :ref="elId" class="fui-collapse__content-wrap" :class="{'fui-collapse-__content-ani':animation}"
+		<view :ref="elId" class="fui-collapse__content-wrap" :class="{'fui-collapse__content-ani':animation}"
 			:style="{background:contentBackground}">
 			<view :id="elId" class="fui-collapse__content" :class="{'fui-collapse__content-open':isHeight}">
 				<slot name="content"></slot>
@@ -114,6 +114,9 @@
 			},
 			isOpen(val : boolean) {
 				if (this.isInit) this.setCollapseState(val)
+			},
+			isHeight(val : boolean) {
+				if (val) this.isOpen = this.expand;
 			}
 		},
 		updated() {
@@ -142,7 +145,6 @@
 				setTimeout(() => {
 					this.initSize()
 					this.isInit = true;
-					this.isOpen = this.expand;
 				}, 50)
 			})
 		},
@@ -279,7 +281,7 @@
 	}
 
 	.fui-collapse__content-wrap {
-		/* #ifndef UNI-APP-X */
+		/* #ifndef APP */
 		will-change: height;
 		/* #endif */
 		box-sizing: border-box;
@@ -288,10 +290,10 @@
 		height: 0;
 	}
 
-	.fui-collapse-__content-ani {
+	.fui-collapse__content-ani {
 		transition-property: height;
 		transition-duration: 0.3s;
-		/* #ifndef UNI-APP-X */
+		/* #ifndef APP */
 		will-change: height;
 		/* #endif */
 	}

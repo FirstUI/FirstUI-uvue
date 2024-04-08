@@ -3,16 +3,16 @@
 		:class="{'fui-dialog__mask-bg':maskBackground==''}" @tap="maskClose">
 		<view class="fui-dialog__inner" :class="{'fui-dialog__bg':background==''}"
 			:style="{background:background,borderRadius:`${radius}rpx`}">
-			<text class="fui-dialog__title" :class="{'fui-dialog__title-color':color==''}" :style="{color:color}"
+			<text class="fui-dialog__title" :class="{'fui-dialog__title-color':color==''}" :style="getTitleStyl"
 				v-if="title!=''">{{d_title}}</text>
 			<view class="fui-dialog__body" :class="{'fui-dialog__mtop':title==''}">
 				<text class="fui-dialog__descr" :class="{'fui-dialog__descr-color':contentColor==''}"
-					:style="{color:contentColor}" v-if="content!=''">{{content}}</text>
+					:style="getContentStyl" v-if="content!=''">{{content}}</text>
 				<slot></slot>
 			</view>
 			<view class="fui-dialog__footer">
 				<template v-for="(item,index) in btns" :key="index">
-					<text :style="{color:item.color}" class="fui-dialog__btn"
+					<text :style="getBtnStyl(item.color)" class="fui-dialog__btn"
 						:class="{'fui-dialog__btn-active':index==current,'fui-dialog__btn-first':index==0,'fui-dialog__btn-color':(item.color==null || item.color=='') && (item.primary==null || item.primary==false),'fui-dialog__color-primary':(item.color==null || item.color=='') && item.primary==true}"
 						@tap="handleClick(index)" @touchstart="onTouchstart(index)" @touchend="onEnd"
 						@touchcancel="onEnd">{{item.text}}</text>
@@ -108,6 +108,16 @@
 		computed: {
 			locale() : string {
 				return fuiLang.locale
+			},
+			getTitleStyl() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.color != '') mp.set('color', this.color);
+				return mp;
+			},
+			getContentStyl() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.contentColor != '') mp.set('color', this.contentColor);
+				return mp;
 			}
 		},
 		watch: {
@@ -158,6 +168,11 @@
 			})
 		},
 		methods: {
+			getBtnStyl(color : string | null) : object {
+				const mp : Map<string, string> = new Map();
+				if (color != '' && color != null) mp.set('color', color);
+				return mp;
+			},
 			getButtons(vals : FuiDialogButtonsParam[]) {
 				this.btns = [] as FuiDialogButtonsParam[];
 				this.$nextTick(() => {
@@ -295,11 +310,12 @@
 	.fui-dialog__btn-active {
 		background: $fui-bg-color-hover;
 	}
-	
+
 	/* #ifdef WEB */
-	.fui-dialog__btn:active{
+	.fui-dialog__btn:active {
 		background: $fui-bg-color-hover;
 	}
+
 	/* #endif */
 
 	.fui-dialog__btn-first {

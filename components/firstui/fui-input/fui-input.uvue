@@ -11,12 +11,11 @@
 			:style="{borderRadius:getBorderRadius,borderColor:borderColor}" v-if="inputBorder"></view>
 		<!-- #endif -->
 		<view class="fui-input__required" v-if="required">
-			<text :style="{color:requiredColor}" class="fui-input__asterisk-text"
+			<text :style="getRequiredColor" class="fui-input__asterisk-text"
 				:class="{'fui-input__asterisk-color':requiredColor==''}">*</text>
 		</view>
 		<view class="fui-input__label" :style="{minWidth:`${labelWidth}rpx`}" v-if="label!=''">
-			<text :class="{'fui-input__label-size':labelSize==0}"
-				:style="{fontSize:`${labelSize}rpx`,lineHeight:`${labelSize}rpx`,color:labelColor}">{{label}}</text>
+			<text :class="{'fui-input__label-size':labelSize==0}" :style="getLabelStyl">{{label}}</text>
 		</view>
 		<slot name="left"></slot>
 		<input :ref="refId" class="fui-input__self" :class="{'fui-input__disabled':disabled,'fui-input__size':size==0}"
@@ -37,9 +36,8 @@
 			</view>
 		</view>
 		<slot></slot>
-		<view v-if="borderBottom  && !inputBorder"
-			:style="{background:borderColor,left:`${bottomLeft}rpx`,right:`${bottomRight}rpx`}"
-			class="fui-input__border-bottom" :class="{'fui-input__background':borderColor==''}"></view>
+		<view v-if="borderBottom  && !inputBorder" :style="getBtnLineStyl" class="fui-input__border-bottom"
+			:class="{'fui-input__background':borderColor==''}"></view>
 	</view>
 </template>
 
@@ -325,6 +323,35 @@
 					radius = '240px'
 				}
 				return radius;
+			},
+			getBtnLineStyl() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.borderColor != '') mp.set('background', this.borderColor);
+
+				// #ifndef APP
+				mp.set('left', `${this.bottomLeft}rpx`);
+				// #endif
+
+				//app端left值与父元素padding-left一致【待修复】
+				// #ifdef APP
+				mp.set('left', `0`);
+				// #endif
+				mp.set('right', `${this.bottomRight}rpx`);
+				return mp;
+			},
+			getRequiredColor() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.requiredColor != '') mp.set('color', this.requiredColor);
+				return mp;
+			},
+			getLabelStyl() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.labelColor != '') mp.set('color', this.labelColor);
+				if (this.labelSize != 0) {
+					mp.set('fontSize', `${this.labelSize}rpx`);
+					mp.set('lineHeight', `${this.labelSize}rpx`);
+				}
+				return mp;
 			}
 		},
 		watch: {
@@ -470,7 +497,7 @@
 	$fui-color-danger: #FF2B2B !default;
 	$fui-color-border: #EEEEEE !default;
 	$fui-placeholder-color: #CCCCCC !default;
-	$fui-input-border-width: 0.5px !default;
+	$fui-input-border-width: 1px !default;
 	$fui-input-label-size: 32rpx !default;
 	$fui-input-size: 32rpx !default;
 
@@ -481,15 +508,15 @@
 		align-items: center;
 		position: relative;
 		box-sizing: border-box;
-		/* #ifndef  APP*/
+		/* #ifndef APP */
 		border-width: 0 !important;
-		overflow: visible;
 		/* #endif */
+		overflow: visible;
 	}
 
 	/* #ifdef APP */
 	.fui-input__border-uvue {
-		border-width: $fui-input-border-width;
+		border-width: 0.5px;
 		border-style: solid;
 	}
 
@@ -506,32 +533,20 @@
 	.fui-input__border-top {
 		position: absolute;
 		top: 0;
-		/* #ifdef APP */
 		height: $fui-input-border-width;
-		/* #endif */
-		/* #ifndef APP */
-		height: 1px;
-		-webkit-transform: scaleY(0.5);
 		transform: scaleY(0.5);
 		transform-origin: 0 0;
 		z-index: 1;
-		/* #endif */
 		pointer-events: none;
 	}
 
 	.fui-input__border-bottom {
 		position: absolute;
 		bottom: 0;
-		/* #ifdef APP */
 		height: $fui-input-border-width;
-		/* #endif */
-		/* #ifndef APP */
-		height: 1px;
-		-webkit-transform: scaleY(0.5) translateZ(0);
-		transform: scaleY(0.5) translateZ(0);
+		transform: scaleY(0.5);
 		transform-origin: 0 100%;
 		z-index: 1;
-		/* #endif */
 		pointer-events: none;
 	}
 
@@ -555,7 +570,9 @@
 	/* #endif */
 
 	.fui-input__required {
+		/* #ifndef APP */
 		transform: translateZ(0);
+		/* #endif */
 		position: absolute;
 		left: 12rpx;
 		height: 100%;

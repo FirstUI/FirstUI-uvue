@@ -78,7 +78,7 @@
 						})
 						this.isShow = true
 					})
-				}, 50)
+				}, 80)
 			},
 			childChange() {
 				this.children.forEach((item : ComponentPublicInstance) => {
@@ -98,18 +98,21 @@
 						.boundingClientRect()
 						.exec(ret => {
 							const node = ret[0] as NodeInfo;
-							let width = ((node.width as number) - 1) / this.columns
-							// width = Math.floor(width * 100) / 100
-							if (this.square)
-								this.height = `${width}px`;
-							if (isNoSupported)
-								this.width = `${width}px`;
-							fn(this.width, this.height)
+							if (node.width != null) {
+								let width = (((node.width as number) - 1) / this.columns)
+								// width = Math.floor(width * 100) / 100
+								if (this.square)
+									this.height = `${width}px`;
+								if (isNoSupported)
+									this.width = `${width}px`;
+								fn(this.width, this.height)
+							} else {
+								this.init()
+							}
 						})
 				} else {
 					fn(this.width, this.height)
 				}
-
 			}
 		}
 
@@ -118,7 +121,7 @@
 
 <style lang="scss">
 	$fui-color-border: #EEEEEE !default;
-	$fui-grid-border-width: 0.5px !default;
+	$fui-grid-border-width: 1px !default;
 
 	@mixin fui_grid_wrap_border {
 		position: absolute;
@@ -154,12 +157,16 @@
 
 	.fui-grid__border-top {
 		height: $fui-grid-border-width;
+		transform-origin: 0 0;
+		transform: scaleY(0.5);
 		right: 0;
 		@include fui_grid_wrap_border;
 	}
 
 	.fui-grid__border-left {
 		width: $fui-grid-border-width;
+		transform-origin: 0 0;
+		transform: scaleX(0.5);
 		bottom: 0;
 		@include fui_grid_wrap_border;
 	}

@@ -1,7 +1,7 @@
 <template>
 	<view class="fui-wrap">
 		<view class="fui-banner__box">
-			<image class="fui-banner" src="/static/images/index/light/img_banner_3x.png" mode="widthFix"></image>
+			<image class="fui-banner" src="/static/images/index/light/img_banner_3x.png"></image>
 			<view class="fui-banner__content">
 				<image class="fui-logo" src="/static/images/common/img_logo.png" mode="widthFix"></image>
 				<text class="fui-title">First UI</text>
@@ -115,7 +115,7 @@
 	}
 
 	.fui-banner__content {
-		width: 100%;
+		width: 80%;
 		height: 538rpx;
 		position: absolute;
 		z-index: 2;
@@ -160,6 +160,7 @@
 	.fui-scroll__view {
 		/* width: 100%; */
 		height: 108rpx;
+		overflow: visible;
 	}
 
 	.fui-tab__item-txt {
@@ -173,12 +174,16 @@
 		font-weight: 700;
 		color: #7F7F7F;
 		border-bottom-width: 0;
-		transition: transform 0.2s linear;
+		transition-duration: 0.2s;
+		transition-timing-function: linear;
+		transition-property: opacity, transform, font-size, color;
 		text-align: center;
+		white-space: nowrap;
 	}
 
 	.fui-tab__item {
 		position: relative;
+		overflow: visible;
 	}
 
 	.fui-tabs--indicator {
@@ -234,8 +239,8 @@
 	}
 
 	.fui-list__item {
-		width: 100%;
 		height: 112rpx;
+		overflow: visible;
 	}
 
 	.fui-item__name {
@@ -245,6 +250,7 @@
 		font-size: 32rpx;
 		font-weight: 700;
 		color: #181818;
+		white-space: nowrap;
 	}
 
 	.fui-item__icon,

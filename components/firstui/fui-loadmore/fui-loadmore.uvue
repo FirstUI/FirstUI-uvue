@@ -3,8 +3,12 @@
 		<slot></slot>
 		<view class="fui-loadmore__icon" @transitionend="onEnd" :ref="refAniId"
 			:class="{'fui-loadmore__border-left':activeColor==''}"
-			:style="{width:`${iconWidth}rpx`,height:`${iconWidth}rpx`,'border-left-color':activeColor,'border-right-color':iconColor,'border-top-color':iconColor,'border-bottom-color':iconColor}"
+			:style="{width:`${iconWidth}rpx`,height:`${iconWidth}rpx`,'border-left-color':isIos? iconColor:activeColor,'border-right-color':iconColor,'border-top-color':iconColor,'border-bottom-color':iconColor}"
 			v-if="src=='' && state==2">
+			<!-- #ifdef APP-IOS -->
+			<view class="fui-loadmore__spin-dot" :class="{'fui-loadmore__bgcolor':activeColor==''}"
+				:style="{background:activeColor}"></view>
+			<!-- #endif -->
 		</view>
 		<image class="fui-loadmore__icon-ani" @transitionend="onEnd" :ref="refAniId" :src="src"
 			:style="{width:`${iconWidth}rpx`,height:`${iconWidth}rpx`}" v-if="src!='' && state==2"></image>
@@ -116,7 +120,12 @@
 		},
 		data() {
 			const refAniId = `fui_lm_${parseInt(Math.ceil(Math.random() * 10e5).toString(), 36)}`
+			let isIos = false;
+			// #ifdef APP-IOS
+			isIos = true;
+			// #endif
 			return {
+				isIos: isIos,
 				refAniId: refAniId,
 				times: 0,
 				isSpin: false,
@@ -213,7 +222,20 @@
 		border-radius: 100px;
 		flex-shrink: 0;
 		@include load_ani;
+		position: relative;
 	}
+
+	/* #ifdef APP-IOS */
+	.fui-loadmore__spin-dot {
+		position: absolute;
+		width: 12rpx;
+		height: 12rpx;
+		border-radius: 8rpx;
+		left: 0;
+		top: 0;
+	}
+
+	/* #endif */
 
 	.fui-loadmore__icon-ani {
 		margin: 0 6px;
@@ -225,7 +247,17 @@
 		padding-top: 16rpx;
 	}
 
+	/* #ifndef APP-IOS */
 	.fui-loadmore__border-left {
 		border-left-color: $fui-color-primary !important;
 	}
+
+	/* #endif */
+
+	/* #ifdef APP-IOS */
+	.fui-loadmore__bgcolor {
+		background: $fui-color-primary !important;
+	}
+
+	/* #endif */
 </style>

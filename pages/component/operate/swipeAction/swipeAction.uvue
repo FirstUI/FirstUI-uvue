@@ -51,6 +51,7 @@
 						</fui-list-cell>
 					</fui-swipe-action>
 				</fui-swipeaction-group>
+				<!-- #ifndef APP-IOS -->
 				<text class="fui-section__title">菜单状态不关联，缩放效果</text>
 				<fui-swipeaction-group>
 					<fui-swipe-action :autoClose="false" :isScale="true">
@@ -62,6 +63,21 @@
 						</fui-list-cell>
 					</fui-swipe-action>
 				</fui-swipeaction-group>
+				<!-- #endif -->
+				
+				<!-- #ifdef APP-IOS -->
+				<text class="fui-section__title">菜单状态不关联</text>
+				<fui-swipeaction-group>
+					<fui-swipe-action :autoClose="false" >
+						<fui-list-cell padding="36rpx 32rpx" :highlight="false">左滑菜单</fui-list-cell>
+					</fui-swipe-action>
+					<fui-swipe-action :autoClose="false" :buttons="buttons">
+						<fui-list-cell padding="36rpx 32rpx" :highlight="false">
+							<text class="fui-text">自定义菜单按钮</text>
+						</fui-list-cell>
+					</fui-swipe-action>
+				</fui-swipeaction-group>
+				<!-- #endif -->
 				<text class="fui-section__title">点击不关闭，结合提示操作</text>
 				<!-- 额外传参写法如：@change="stateChange($event as boolean,1)" -->
 				<fui-swipeaction-group>
@@ -120,9 +136,10 @@
 			buttonTap(e : FuiSwipeActionButtonParam) {
 				//按钮点击事件
 				console.log(e)
-				this.fui.modal('提示', '确定要删除吗', (confirm) => {
+				this.fui.modal('提示', '确定要删除吗', (confirm:boolean) => {
 					if (confirm) {
 						this.fui.toast('删除～')
+						this.isShow = false
 					} else {
 						this.fui.toast('取消删除，关闭菜单～')
 						//关闭菜单

@@ -20,6 +20,7 @@
 						<fui-button text="立即体验" radius="80rpx" @onclick="goIndex"></fui-button>
 					</view>
 				</view>
+
 			</view>
 
 			<fui-footer :isFixed="true" text="Copyright © 2024 unix.firstui.cn"></fui-footer>
@@ -40,8 +41,7 @@
 				logoEl: null as null | UniElement,
 				isWaveAni: true,
 				isPc: false,
-				times: 0,
-				content: ['FirstUI']
+				times: 0
 			}
 		},
 		onLoad() {
@@ -124,16 +124,11 @@
 			},
 			onReset() {
 				this.getEl()
-				this.setDuration(true)
-				this.onSatrtAni(false)
-				setTimeout(() => {
-					this.setDuration(false)
-					this.onSatrtAni(true)
-				}, 0)
+				this.onSatrtAni(!this.isWaveAni)
 			},
 			onWaveEnd() {
 				// #ifdef APP
-				if (this.isWaveAni) this.onReset()
+				this.onReset()
 				// #endif
 			}
 		}
@@ -248,7 +243,13 @@
 		position: relative;
 		z-index: 3;
 		background: #FFFFFF;
+		/* #ifndef APP-IOS */
 		border-radius: 64rpx 64rpx 0 0;
+		/* #endif */
+
+		/* #ifdef APP-IOS */
+		border-radius: 64rpx;
+		/* #endif */
 		transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
 		transition-duration: 2s;
 		transition-property: transform, opacity;
@@ -284,8 +285,16 @@
 	}
 
 	.fui-img__wave {
+		/* #ifndef APP-IOS */
 		height: 260rpx;
 		width: 2250rpx;
+		/* #endif */
+		
+		/* #ifdef APP-IOS */
+		height: 416rpx;
+		width: 3600rpx;
+		/* #endif */
+		
 		position: absolute;
 		right: 0;
 		top: 140rpx;

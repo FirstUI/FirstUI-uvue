@@ -28,7 +28,7 @@
 				<text class="fui-section__title">推荐布局</text>
 				<fui-card>
 					<view class="fui-list__item">
-						<image class="fui-cover fui-cover__top-radius"
+						<image class="fui-cover"
 							:src="`${resUrl}/cooperate/dark/img_banner_3x.png`" mode="widthFix">
 						</image>
 					</view>
@@ -81,11 +81,13 @@
 		height: 385rpx;
 		position: relative;
 		background: #eee;
+		overflow: hidden;
 	}
 
 	.fui-cover {
 		width: 100%;
 		height: 385rpx;
+		border-radius: 16rpx 16rpx 0 0;
 	}
 
 	.fui-list__title {
@@ -98,6 +100,7 @@
 		padding: 24rpx 20rpx;
 		box-sizing: border-box;
 		background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.6));
+		border-radius:0 0 16rpx 16rpx;
 	}
 
 	.fui-card__title {

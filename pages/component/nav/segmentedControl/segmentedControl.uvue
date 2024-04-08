@@ -11,7 +11,7 @@
 				<text class="fui-section__title fui-mtop--0">基础使用</text>
 				<fui-segmented-control :values="values" @onclick="itemClick"></fui-segmented-control>
 				<text class="fui-section__title">自定义颜色</text>
-				<fui-segmented-control :values="values" :marginTop="24" color="#FF2B2B"></fui-segmented-control>
+				<fui-segmented-control :values="values" :marginTop="24" color="#FF2B2B"></fui-segmented-control> 
 				<fui-segmented-control :values="values" :marginTop="24" color="#FFB703"></fui-segmented-control>
 				<fui-segmented-control :values="values" :marginTop="24" color="#09BE4F"></fui-segmented-control>
 				<fui-segmented-control :values="values" :marginTop="24" color="#6831FF"></fui-segmented-control>
@@ -25,8 +25,10 @@
 				<fui-segmented-control :values="values2" :disabled="true"></fui-segmented-control>
 				<text class="fui-section__title">默认选中</text>
 				<fui-segmented-control :values="values2" :current="1"></fui-segmented-control>
+				<!-- #ifndef APP-IOS -->
 				<text class="fui-section__title">改变圆角值</text>
 				<fui-segmented-control :values="values2" :radius="100"></fui-segmented-control>
+				<!-- #endif -->
 				<text class="fui-section__title">单项禁用</text>
 				<fui-segmented-control :values="values3"></fui-segmented-control>
 			</view>

@@ -11,7 +11,7 @@
 		</view>
 		<view class="fui-pagination__num" v-if="isPage && pageType==1">
 			<text :class="{'fui-pagination__active-color':currentColor==''}"
-				:style="{color:currentColor,fontSize:`${pageFontSize}rpx`}">{{currentIndex}}</text>
+				:style="getActiveStyl">{{currentIndex}}</text>
 			<text :style="{color:pageColor,fontSize:`${pageFontSize}rpx`}">/{{maxPage}}</text>
 		</view>
 		<view class="fui-page__number" v-if="isPage && pageType==2">
@@ -171,6 +171,12 @@
 			},
 			prevNext() : string {
 				return `${this.prevText}_${this.nextText}`
+			},
+			getActiveStyl() : object {
+				const mp : Map<string, any> = new Map();
+				if (this.currentColor != '') mp.set('color', this.currentColor);
+				mp.set('fontSize', `${this.pageFontSize}rpx`)
+				return mp;
 			}
 		},
 		watch: {

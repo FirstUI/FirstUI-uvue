@@ -115,7 +115,7 @@
 
 <style scoped lang="scss">
 	$fui-color-border: #EEEEEE !default;
-	$fui-list-cell-borderwidth: 0.5px !default;
+	$fui-list-cell-borderwidth: 1px !default;
 
 	.fui-list__wrap {
 		width: 100%;
@@ -138,6 +138,8 @@
 		position: absolute;
 		top: 0;
 		height: $fui-list-cell-borderwidth;
+		transform: scaleY(0.5);
+		transform-origin: 0 0;
 		z-index: 1;
 		pointer-events: none;
 	}
@@ -146,6 +148,8 @@
 		position: absolute;
 		bottom: 0;
 		height: $fui-list-cell-borderwidth;
+		transform: scaleY(0.5);
+		transform-origin: 0 100%;
 		z-index: 1;
 		pointer-events: none;
 	}

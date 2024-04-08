@@ -17,6 +17,7 @@
 						<text class="fui-text">标题文字</text>
 						<text class="fui-text__explain">说明文字</text>
 					</fui-list-cell>
+					<view></view>
 					<fui-list-cell :arrow="true">
 						<text class="fui-text">标题文字</text>
 					</fui-list-cell>
@@ -150,9 +151,12 @@
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
+		overflow: visible;
 	}
 
 	.fui-text__explain {
+		height: 40rpx;
+		line-height: 40rpx;
 		font-size: 28rpx;
 		color: #7F7F7F;
 		flex-shrink: 0;

@@ -7,18 +7,20 @@
 				<text class="fui-page__title">Switch</text>
 				<text class="fui-page__desc">Switch 开关选择器，原生组件增强。</text>
 			</view>
+			
 			<view class="fui-page__bd">
 				<text class="fui-section__title fui-mtop--0">基础使用</text>
 				<fui-list-cell :highlight="false" padding="28rpx 32rpx">
 					<view class="fui-cells">
 						<text class="fui-text">状态：{{status?'ON':'OFF'}}</text>
 						<fui-switch @change="change"></fui-switch>
-					</view>
+					</view> 
 				</fui-list-cell>
 				<text class="fui-section__title">带文字</text>
 				<fui-list-cell :highlight="false" padding="28rpx 32rpx">
 					<view class="fui-cells">
 						<text class="fui-text">slot插槽</text>
+						
 						<fui-switch v-model:checked="isOpen">
 							<text class="fui-switch--text">{{isOpen?'ON':'OFF'}}</text>
 						</fui-switch>
@@ -68,7 +70,7 @@
 					</fui-list-cell>
 				</fui-label>
 			</view>
-		</view>
+		</view> 
 	<!-- #ifdef APP -->
 	</scroll-view>
 	<!-- #endif -->

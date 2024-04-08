@@ -4,7 +4,7 @@
 		:style="{margin:margin,background:background,borderRadius:full?'0px':radius,'box-shadow':showBorder?'none':shadow,borderColor:borderColor}"
 		@tap="handleClick">
 		<view class="fui-card__header" v-if="tag!='' || title!='' || src!=''"
-			:class="{'fui-card__header-line':headerLine,'fui-card__bottom-bcolor':lineColor!='' && headerLine}"
+			:class="{'fui-card__header-line':headerLine,'fui-card__bottom-bcolor':lineColor=='' && headerLine}"
 			:style="{'border-top-left-radius':full?'0px':radius,'border-top-right-radius':full?'0px':radius,'border-bottom-color':headerLine?lineColor:'transparent',padding:padding,background:headerBackground}">
 			<view class="fui-card__header-left">
 				<image :src="src" class="fui-card__header-thumb" v-if="src!=''"
@@ -14,9 +14,21 @@
 			</view>
 			<text class="fui-card__header-right" v-if="tag!=''"
 				:style="{fontSize:`${tagSize}rpx`,color:tagColor}">{{tag}}</text>
+			<!-- #ifndef APP -->
+			<view class="fui-card__bottom-line" v-if="headerLine"
+				:style="{background:headerLine?lineColor:'transparent'}"
+				:class="{'fui-card__btmline-bgcolor':lineColor==''}"></view>
+			<!-- #endif -->
 		</view>
-		<view class="fui-card__body" :class="{'fui-card__header-line':footerLine}">
+		<view class="fui-card__body"
+			:class="{'fui-card__header-line':footerLine,'fui-card__bottom-bcolor':lineColor=='' && footerLine}"
+			:style="{'border-bottom-color':footerLine?lineColor:'transparent'}">
 			<slot></slot>
+			<!-- #ifndef APP -->
+			<view class="fui-card__bottom-line" v-if="footerLine"
+				:style="{background:footerLine?lineColor:'transparent'}"
+				:class="{'fui-card__btmline-bgcolor':lineColor==''}"></view>
+			<!-- #endif -->
 		</view>
 		<view class="fui-card__footer"
 			:style="{'border-bottom-left-radius':full?'0px':radius,'border-bottom-right-radius':full?'0px':radius}">
@@ -101,7 +113,7 @@
 			},
 			lineColor: {
 				type: String,
-				default: '#EEEEEE'
+				default: ''
 			},
 			padding: {
 				type: String,
@@ -178,7 +190,6 @@
 		border-radius: 0px !important;
 	}
 
-
 	.fui-card__border {
 		position: relative;
 		box-shadow: none !important;
@@ -209,17 +220,47 @@
 		align-items: center;
 	}
 
+
 	.fui-card__header-line {
+		/* #ifdef APP */
 		position: relative;
 		border-bottom-width: $fui-card-border-width;
 		border-bottom-style: solid;
 		box-sizing: border-box;
+		/* #endif */
+
+		/* #ifndef APP */
+		border-bottom-width: 0;
+		/* #endif */
 	}
 
+
+	/* #ifndef APP */
+	.fui-card__bottom-line {
+		position: absolute;
+		width: 100%;
+		height: 1px;
+		-webkit-transform: scaleY(0.5);
+		transform: scaleY(0.5);
+		transform-origin: 0 100%;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		pointer-events: none;
+	}
+
+	.fui-card__btmline-bgcolor {
+		background: $fui-color-border !important;
+	}
+
+	/* #endif */
+
+	/* #ifdef APP */
 	.fui-card__bottom-bcolor {
 		border-bottom-color: $fui-color-border !important;
 	}
 
+	/* #endif */
 
 	.fui-card__header-thumb {
 		margin-right: 20rpx;
@@ -244,6 +285,7 @@
 	.fui-card__body {
 		width: 100%;
 		box-sizing: border-box;
+		position: relative;
 	}
 
 	.fui-card__footer {

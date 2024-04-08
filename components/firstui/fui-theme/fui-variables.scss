@@ -32,8 +32,8 @@ $fui-list-cell-padding:32rpx;
 $fui-list-cell-arrowcolor:#B2B2B2;
 /* 下边框left值*/
 $fui-list-cell-bottomleft:32rpx;
-/* 边框宽度（适用于 fui-list 与 fui-list-cell组件） */
-$fui-list-cell-borderwidth:0.5px;
+/* 边框宽度（适用于 fui-list 与 fui-list-cell组件），默认缩放0.5倍 */
+$fui-list-cell-borderwidth:1px;
 
 
 /* fui-section 标题栏组件 */
@@ -51,16 +51,16 @@ $fui-section-descr-color: #B2B2B2;
 $fui-section-descr-top: 12rpx;
 
 /* fui-grid 宫格组件 */
-/* 边框宽度 */
-$fui-grid-border-width:0.5px;
+/* 边框宽度 默认缩放0.5倍*/
+$fui-grid-border-width:1px;
 
 /* fui-card 卡片组件 */
-/* 边框宽度 */
-$fui-card-border-width:0.5px;
+/* 边框宽度 默认缩放0.5倍 */
+$fui-card-border-width:1px;
 
 /* fui-input 输入框组件 */
-/* 边框宽度 */
-$fui-input-border-width:0.5px;
+/* 边框宽度，默认缩放0.5倍 */
+$fui-input-border-width:1px;
 /* 标题字体大小 */
 $fui-input-label-size: 32rpx;
 /* 输入框字体大小 */
@@ -90,7 +90,7 @@ $fui-switch-normal-transition: #dfdfdf;
 /* 未选中时边框颜色 */
 $fui-switch-border-color: #CCCCCC;
 /* switch圆形按钮阴影 */
-$fui-switch-circle-shadow: 0 0 3px rgba(0, 0, 0, .4);
+$fui-switch-circle-shadow: 0 0 6rpx rgba(0, 0, 0, .4);
 /* switch圆形按钮的背景色 */
 $fui-switch-circle-background: #FFFFFF;
 /* switch中对号颜色，type=checkbox时有效 */
@@ -145,9 +145,13 @@ $fui-tag-border-width: 0.5px;
 $fui-collapse-border-width: 0.5px;
 
 /* fui-divider 分割线组件 */
-/* 线条宽度 */
-$fui-divider-line-width: 0.5px;
+/* 线条宽度 默认缩放0.5倍*/
+$fui-divider-line-width: 1px;
 /* 线条颜色 */
 $fui-divider-line-color: #CCCCCC;
 /* 显示文本字体颜色 */
 $fui-divider-text-color: #B2B2B2;
+
+/* fui-form-item 表单项组件 */
+/* label标题字体大小 */
+$fui-form-item-labelsize: 32rpx;

@@ -189,7 +189,7 @@
 	.fui-sections__title {
 		position: relative;
 		display: flex;
-		/* #ifndef UNI-APP-X */
+		/* #ifndef APP */
 		word-break: break-all;
 		/* #endif */
 		flex-shrink: 0;
@@ -209,13 +209,13 @@
 	}
 
 	.fui-sections__descr {
-		/* #ifndef UNI-APP-X */
+		/* #ifndef APP */
 		word-break: break-all;
 		/* #endif */
 	}
 
 	.fui-sections__descr-text {
-		/* #ifndef UNI-APP-X */
+		/* #ifndef APP */
 		word-break: break-all;
 		/* #endif */
 		font-weight: 400;
@@ -227,7 +227,9 @@
 
 	.fui-sections__title-size {
 		font-size: $fui-section-title-size !important;
+		/* #ifndef APP-ANDROID */
 		line-height: $fui-section-title-size !important;
+		/* #endif */
 	}
 
 	.fui-sections__title-color {

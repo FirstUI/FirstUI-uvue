@@ -75,11 +75,9 @@
 				<text class="fui-section__title">不显示箭头</text>
 				<fui-collapse :accordion="true" @change="change">
 					<fui-collapse-item :arrow="false" :index="index" v-for="(item,index) in list" :key="index">
-						<fui-list-cell padding="0">
-							<view class="fui-item__box">
-								<text class="fui-text">{{item.question}}</text>
-							</view>
-						</fui-list-cell>
+						<view class="fui-item__box" hover-class="fs-hover" :hover-stay-time="150">
+							<text class="fui-text">{{item.question}}</text>
+						</view>
 						<template v-slot:content>
 							<text class="fui-descr" style="color: #09BE4F;">{{item.answer}}</text>
 						</template>

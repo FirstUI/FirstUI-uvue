@@ -14,7 +14,7 @@
 				</fui-button>
 			</view>
 			<fui-drawer v-model:visible="visible">
-				<scroll-view :scroll-y="true" class="fui-scroll__view">
+				<scroll-view direction="vertical" class="fui-scroll__view">
 					<view>
 						<fui-list-cell :arrow="true" v-for="(item,index) in itemList" :key="index">
 							<text class="fui-text">item{{item}}</text>
@@ -26,7 +26,7 @@
 			<fui-drawer :visible="visible2" direction="left" :radius="24" :maskClosable="false">
 				<view class="fui-scroll__view">
 					<text class="fui-title">左侧菜单栏</text>
-					<scroll-view :scroll-y="true" style="height: 720rpx;">
+					<scroll-view direction="vertical" style="height: 720rpx;">
 						<view>
 							<fui-list-cell v-for="(item,index) in itemList" :key="index">
 								<text class="fui-text">item{{item}}</text>
@@ -80,7 +80,6 @@
 	.fui-scroll__view {
 		width: 520rpx;
 		flex: 1;
-		overflow: hidden;
 	}
 
 	.fui-title {

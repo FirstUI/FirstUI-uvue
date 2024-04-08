@@ -2,29 +2,22 @@
 	<view class="fui-switch__input"
 		:class="[`fui-switch__size-${type}`,scaleRatio!=1? `fui-switch__scale-${scaleAlign}`:'',disabled && disabledStyle ?'fui-switch__checkbox-disabled':'']"
 		:style="{transform:`scale(${scaleRatio})`}">
-		<view class="fui-switch__input-def"
-			:style="{background:val?color:transitionColor,borderColor:val?color:(borderColor==''?color:borderColor)}"
+		<view class="fui-switch__input-def" :style="getSwitchStyl"
 			:class="{'fui-checkbox__disabled':disabled,'fui-switch__checked-color':styleVal && color=='','fui-switch__normal-bcolor':!styleVal && borderColor=='','fui-switch__normal-bg':!styleVal && transitionColor==''}"
-			v-if="type=='switch'">
-			<view class="fui-switch__input-before" :style="{background: normalColor}"
+			v-if="type=='switch'" @tap="onChange">
+			<view class="fui-switch__input-before" :style="getBeforeBgColor"
 				:class="{'fui-switch__input--before':val,'fui-switch__before-bg':!styleVal && normalColor==''}">
 			</view>
 			<view class="fui-switch__input-after" :style="getStyle"
 				:class="{'fui-switch__input--after':val,'fui-switch__after-bg':(btnColor=='' && styleVal) || (!styleVal && btnNormalColor=='')}">
 				<slot></slot>
 			</view>
-			<switch class="fui-switch__hidden" :class="{'fui-switch__pointer-events':isLabel}" @change="onChange"
-				:name="name" :checked="val" :disabled="disabled">
-			</switch>
 		</view>
 		<view class="fui-switch__checkbox-self"
 			:class="{'fui-switch__checked-color':styleVal && color=='','fui-switch__normal-bcolor':!styleVal && borderColor=='','fui-switch__circle-bg':!styleVal && normalColor==''}"
-			:style="{background:val?color:normalColor,'border-color':val?color:(borderColor==''?color:borderColor)}"
-			v-else>
+			:style="getSwitchStyl" v-else @tap="onChange">
 			<view class="fui-switch__check-mark" :class="{'fui-switch__mark-color':checkMarkColor==''}"
-				:style="{borderBottomColor:checkMarkColor,borderRightColor:checkMarkColor}" v-if="val"></view>
-			<switch class="fui-switch__hidden" :class="{'fui-switch__pointer-events':isLabel}" @change="onChange"
-				:name="name" :checked="val" :disabled="disabled"></switch>
+				:style="getMarkStyl" v-if="val"></view>
 		</view>
 	</view>
 </template>
@@ -131,6 +124,33 @@
 					if (this.btnNormalColor != '') mp.set('background', this.btnNormalColor);
 				}
 				return mp
+			},
+			getSwitchStyl() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.val) {
+					if (this.color != '') {
+						mp.set('borderColor', this.color);
+						mp.set('background', this.color);
+					}
+				} else {
+					if (this.transitionColor != '') mp.set('background', this.transitionColor);
+					if (this.borderColor != '') mp.set('borderColor', this.borderColor);
+				}
+
+				return mp;
+			},
+			getBeforeBgColor() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.normalColor != '') mp.set('background', this.normalColor)
+				return mp;
+			},
+			getMarkStyl() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.checkMarkColor != '') {
+					mp.set('borderBottomColor', this.checkMarkColor)
+					mp.set('borderRightColor', this.checkMarkColor)
+				}
+				return mp;
 			}
 		},
 		watch: {
@@ -159,19 +179,19 @@
 			}
 		},
 		methods: {
-			onChange(e : UniSwitchChangeEvent) {
+			onChange(e : UniPointerEvent) {
+				e.stopPropagation();
 				if (this.disabled) return;
-				this.emitChange(e.detail.value, false)
+				this.emitChange(!this.val)
 			},
-			emitChange(e : boolean, label : boolean) {
-				if (this.fuiLabel != null && !label) return;
+			emitChange(e : boolean) {
 				this.val = e;
 				this.$emit('change', e)
 				this.$emit('update:checked', e)
 			},
 			labelClick() {
 				if (this.disabled) return;
-				this.emitChange(!this.val, true)
+				this.emitChange(!this.val)
 			},
 			//provide/inject方式（可能有警告，设置default:null也无法去除，应该是底层有bug）
 			getParent(name : string) : boolean {
@@ -208,7 +228,7 @@
 	$fui-switch-background: #FFFFFF !default;
 	$fui-switch-normal-transition: #dfdfdf !default;
 	$fui-switch-border-color: #CCCCCC !default;
-	$fui-switch-circle-shadow: 0 0 3px rgba(0, 0, 0, .4) !default;
+	$fui-switch-circle-shadow: 0 0 6rpx rgba(0, 0, 0, .4) !default;
 	$fui-switch-circle-background: #FFFFFF !default;
 	$fui-switch-mark-color: #FFFFFF !default;
 
@@ -307,6 +327,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		transform: translateX(0);
 	}
 
 	.fui-switch__after-bg {
@@ -344,21 +365,6 @@
 	.fui-switch__mark-color {
 		border-bottom-color: $fui-checkbox-mark-color !important;
 		border-right-color: $fui-checkbox-mark-color !important;
-	}
-
-	.fui-switch__hidden {
-		position: absolute;
-		top: -1px;
-		left: -1px;
-		opacity: 0;
-		width: 100%;
-		height: 100%;
-		z-index: 2;
-		border-width: 0;
-	}
-
-	.fui-switch__pointer-events {
-		pointer-events: none;
 	}
 
 	.fui-switch__checkbox-disabled {

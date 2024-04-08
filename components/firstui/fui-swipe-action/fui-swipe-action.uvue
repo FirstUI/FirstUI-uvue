@@ -406,11 +406,33 @@
 			mousedown(e : UniTouchEvent) {
 				if (!this.isPC()) return
 				this.movable = true
+				if (e['touches'] == null || e['touches'] == undefined) {
+					e['touches'] = [{
+						clientX: e['clientX'],
+						clientY: e['clientY'],
+						identifier: 1,
+						pageX: e['pageX'],
+						pageY: e['pageY'],
+						screenX: e['screenX'],
+						screenY: e['screenY']
+					}] as UniTouch[];
+				}
 				this.touchstart(e)
 			},
 			mousemove(e : UniTouchEvent) {
 				if (!this.isPC() || !this.movable) return;
 				this.isMove = true;
+				if (e['touches'] == null || e['touches'] == undefined) {
+					e['touches'] = [{
+						clientX: e['clientX'],
+						clientY: e['clientY'],
+						identifier: 1,
+						pageX: e['pageX'],
+						pageY: e['pageY'],
+						screenX: e['screenX'],
+						screenY: e['screenY']
+					}] as UniTouch[];
+				}
 				this.touchmove(e)
 			},
 			mouseup() {

@@ -1,5 +1,4 @@
 <template>
-	
 	<!-- #ifdef APP -->
 	<scroll-view class="fui-scroll--view">
 	<!-- #endif -->

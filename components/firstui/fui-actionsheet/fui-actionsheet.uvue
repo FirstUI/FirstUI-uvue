@@ -4,13 +4,12 @@
 		<view :ref="refAsId" class="fui-actionsheet__wrap"
 			:class="[radius?'fui-actionsheet__radius':'',`fui-as__bg-${themeStyl}`]" :style="{zIndex:zIndex}">
 			<text class="fui-actionsheet__tips"
-				:class="[color==''?'fui-actionsheet__tip-color':'',`fui-as__btn-${themeStyl}`]"
-				:style="{fontSize:`${size}rpx`,color:color}" v-if="tips!=''">{{tips}}</text>
+				:class="[color==''?'fui-actionsheet__tip-color':'',`fui-as__btn-${themeStyl}`]" :style="getTipsStyl"
+				v-if="tips!=''">{{tips}}</text>
 			<view :class="{'fui-actionsheet__operate-box':isCancel}">
 				<view :class="[`fui-as__btn-${themeStyl}`]" v-for="(item,index) in vals" :key="index"
 					hover-class="fui-actionsheet__btn-active" :hover-stay-time="150">
-					<text class="fui-actionsheet__btn"
-						:style="{color:theme=='dark'?item.darkColor:item.color,fontSize:`${itemSize}rpx`}"
+					<text class="fui-actionsheet__btn" :style="getBtnStyl(item.color, item.darkColor, theme , itemSize)"
 						:class="[(item.darkColor==null || item.darkColor=='') && themeStyl=='dark'?`fui-actionsheet__color-${themeStyl}`: '',(item.color==null || item.color=='') && themeStyl=='light'?`fui-actionsheet__color-${themeStyl}`:'' , !isCancel && index==vals.length-1 && iphoneX && safeArea?'fui-as__safe-weex':'',index!=0 || tips!=''?`fui-as__divider-${themeStyl}`:'']"
 						@tap="handleClickItem(index)">{{item.text}}</text>
 				</view>
@@ -121,6 +120,12 @@
 		computed: {
 			locale() : string {
 				return fuiLang.locale
+			},
+			getTipsStyl() : object {
+				const mp : Map<string, string> = new Map();
+				mp.set('fontSize', `${this.size}rpx`)
+				if (this.color != '') mp.set('color', this.color);
+				return mp;
 			}
 		},
 		watch: {
@@ -170,6 +175,16 @@
 			})
 		},
 		methods: {
+			getBtnStyl(color : string | null, darkColor : string | null, theme : string, size : number) : object {
+				const mp : Map<string, any> = new Map();
+				mp.set('fontSize', `${size}rpx`);
+				if (theme == 'dark') {
+					if (darkColor != null && darkColor != '') mp.set('color', darkColor);
+				} else {
+					if (color != null && color != '') mp.set('color', color);
+				}
+				return mp;
+			},
 			initData(vals : FuiActionSheetItemParam[]) {
 				this.vals = [] as FuiActionSheetItemParam[]
 				this.themeStyl = '';

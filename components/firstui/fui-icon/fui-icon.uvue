@@ -1,6 +1,6 @@
 <template>
-	<text :style="{ color: color, fontSize: getSize,lineHeight:getSize, fontWeight: fontWeight}" class="fui-icon"
-		:class="{'fui-icon__fontsize':isBind,'fui-icon__active-color':primary && color=='','fui-icon__color':color=='' }"
+	<text :style="getIconStyl" class="fui-icon"
+		:class="{'fui-icon__fontsize':isBind,'fui-icon__active-color':primary && color=='','fui-icon__color': color=='' && !primary }"
 		@tap="handleClick">{{ getIcon }}</text>
 </template>
 
@@ -81,6 +81,14 @@
 			getIcon() : string {
 				const icon = this.icons.getString(this.name)
 				return icon == null ? '' : icon
+			},
+			getIconStyl() : object {
+				const mp : Map<string, string> = new Map();
+				mp.set('fontWeight', this.fontWeight);
+				mp.set('fontSize', this.getSize);
+				mp.set('lineHeight', this.getSize);
+				if (this.color != '') mp.set('color', this.color);
+				return mp;
 			}
 		},
 		data() {

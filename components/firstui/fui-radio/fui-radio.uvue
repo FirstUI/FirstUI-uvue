@@ -1,11 +1,13 @@
 <template>
 	<view class="fui-radio__input"
-		:class="[scaleRatio!=1?`fui-radio__scale-${scaleAlign}`:'',disabled?'fui-radio__disabled':'',color=='' && styleVal && !isCheckMark?'fui-radio__color':'',normalColor=='' && !styleVal && !isCheckMark?'fui-radio__background':'',borderColor=='' && !styleVal && !isCheckMark?'fui-radio__normal-border':'']"
-		:style="getStyl" @tap.stop="radioChange">
-		<view class="fui-check__mark" :class="{'fui-radio__mark-color':checkMarkColor==''}"
-			:style="{borderBottomColor:checkMarkColor,borderRightColor:checkMarkColor}" v-if="val"></view>
-		<radio class="fui-radio__hidden" style="opacity: 0;position: absolute;" :disabled="disabled" :value="value"
-			:checked="val"></radio>
+		:class="[scaleRatio!=1?`fui-radio__scale-${scaleAlign}`:'',disabled?'fui-radio__disabled':'',color=='' && styleVal && (!isCheckMark || styleType==2)?'fui-radio__color':'',color=='' && styleVal && !isCheckMark && styleType==1?'fui-radio__active-bgcolor':'',normalColor=='' && !styleVal && (!isCheckMark || styleType==2)?'fui-radio__background':'',color=='' && styleVal && styleType==2?'fui-radio__background':'',borderColor=='' && !styleVal && (!isCheckMark || styleType==2)?'fui-radio__normal-border':'']"
+		:style="getStyl" @tap.stop="radioClick">
+		<view class="fui-check__mark" :class="{'fui-radio__mark-color':checkMarkColor==''}" :style="getMarkStyl"
+			v-if="val && styleType==1">
+		</view>
+		<view class="fui-check__mark-circle" :class="{'fui-radio__active-bgcolor':checkMarkColor==''}"
+			:style="getCheckMarkStyl" v-if="val && styleType==2">
+		</view>
 	</view>
 </template>
 
@@ -26,6 +28,7 @@
 	 * @property {String} checkMarkColor {String} 对号颜色
 	 * @property {Number} scaleRatio {Number} 缩放比例，当比例大于1时，外层容器需要设置 overflow: visible或者留出足够空间，避免显示不全
 	 * @property {String} scaleAlign {String} 缩放后对齐方式,可选值：left、center、right
+	 * @property {Number} styleType {Number} 选中后样式类型,可选值：1-checkmark 2-dot
 	 */
 	export default {
 		name: "fui-radio",
@@ -73,6 +76,10 @@
 			scaleAlign: {
 				type: String,
 				default: 'center'
+			},
+			styleType: {
+				type: Number,
+				default: 1
 			}
 		},
 		created() {
@@ -110,14 +117,32 @@
 				const mp : Map<string, string> = new Map();
 				mp.set('transform', `scale(${this.scaleRatio})`);
 				mp.set('border-radius', this.borderRadius);
-				let color = this.val ? this.color : (this.borderColor == '' ? this.color : this.borderColor);
+				const color = this.val ? this.color : (this.borderColor == '' ? this.color : this.borderColor);
 				const bgColor = this.val ? this.color : this.normalColor;
-				if (this.isCheckMark) {
-					mp.set('border-color', 'transparent')
-					mp.set('background', 'transparent')
+				if (this.styleType == 1) {
+					if (this.isCheckMark) {
+						mp.set('border-color', 'transparent')
+						mp.set('background', 'transparent')
+					} else {
+						if (color != '') mp.set('border-color', color)
+						if (bgColor != '') mp.set('background', bgColor)
+					}
 				} else {
 					if (color != '') mp.set('border-color', color)
 					if (bgColor != '') mp.set('background', bgColor)
+				}
+				return mp;
+			},
+			getCheckMarkStyl() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.checkMarkColor != '') mp.set('background', this.checkMarkColor)
+				return mp;
+			},
+			getMarkStyl() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.checkMarkColor != '') {
+					mp.set('borderBottomColor', this.checkMarkColor)
+					mp.set('borderRightColor', this.checkMarkColor)
 				}
 				return mp;
 			}
@@ -131,6 +156,10 @@
 			};
 		},
 		methods: {
+			radioClick(e : UniPointerEvent) {
+				e.stopPropagation();
+				this.radioChange();
+			},
 			radioChange() {
 				if (this.disabled || this.val) return;
 				this.val = true;
@@ -170,7 +199,14 @@
 		height: 40rpx;
 		border-width: 1px;
 		border-style: solid;
+		/* #ifdef APP */
 		border-radius: 100px;
+		/* #endif */
+
+		/* #ifdef WEB */
+		border-radius: 50%;
+		/* #endif */
+
 		display: flex;
 		box-sizing: border-box;
 		flex-shrink: 0;
@@ -193,8 +229,11 @@
 		transform-origin: 100% center;
 	}
 
-	.fui-radio__color {
+	.fui-radio__active-bgcolor {
 		background: $fui-color-primary !important;
+	}
+
+	.fui-radio__color {
 		border-color: $fui-color-primary !important;
 	}
 
@@ -225,16 +264,16 @@
 		transform-origin: 54% 48%;
 	}
 
-	.fui-radio__hidden {
-		width: 100%;
-		height: 100%;
-		pointer-events: none;
-		border-width: 0;
-		position: absolute;
-		top: 0;
-		left: 0;
-		opacity: 0;
-		z-index: 2;
+	.fui-check__mark-circle {
+		width: 16rpx;
+		height: 16rpx;
+		/* #ifdef APP */
+		border-radius: 16rpx;
+		/* #endif */
+
+		/* #ifdef WEB */
+		border-radius: 50%;
+		/* #endif */
 	}
 
 	.fui-radio__disabled {

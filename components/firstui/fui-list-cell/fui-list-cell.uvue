@@ -3,17 +3,15 @@
 		:class="{'fui-list__cell-background':background==''}"
 		:style="{background:background,marginTop:`${marginTop}rpx`,marginBottom:`${marginBottom}rpx`,borderRadius:radius}"
 		@tap="handleClick">
-		<view v-if="topBorder" :style="{background:borderColor,left:`${topLeft}rpx`,right:`${topRight}rpx`}"
-			class="fui-cell__border-top" :class="{'fui-cell__border-color':borderColor==''}"></view>
+		<view v-if="topBorder" :style="getTopLineStyl" class="fui-cell__border-top"
+			:class="{'fui-cell__border-color':borderColor==''}"></view>
 		<!-- 外层设置 padding 会影响 absolute 定位的left和right值 ... -->
-		<view class="fui-list__cell-inner" :class="{'fui-list__cell-padding':padding==''}" :style="{padding:padding}">
+		<view class="fui-list__cell-inner" :class="{'fui-list__cell-padding':padding==''}" :style="getPadding">
 			<slot></slot>
-			<view class="fui-cell__arrow" :class="{'fui-list__cell-arrowcolor':arrowColor==''}" v-if="arrow">
+			<view class="fui-cell__arrow" :style="getBorderColor" :class="{'fui-list__cell-arrowcolor':arrowColor==''}" v-if="arrow">
 			</view>
 		</view>
-		<view v-if="bottomBorder"
-			:style="{background:borderColor,left:`${bottomLeft==-1?0:bottomLeft}rpx`,right:`${bottomRight}rpx`}"
-			class="fui-cell__border-bottom"
+		<view v-if="bottomBorder" :style="getBtmLineStyl" class="fui-cell__border-bottom"
 			:class="{'fui-cell__border-color':borderColor=='','fui-list__cell-bleft':bottomLeft==-1}"></view>
 	</view>
 </template>
@@ -110,6 +108,32 @@
 				default: 0
 			}
 		},
+		computed: {
+			getPadding() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.padding != '') mp.set('padding', this.padding);
+				return mp;
+			},
+			getBorderColor(): object {
+				const mp : Map<string, string> = new Map();
+				if (this.arrowColor != '') mp.set('border-color', this.arrowColor);
+				return mp;
+			},
+			getTopLineStyl() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.borderColor != '') mp.set('background', this.borderColor);
+				mp.set('left', `${this.topLeft}rpx`);
+				mp.set('right', `${this.topRight}rpx`);
+				return mp;
+			},
+			getBtmLineStyl() : object {
+				const mp : Map<string, string> = new Map();
+				if (this.borderColor != '') mp.set('background', this.borderColor);
+				mp.set('left', `${this.bottomLeft == -1 ? 0 : this.bottomLeft}rpx`);
+				mp.set('right', `${this.bottomRight}rpx`);
+				return mp;
+			}
+		},
 		methods: {
 			handleClick() {
 				this.$emit('onclick', this.index);
@@ -163,6 +187,8 @@
 		top: 0;
 		height: $fui-list-cell-borderwidth;
 		z-index: 1;
+		transform: scaleY(0.5);
+		transform-origin: 0 0;
 		pointer-events: none;
 	}
 
@@ -170,6 +196,9 @@
 		position: absolute;
 		bottom: 0;
 		height: $fui-list-cell-borderwidth;
+		height: 1px;
+		transform: scaleY(0.5);
+		transform-origin: 0 100%;
 		z-index: 1;
 		pointer-events: none;
 	}

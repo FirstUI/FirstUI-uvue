@@ -2,7 +2,7 @@
 	<view class="fui-drawer__popup-wrap"
 		:style="{ zIndex: zIndex,background:maskBackground,alignItems:direction=='left'?'flex-start':'flex-end'}"
 		@tap.stop="handleClose" :ref="refMkId">
-		<view :ref="refId" class="fui-drawer__popup" :class="['fui-drawer_'+direction]"
+		<view :id="refId" :ref="refId" class="fui-drawer__popup" :class="['fui-drawer_'+direction]"
 			:style="{background: background,borderTopLeftRadius:`${direction=='right'? radius:0}rpx`,borderBottomLeftRadius:`${direction=='right'? radius:0}rpx`,borderTopRightRadius:`${direction=='left'? radius:0}rpx`,borderBottomRightRadius:`${direction=='left'? radius:0}rpx`}">
 			<slot></slot>
 		</view>
@@ -65,7 +65,8 @@
 				refMkId: refMkId,
 				isShow: false,
 				element: null as null | UniElement,
-				mkElement: null as null | UniElement
+				mkElement: null as null | UniElement,
+				width: 0
 			}
 		},
 		watch: {
@@ -84,10 +85,30 @@
 			this.$nextTick(() => {
 				setTimeout(() => {
 					if (!this.visible) this.close();
+					this._getSize()
 				}, 50);
 			})
 		},
+		// #ifdef WEB
+		updated() {
+			if (this.width == 0) {
+				setTimeout(() => {
+					this._getSize()
+				}, 100)
+			}
+		},
+		// #endif
 		methods: {
+			_getSize() {
+				uni.createSelectorQuery()
+					.in(this)
+					.select(`#${this.refId}`)
+					.boundingClientRect()
+					.exec(ret => {
+						const node = ret[0] as NodeInfo;
+						this.width = node.width ?? 0;
+					})
+			},
 			handleClose() {
 				if (!this.maskClosable) return;
 				this.$emit('close');

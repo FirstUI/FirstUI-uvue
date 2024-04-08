@@ -225,3 +225,52 @@ export type FuiCollapseChangeParam = {
 	index : number;
 	isOpen : boolean;
 }
+
+
+/**
+ * 【fui-validator 和 fui-form 组件】 FuiFormRulesValidatorParam 表单校验规则自定义方法参数类型
+ * @description 表单校验自定义方法参数类型
+ * @param {String} msg {String} 错误提示内容
+ * @param {Function} method (value : any) => boolean 校验方法
+ */
+export type FuiFormRulesValidatorParam = {
+	msg : string;
+	method : (value : any | null) => boolean;
+}
+
+/**
+ * 【fui-validator 和 fui-form 组件】FuiFormRulesParam 表单校验规则参数类型
+ * @description 表单校验规则参数类型
+ * @param {String} name {String} 元素的名称，与formData中key一致
+ * @param {Array} rule {string[]} 内置的校验方法名称集合，详细见下方说明
+ * @param {Array} msg {string[]} 对应rule规则方法的错误提示信息
+ * @param {Array} validator {FuiFormRulesValidatorParam[]} 表单校验规则自定义方法参数类型
+ */
+export type FuiFormRulesParam = {
+	name : string;
+	rule ?: string[];
+	msg ?: string[];
+	validator ?: FuiFormRulesValidatorParam[]
+}
+
+/**
+ * 【fui-validator 和 fui-form 组件】FuiFormErrorMsgParam 表单校验错误消息参数类型
+ * @description 表单校验错误消息参数类型
+ * @param {String} name {String} 元素的名称，与formData中key一致
+ * @param {String} msg {String} 错误提示信息
+ */
+export type FuiFormErrorMsgParam = {
+	name : string;
+	msg : string;
+}
+
+/**
+ * 【fui-validator 和 fui-form 组件】FuiFormValidatorResParam 表单校验结果参数类型
+ * @description 表单校验结果参数类型
+ * @param {Boolean} isPassed {Boolean} 是否校验通过
+ * @param {Array} errorMsg {FuiFormErrorMsgParam[]} 错误提示信息
+ */
+export type FuiFormValidatorResParam = {
+	isPassed : boolean;
+	errorMsg : FuiFormErrorMsgParam[];
+}

@@ -221,16 +221,7 @@
 		},
 		methods: {
 			rpx2px(rpx : number) : number {
-				let px : number;
-				// #ifdef APP-ANDROID
-				px = UTSAndroid.rpx2px(rpx)
-				// #endif
-
-				// #ifndef APP-ANDROID
-				const sys : GetSystemInfoResult = uni.getSystemInfoSync()
-				px = sys.windowWidth / 750 * rpx
-				// #endif
-				return px;
+				return uni.rpx2px(rpx);
 			},
 			getPosition(callback : (res : boolean) => void) {
 				uni.createSelectorQuery()
@@ -282,7 +273,9 @@
 				this.maskElement!.style.setProperty('opacity', '0');
 				this.element!.style.setProperty('opacity', '0');
 				if (this.direction == 'up') {
-					this.element!.style.setProperty('transform', 'translateY(-100%) scaleY(0)');
+					// #ifndef APP-IOS
+					this.element!.style.setProperty('transform', 'scaleY(0) translateY(-100%)');
+					// #endif
 				} else {
 					this.element!.style.setProperty('transform', 'scaleY(0)');
 				}
@@ -308,7 +301,9 @@
 							this.element!.style.setProperty('opacity', '1')
 							this.element!.style.setProperty('visibility', 'visible');
 							if (this.direction == 'up') {
-								this.element!.style.setProperty('transform', 'translateY(-100%) scaleY(1)');
+								// #ifndef APP-IOS
+								this.element!.style.setProperty('transform', 'scaleY(1) translateY(-100%)');
+								// #endif
 							} else {
 								this.element!.style.setProperty('transform', 'scaleY(1)');
 							}
@@ -360,7 +355,13 @@
 
 	.fui-ddm__up {
 		transform-origin: 0 100%;
-		transform: translateY(-100%) scaleY(0);
+		/* #ifndef APP-IOS */
+		transform:scaleY(0) translateY(-100%);
+		/* #endif */
+		
+		/* #ifdef APP-IOS */
+		transform:translateY(-100%);
+		/* #endif */
 		@include init_hidden;
 	}
 

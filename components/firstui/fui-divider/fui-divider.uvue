@@ -67,7 +67,7 @@
 </script>
 
 <style scoped lang="scss">
-	$fui-divider-line-width: 0.5px !default;
+	$fui-divider-line-width: 1px !default;
 	$fui-divider-line-color: #CCCCCC !default;
 	$fui-divider-text-color: #B2B2B2 !default;
 	$fui-bg-color-grey: #F1F4FA !default;
@@ -86,6 +86,7 @@
 	.fui-divider__line {
 		position: absolute;
 		height: $fui-divider-line-width;
+		transform: scaleY(0.5);
 	}
 
 	.fui-divider__line-color {

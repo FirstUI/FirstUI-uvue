@@ -2,11 +2,10 @@
 	<view class="fui-segmented__control" :class="{'fui-segmented__disabled':disabled}"
 		:style="{marginTop:`${marginTop}rpx`,marginBottom:`${marginBottom}rpx`}">
 		<view class="fui-segmented__item" v-for="(item,index) in vals" :key="index"
-			:style="{borderTopLeftRadius:index==0?`${radius}rpx`:'0',borderBottomLeftRadius:index==0?`${radius}rpx`:'0',borderTopRightRadius:index==vals.length - 1?`${radius}rpx`:'0',borderBottomRightRadius:index==vals.length - 1?`${radius}rpx`:'0',borderColor:type=='button'?color:'transparent',background:currentIndex==index && type=='button'?color:'transparent',height:`${height}rpx`}"
+			:style="getItemStyl(currentIndex,index,vals.length)"
 			:class="{'fui-segmented__first':index==0 && type=='button','fui-seg__item-bg':currentIndex==index && color=='' && type=='button','fui-seg__item-border':color=='' && type=='button','fui-segmented__item-border':type=='button'}"
 			@tap="handleClick(index)">
-			<text
-				:style="{fontSize:`${size}rpx`,color:currentIndex==index?activeColor:color,fontWeight:bold && currentIndex==index ?'bold':'normal'}"
+			<text :style="getTextStyl(currentIndex,index)"
 				:class="{'fui-segmented__disabled':item.disabled==true,'fui-seg__text-color':color=='' && currentIdx!=index}">{{item.name}}</text>
 			<view class="fui-segmented__item-line" v-if="currentIndex==index && type=='text'"
 				:style="{background:activeColor}"></view>
@@ -116,6 +115,30 @@
 			if (values != null) this.initData(values);
 		},
 		methods: {
+			getTextStyl(currentIndex : number, index : number) : object {
+				const mp : Map<string, any> = new Map();
+				mp.set('fontSize', `${this.size}rpx`)
+				mp.set('fontWeight', this.bold && currentIndex == index ? 'bold' : 'normal');
+				if (currentIndex == index) {
+					mp.set('color', this.activeColor)
+				} else {
+					if (this.color != '') mp.set('color', this.color)
+				}
+				return mp;
+			},
+			getItemStyl(currentIndex : number, index : number, len : number) : object {
+				const mp : Map<string, any> = new Map();
+				mp.set('borderTopLeftRadius', index == 0 ? `${this.radius}rpx` : '0');
+				mp.set('borderBottomLeftRadius', index == 0 ? `${this.radius}rpx` : '0');
+				mp.set('borderTopRightRadius', index == len - 1 ? `${this.radius}rpx` : '0');
+				mp.set('borderBottomRightRadius', index == len - 1 ? `${this.radius}rpx` : '0');
+				mp.set('height', `${this.height}rpx`);
+				if (this.type == 'button' && this.color != '') {
+					mp.set('borderColor', this.color)
+					mp.set('background', currentIndex == index ? this.color : 'transparent')
+				}
+				return mp;
+			},
 			initData(vals : FuiSegmentedControlValueParam[]) {
 				this.vals = [] as FuiSegmentedControlValueParam[];
 				this.$nextTick(() => {
@@ -144,6 +167,9 @@
 		display: flex;
 		flex-direction: row;
 		overflow: hidden;
+		/* #ifdef APP-IOS */
+		border: 1px solid transparent;
+		/* #endif */
 	}
 
 	.fui-segmented__item {
@@ -158,6 +184,7 @@
 		border-left-width: 0;
 		position: relative;
 		box-sizing: border-box;
+
 	}
 
 	.fui-segmented__item-border {

@@ -4,7 +4,7 @@
 		@tap="handleTap">
 		<slot></slot>
 		<text class="fui-text__content"
-			:style="{color:color,fontSize:getSize,lineHeight:lineHeight?getSize:'normal',textAlign:align,textDecoration:decoration,fontWeight:fontWeight}"
+			:style="{color:color,fontSize:getSize,lineHeight:lineHeight?getSize:'1.2',textAlign:align,textDecoration:decoration,fontWeight:fontWeight}"
 			:class="[color==''?'fui-text__'+type:'',unShrink?'fui-text__unshrink':'',isBind?'fui-text__fontsize':'',lineHeight && isBind?'fui-text__lineheight':'']"
 			:selectable="selectable">{{getText(text, textType, format)}}</text>
 		<slot name="right"></slot>

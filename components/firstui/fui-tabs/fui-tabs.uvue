@@ -21,7 +21,7 @@
 						</image>
 						<view class="fui-tabs__text" :style="{transform:`scale(${tabIndex==index?scale:1})`}">
 							<text :class="{'fui-tabs__selected-color':selectedColor=='' && tabIdx==index}"
-								:style="{fontSize:`${size}rpx`,color:tabIndex==index?selectedColor:color,fontWeight:tabIndex==index?selectedFontWeight:fontWeight}">
+								:style="getTextStyl(tabIndex,index)">
 								{{tab.name}}
 							</text>
 							<text
@@ -206,6 +206,18 @@
 			};
 		},
 		methods: {
+			getTextStyl(tabIndex : number, index : number) : object {
+				const mp : Map<string, any> = new Map();
+				mp.set('fontSize', `${this.size}rpx`);
+				if (tabIndex == index) {
+					mp.set('fontWeight', this.selectedFontWeight);
+					if (this.selectedColor != '') mp.set('color', this.selectedColor);
+				} else {
+					mp.set('color', this.color);
+					mp.set('fontWeight', this.fontWeight);
+				}
+				return mp;
+			},
 			initData(vals : FuiTabsItemParam[]) {
 				this.vals = [] as FuiTabsItemParam[];
 				const ids = [] as string[];
@@ -243,7 +255,9 @@
 		.fui-tabs__scrollbox {
 			width: 100%;
 			flex-direction: row;
+			/* #ifndef APP-IOS */
 			overflow: hidden;
+			/* #endif */
 		}
 
 		.fui-tabs__fixed {

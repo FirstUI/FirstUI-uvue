@@ -171,9 +171,9 @@
 				}
 				if (top <= 0.01 || this.halfMove || className == 'fui-half__screen-title') {
 					if (this.halfScreenY == 0) {
-						this.halfScreenY = p.clientY;
+						this.halfScreenY = p.screenY;
 					}
-					let offset = p.clientY - this.halfScreenY;
+					let offset = p.screenY - this.halfScreenY;
 					if (offset > 0) {
 						this.halfMove = true;
 						// #ifdef APP
@@ -182,10 +182,11 @@
 						// #ifdef WEB
 						this.scrollDirection = 'none';
 						// #endif
-						this.halfEl?.style?.setProperty('transform', 'translateY(' + offset.toFixed(2) + 'px)');
+						this.halfEl!.style.setProperty('transform', `translateY(${offset.toFixed(0)}px)`);
+						console.log(this.halfEl!.style.getPropertyValue('transform'))
 						this.halfOffset = offset;
 					} else if (this.halfOffset > 0) {
-						offset = this.halfScreenY - p.clientY;
+						offset = this.halfScreenY - p.screenY;
 						if (offset > this.halfOffset) {
 							offset = 0;
 							this.halfMove = false;
@@ -196,7 +197,7 @@
 						// #ifdef WEB
 						this.scrollDirection = 'vertical';
 						// #endif
-						this.halfEl?.style?.setProperty('transform', 'translateY(' + offset.toFixed(2) + 'px)');
+						this.halfEl!.style.setProperty('transform', `translateY(${offset.toFixed(2)}px)`);
 						this.halfOffset = offset;
 					}
 				}
@@ -291,8 +292,23 @@
 			mousemove(e : UniTouchEvent) {
 				// #ifdef WEB
 				if (!this.isPC() || !this.movable) return;
-				// #endif
+				if (e['touches'] == null || e['touches'] == undefined) {
+					e['touches'] = [{
+						clientX: e['clientX'],
+						clientY: e['clientY'],
+						identifier: 1,
+						pageX: e['pageX'],
+						pageY: e['pageY'],
+						screenX: e['screenX'],
+						screenY: e['screenY']
+					}] as UniTouch[];
+				}
 				this.onHalfTouchMove(e)
+				// #endif
+
+				// #ifndef WEB
+				console.log(e)
+				// #endif
 			},
 			mouseup() {
 				// #ifdef WEB
@@ -385,7 +401,7 @@
 		flex-direction: row;
 		align-items: flex-end;
 		justify-content: center;
-		transition-property: opacity, visibility;
+		transition-property: opacity;
 		transition-timing-function: ease-in-out;
 		transition-duration: 0.3s;
 		border-bottom-width: 0;
@@ -396,7 +412,7 @@
 
 	.fui-half__screen-wrap {
 		width: 100%;
-		transition-property: transform, opacity, visibility;
+		transition-property: transform, opacity;
 		transition-timing-function: ease-in-out;
 		transition-duration: 0.3s;
 		min-height: 20rpx;

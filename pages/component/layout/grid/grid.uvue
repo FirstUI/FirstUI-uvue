@@ -9,7 +9,7 @@
 			</view>
 			<view class="fui-page__bd">
 				<text class="fui-section__title fui-mtop--0">九宫格</text>
-				<view class="fui-aa">
+				<view>
 					<fui-grid>
 						<fui-grid-item :index="index" v-for="(item,index) in nums" :key="index">
 							<view class="fui-grid__cell">

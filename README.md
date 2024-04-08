@@ -107,6 +107,75 @@ GitHub地址：[https://github.com/FirstUI/FirstUI-uvue](https://github.com/Firs
 
 ### 更新日志
 
+#### V1.3.0（2024-04-08）
+
+- 重要优化：本次更新开发工具需升级至Hbuilderx 4.11.2024040401+，更新后必须升级开发工具（alpha版本）。
+
+- [重要] 新增支持编译到iOS平台。
+
+- 新增 Request 网络请求 组件，支持Promise，可在发起请求和请求响应之前进行拦截（uts）[vip]。
+
+- 新增 Rate 评分 组件，适配ios端 [vip]。
+
+- 新增 Spin 旋转动画 组件，适配ios端 [vip]。
+
+- Switch 开关 组件优化，调整Android端阴影不明显问题，适配ios端。
+
+- Drawer 抽屉 组件优化。
+
+- Form 表单示例 优化，新增评分组件示例。
+
+- Radio 单选框 组件优化，新增属性styleType设置选中后样式，适配ios端。
+
+- Grid 宫格 组件 组件优化，调整web端/ios端部分样式。
+
+- Card 卡片 组件优化，调整web端部分样式。
+
+- HalfScreen 半屏弹窗 组件优化，修复web端滑动事件报错的问题。
+
+- SwipeAction 滑动菜单 组件优化，修复web端滑动事件报错的问题。
+
+- Text 文本 组件优化，修复ios端文本不显示问题。
+
+- Number 数字 组件 优化，部分调整以适配ios端。
+
+- Icon 图标 组件优化，部分调整以适配ios端。
+
+- List 列表 组件 组件优化，适配ios端。
+
+- Button 按钮 组件优化，ios端部分样式调整。
+
+- Avatar 头像 组件优化，ios端部分样式调整。
+
+- LoadMore 加载更多 组件优化，ios端部分样式调整。
+
+- Collapse 折叠面板 组件优化，适配ios端。
+
+- Divider 分割线 组件优化，ios端部分样式调整。
+
+- Pagination 分页器 组件优化，部分调整以适配ios端。
+
+- SegmentedControl 分段器 组件优化，ios端部分样式调整。
+
+- Tabs 标签页 组件优化，部分调整以适配ios端。
+
+- Dialog 对话框 组件优化，部分调整以适配ios端。
+
+- ActionSheet 上拉菜单 组件优化，部分调整以适配ios端。
+
+- InputNumber 数字输入框 组件优化，部分调整以适配ios端。
+
+- Checkbox 复选框 组件优化，适配ios端。
+
+- FormItem 表单项 组件优化，适配ios端。
+
+- Input 输入框 组件优化，适配ios端。
+
+- Textarea 多行输入框 组件优化，适配ios端。
+
+- 优化部分已知问题。
+
+
 #### V1.2.6（2024-04-02）
 
 - 新增常用的基础样式class，类（class）选择器，用于页面布局，详见文档。
@@ -150,7 +219,7 @@ GitHub地址：[https://github.com/FirstUI/FirstUI-uvue](https://github.com/Firs
 
 - Section 标题栏 组件优化，Web端部分调整，去除多余兼容处理逻辑（Hbuilderx 4.01.20+以下版本不可去除）。
 
-- Animation 动画 组件优化，Web端部分调整，去除多余兼容处理逻辑。
+- Animation 动画 组件优化，Web端部分调整，去除多余兼容处理逻辑，优化部分体验。
 
 - Button 按钮 组件优化，Web端部分调整，去除多余兼容处理逻辑。
 

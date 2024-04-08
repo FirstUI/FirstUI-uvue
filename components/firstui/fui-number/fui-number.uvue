@@ -1,7 +1,7 @@
 <template>
 	<text class="fui-digitalnumbers"
 		:class="{'fui-number__size':isBind,'fui-number__color':color=='','fui-number__lineheight':lineHeight && isBind,'fui-digitalnumbers__active': highlight && !disabled}"
-		:style="{color:color, fontSize: getSize, fontWeight: fontWeight,lineHeight:lineHeight?getSize:'normal',textDecoration:decoration}"
+		:style="{color:color, fontSize: getSize, fontWeight: fontWeight,lineHeight:lineHeight?getSize:'1.2',textDecoration:decoration}"
 		@tap="handleClick" @touchstart="touchstart" @touchcancel="touchend" @touchend="touchend"
 		ref="fui_number">{{getNumber}}</text>
 </template>

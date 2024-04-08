@@ -182,6 +182,11 @@ export const tabs = [{
 		vip: false,
 		page: 'loading'
 	}, {
+		icon: 'loading',
+		name: 'Spin 旋转动画',
+		vip: true,
+		page: 'spin'
+	}, {
 		icon: 'swipeaction',
 		name: 'SwipeAction 滑动菜单',
 		vip: false,
