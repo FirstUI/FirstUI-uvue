@@ -18,7 +18,7 @@
 			<text :class="{'fui-input__label-size':labelSize==0}" :style="getLabelStyl">{{label}}</text>
 		</view>
 		<slot name="left"></slot>
-		<input :ref="refId" class="fui-input__self" :class="{'fui-input__disabled':disabled,'fui-input__size':size==0}"
+		<input :ref="refId" class="fui-input__self" :class="{'fui-input__disabled':disabled || readonly,'fui-input__size':size==0}"
 			:style="{fontSize:`${size}rpx`,color:color,textAlign:textAlign}" placeholder-class="fui-input__placeholder"
 			:type="type" :name="name" :value="val" :placeholder="placeholder" :password="password || type == 'password'"
 			:placeholder-style="placeholderStyle" :disabled="disabled || readonly" :cursor-spacing="cursorSpacing"

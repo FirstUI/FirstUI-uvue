@@ -107,6 +107,50 @@ GitHub地址：[https://github.com/FirstUI/FirstUI-uvue](https://github.com/Firs
 
 ### 更新日志
 
+#### V1.4.0（2025-02-24）
+
+- 新增 Panel 面板 组件。
+
+- 新增 Preview 表单预览 组件。
+
+- 新增 Message 消息提示 组件。
+
+- 新增 Modal 模态框 组件。
+
+- 新增 LoadAni 加载动画 组件。
+
+- 新增 NavBar 导航栏 组件。
+
+- 新增 Link 超链接 组件。
+
+- 新增 Tabbar 标签栏 组件。
+
+- 新增 Progress 进度条 组件。
+
+- 新增 Circle 圆形进度条 组件。
+
+- 新增 CountDown 倒计时 组件。
+
+- 新增 Upload 图片上传 组件。
+
+- 新增 UploadVideo 视频上传 组件。
+
+- 新增 SliderRange 滑块区间选择器 组件。
+
+- 新增 Select 选择器 组件。
+
+- 新增 SearchBar 搜索栏 组件。
+
+- Collapse 折叠面板 组件（fui-collapse-item）优化，新增marginTop、marginBottom属性。
+
+- Slider 滑块选择器 组件优化，新增插槽自定义操作按钮内显示内容。
+
+- Input 输入框 组件优化，修复Web端设置 readonly 属性为true时点击事件失效的问题。
+
+- Loading 加载 组件优化，修复设置text失效的问题。
+
+- 优化部分已知问题。
+
 #### V1.3.0（2024-04-08）
 
 - 重要优化：本次更新开发工具需升级至Hbuilderx 4.11.2024040401+，更新后必须升级开发工具（alpha版本）。

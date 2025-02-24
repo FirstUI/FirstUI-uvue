@@ -9,6 +9,7 @@
 		<view class="fui-slider__handle" :class="{'fui-slider__disabled':disabled}"
 			:style="{width:`${blockWidth}px`,height:`${blockHeight}px`,borderRadius:`${blockRadius}px`,background:blockColor}"
 			@touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" @mousedown="mousedown" :ref="handleId">
+			<slot name="handle"></slot>
 		</view>
 		<slot>
 			<text class="fui-slider__value"
@@ -134,7 +135,7 @@
 			}
 		},
 		watch: {
-			modelValue(val) {
+			modelValue(val : number) {
 				let start = this.getStartVal(val)
 				this.initValue = start
 				this.start = start
@@ -422,7 +423,10 @@
 		z-index: 3;
 		transform: translateY(-50%);
 		transition-duration: 0ms;
-
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
 	}
 
 	/* #ifdef WEB */

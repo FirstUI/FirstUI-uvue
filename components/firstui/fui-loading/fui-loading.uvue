@@ -94,17 +94,19 @@
 			}
 		},
 		watch: {
-			text(val : string) {
-				if (val == '') {
-					this.getLoadingText(fuiLang.locale)
-				} else {
-					this.loadingText = val;
-				}
-
+			text: {
+				handler(val : string) {
+					if (val == '') {
+						this.getLoadingText(fuiLang.locale)
+					} else {
+						this.loadingText = val;
+					}
+				},
+				immediate: true
 			},
 			locale: {
 				handler(val : string) {
-					this.getLoadingText(val)
+					if (this.text == '') this.getLoadingText(val);
 				},
 				immediate: true
 			}
@@ -131,11 +133,20 @@
 			this.element = null;
 		},
 		methods: {
+			/**
+			 * 获取显示文本
+			 * @description 获取显示文本
+			 * @param {Strirng} val 语言
+            */
 			getLoadingText(val : string) {
 				const lang = getFuiLocaleLang(val)
 				const loadingR = lang['loading'] as UTSJSONObject;
 				this.loadingText = loadingR.getString('text') as string;
 			},
+			/**
+			 * 开始执行
+			 * @description 开始执行
+			*/
 			startSpin() {
 				if (this.element != null && this.isSpin) return;
 				if (this.element == null) {
